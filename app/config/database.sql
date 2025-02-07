@@ -45,8 +45,8 @@ CREATE TABLE sponsors (
     img VARCHAR(255) DEFAULT NULL
 );
 
--- TABLE EVENTS (evenements)
-CREATE TABLE evenements (
+-- TABLE EVENTS
+CREATE TABLE events (
     event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE tickets (
     event_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     generateDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (event_id) REFERENCES evenements(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE feedback (
     user_id BIGINT NOT NULL,
     content TEXT NOT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (event_id) REFERENCES evenements(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -121,12 +121,12 @@ CREATE TABLE orderdetails (
     unitPrice FLOAT NOT NULL CHECK (unitPrice >= 0),
     subtotal FLOAT NOT NULL CHECK (subtotal >= 0),
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (event_id) REFERENCES evenements(event_id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- INDEXATION POUR OPTIMISATION
 CREATE INDEX idx_username ON users(username);
 CREATE INDEX idx_email ON users(email);
-CREATE INDEX idx_event_title ON evenements(title);
-CREATE INDEX idx_event_status ON evenements(status);
+CREATE INDEX idx_event_title ON events(title);
+CREATE INDEX idx_event_status ON events(status);
 CREATE INDEX idx_order_status ON orders(status);
