@@ -1,6 +1,6 @@
 <?php
+namespace App\config;
 
-namespace App\Config;
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Dotenv;
@@ -32,7 +32,7 @@ class Database {
                 self::$conn = new PDO("mysql:host=" . $this->ServerName . ";dbname=" . $this->DbName,$this->UserName, $this->PassWord);
                 self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 if(self::$conn){
-                    // echo "hell ya";
+                    // echo "connected";
                 }
             } catch (PDOException $e) {
                 die("Connection failed: " . $e->getMessage());
