@@ -6,17 +6,17 @@ use App\config\Database;
 use PDO;
 
 
-class User{
+abstract class User{
 
 protected $username;
 protected $email;
 protected $password;
-protected $bio;
-protected $profile_picture;
+protected $avatar;
+protected $gender;
 protected $role;
 
 
-// public function __construct($username,$email,$password,$bio,$profile_picture,$role){
+// public function __construct($username,$email,$password,$bio,$profile_picture,$role Role){
 
 // $this->username = $username;
 // $this->email = $email;
@@ -71,7 +71,7 @@ public function getRole(){
 
 // |---------------------- AddUser -----------------|
 
-public static function AddUser($columns, $values)
+public static function AddUser($columns, $values ,$roleId)
 {
   $conn = Database::getInstanse()->getConnection();
 
@@ -83,16 +83,39 @@ public static function AddUser($columns, $values)
   $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
   $stmt = $conn->prepare($query);
 
-  return $stmt->execute($values);
-}
+  $result =  $stmt->execute($values);
 
+  if($result){
+    $lastid = $conn->lastInsertId();
+
+    $role = self::AddRoleUser($lastid,$roleId);
+    return true;
+
+  }
+
+}
+public static function AddRoleUser($lastid, $roleId){
+    $conn = Database::getInstanse()->getConnection();
+    try {
+            if (!empty($roleId)) {
+                $sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([$lastid , $roleId]);
+            } else {
+                echo "Error: Tag not found - $roleId";
+            }
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
+    }
+}
 // |---------------------- findByEmail -----------------|
 
 public static function findByEmail($email){
 
   $conn = Database::getInstanse()->getConnection();
 
-  $query = "SELECT * FROM users WHERE email = :email";
+  $query ="SELECT u.user_id AS userId, u.username AS userName, u.avatar AS avatar, u.email AS userEmail , u.password , r.role_id AS roleId ,r.name_role AS UserRole
+      FROM users u INNER JOIN user_roles ur ON ur.user_id = u.user_id INNER JOIN roles r on r.role_id = ur.role_id  WHERE email = :email";
   $stmt=$conn->prepare($query);
   $stmt->bindParam(':email', $email, PDO::PARAM_STR);
   $stmt->execute();

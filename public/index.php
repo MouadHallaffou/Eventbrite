@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 
 use App\core\Router;
-use App\controllers\frontOffice\ArticleController;
+use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\DashboardController;
@@ -17,8 +17,8 @@ use Twig\Loader\FilesystemLoader;
 
 $router = new Router();
 
-$router->get('/', HomeController::class, 'index');
-$router->get('/', ArticleController::class, 'showArticles');
+$router->get('/home', HomeController::class, 'index');
+$router->get('/', EventController::class, 'showEvents');
 
 
 
