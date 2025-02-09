@@ -51,6 +51,7 @@ CREATE TABLE events (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     adresse TEXT NOT NULL,
+    image VARCHAR(255) DEFAULT NULL,
     status ENUM('pending', 'refused', 'accepted') NOT NULL DEFAULT 'pending',
     eventMode ENUM('en ligne', 'presentiel') NOT NULL,
     price FLOAT DEFAULT NULL CHECK (price >= 0),
