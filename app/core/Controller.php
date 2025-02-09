@@ -1,14 +1,14 @@
 <?php
 
 namespace App\core;
-
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 class Controller {
-    public function render($view,$data=[]){
+    public static function render($view,$data=[]){
         extract($data);
-        require __DIR__. "/../views/$view.php";
+        include __DIR__ ."/../views/back/$view";
     }
-}
+}                         
 
 
 
