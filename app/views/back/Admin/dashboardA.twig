@@ -404,64 +404,7 @@
 
 			<!-- strat content -->
 			<div class="bg-gray-100 flex-1 p-6 md:mt-16">
-                   
-                <div class="overflow-x-auto"> 
-			       <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="py-2 px-4">Username</th>
-                        <th class="py-2 px-4">Email</th>
-                        <th class="py-2 px-4">Role</th>
-                        <th class="py-2 px-4">Status</th>
-                        <th class="py-2 px-4">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% if users %}
-                        {% for row in users %}
-                            <form method="POST">
-                                <tr class="border-b">
-                                    <td class="py-2 px-4">{{ row.username }}</td>
-                                    <td class="py-2 px-4">{{ row.email }}</td>
-                                    <td class="py-2 px-4">
-                                        <select name="role">
-                                            {% if row.role != 'Admin' %}
-                                                <option value="{{ row.role }}">{{ row.role }}</option>
-                                                <option value="Teacher">organisateur</option>
-                                                <option value="Student">Participant</option>
-                                            {% endif %}
-                                        </select>
-                                    </td>
-                                    <td class="py-2 px-4">
-                                        <select name="status">
-                                            <option value="{{ row.status }}">{{ row.status }}</option>
-                                            <option value="banned">banned</option>
-                                            <option value="accepte">accepte</option>
-                                            <option value="pendding">pendding</option>
-                                        </select>
-                                    </td>
-                                    <td class="py-2 px-4">
-                                        <input type="hidden" name="UserId" value="{{ row.id }}">
-                                        <button type="submit" name="updateUser" class="text-blue-500 hover:underline">
-                                            <i class="fa-solid fa-pencil"></i>
-                                        </button>
-                                        |
-                                        <button type="submit" name="deleteUser" onclick="return confirm('Are you sure you want to delete this player?')" class="text-red-500 hover:underline">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </form>
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="8" class="py-2 px-4 text-center">No data available</td>
-                        </tr>
-                    {% endif %}
-                    </tbody>
-                   </table>
-                </div>
-				{# <!-- General Report -->
+				<!-- General Report -->
 				<div class="grid grid-cols-4 gap-6 xl:grid-cols-1">
 					<!-- card -->
 					<div class="report-card">
@@ -584,6 +527,262 @@
 
 				</div>
 				<!-- End General Report -->
+
+				<!-- strat Analytics -->
+				<div
+					class="mt-6 grid grid-cols-2 gap-6 xl:grid-cols-1">
+
+					<!-- update section -->
+					<div class="card bg-teal-400 border-teal-400 shadow-md text-white">
+						<div
+							class="card-body flex flex-row">
+
+							<!-- image -->
+							<div class="img-wrapper w-40 h-40 flex justify-center items-center">
+								<img src="./img/happy.svg" alt="img title">
+							</div>
+							<!-- end image -->
+
+							<!-- info -->
+							<div class="py-2 ml-10">
+								<h1 class="h6">Good Job,
+									{{ session.name }}!</h1>
+								<p class="text-white text-xs">You've finished all of your tasks for this week.</p>
+
+								<ul class="mt-4">
+									<li class="text-sm font-light">
+										<i class="fad fa-check-double mr-2 mb-2"></i>
+										Finish Dashboard Design</li>
+									<li class="text-sm font-light">
+										<i class="fad fa-check-double mr-2 mb-2"></i>
+										Fix Issue #74</li>
+									<li class="text-sm font-light">
+										<i class="fad fa-check-double mr-2"></i>
+										Publish version 1.0.6</li>
+								</ul>
+							</div>
+							<!-- end info -->
+
+						</div>
+					</div>
+					<!-- end update section -->
+
+					<!-- carts -->
+					<div
+						class="flex flex-col">
+						<!-- charts -->
+						<div class="grid grid-cols-2 gap-6 h-full">
+
+							<div class="card">
+								<div class="py-3 px-4 flex flex-row justify-between">
+									<h1 class="h6">
+										<span class="num-4"></span>k
+										<p>page view</p>
+									</h1>
+
+									<div class="bg-teal-200 text-teal-700 border-teal-300 border w-10 h-10 rounded-full flex justify-center items-center">
+										<i class="fad fa-eye"></i>
+									</div>
+								</div>
+								<div class="analytics_1"></div>
+							</div>
+
+							<div class="card">
+								<div class="py-3 px-4 flex flex-row justify-between">
+									<h1 class="h6">
+										<span class="num-2"></span>k
+										<p>Unique Users</p>
+									</h1>
+
+									<div class="bg-indigo-200 text-indigo-700 border-indigo-300 border w-10 h-10 rounded-full flex justify-center items-center">
+										<i class="fad fa-users-crown"></i>
+									</div>
+								</div>
+								<div class="analytics_1"></div>
+							</div>
+
+						</div>
+						<!-- charts    -->
+					</div>
+					<!-- end charts -->
+
+				</div>
+				<!-- end Analytics -->
+
+				<!-- Sales Overview -->
+				<div
+					class="card mt-6">
+
+					<!-- header -->
+					<div class="card-header flex flex-row justify-between">
+						<h1 class="h6">Sales Overview</h1>
+
+						<div class="flex flex-row justify-center items-center">
+
+							<a href="">
+								<i class="fad fa-chevron-double-down mr-6"></i>
+							</a>
+
+							<a href="">
+								<i class="fad fa-ellipsis-v"></i>
+							</a>
+
+						</div>
+
+					</div>
+					<!-- end header -->
+
+					<!-- body -->
+					<div class="card-body grid grid-cols-2 gap-6 lg:grid-cols-1">
+
+						<div class="p-8">
+							<h1 class="h2">5,337</h1>
+							<p class="text-black font-medium">Sales this month</p>
+
+							<div class="mt-20 mb-2 flex items-center">
+								<div class="py-1 px-3 rounded bg-green-200 text-green-900 mr-3">
+									<i class="fa fa-caret-up"></i>
+								</div>
+								<p class="text-black">
+									<span class="num-2 text-green-400"></span>
+									<span class="text-green-400">% more sales</span>
+									in comparison to last month.</p>
+							</div>
+
+							<div class="flex items-center">
+								<div class="py-1 px-3 rounded bg-red-200 text-red-900 mr-3">
+									<i class="fa fa-caret-down"></i>
+								</div>
+								<p class="text-black">
+									<span class="num-2 text-red-400"></span>
+									<span class="text-red-400">% revenue per sale</span>
+									in comparison to last month.</p>
+							</div>
+
+							<a href="#" class="btn-shadow mt-6">view details</a>
+
+						</div>
+
+						<div class="">
+							<div id="sealsOverview"></div>
+						</div>
+
+					</div>
+					<!-- end body -->
+
+				</div>
+				<!-- end Sales Overview -->
+
+				<!-- start numbers -->
+				<div class="grid grid-cols-5 gap-6 xl:grid-cols-2">
+
+					<!-- card -->
+					<div class="card mt-6">
+						<div class="card-body flex items-center">
+
+							<div class="px-3 py-2 rounded bg-indigo-600 text-white mr-3">
+								<i class="fad fa-wallet"></i>
+							</div>
+
+							<div class="flex flex-col">
+								<h1 class="font-semibold">
+									<span class="num-2"></span>
+									Sales</h1>
+								<p class="text-xs">
+									<span class="num-2"></span>
+									payments</p>
+							</div>
+
+						</div>
+					</div>
+					<!-- end card -->
+
+					<!-- card -->
+					<div class="card mt-6">
+						<div class="card-body flex items-center">
+
+							<div class="px-3 py-2 rounded bg-green-600 text-white mr-3">
+								<i class="fad fa-shopping-cart"></i>
+							</div>
+
+							<div class="flex flex-col">
+								<h1 class="font-semibold">
+									<span class="num-2"></span>
+									Orders</h1>
+								<p class="text-xs">
+									<span class="num-2"></span>
+									items</p>
+							</div>
+
+						</div>
+					</div>
+					<!-- end card -->
+
+					<!-- card -->
+					<div class="card mt-6 xl:mt-1">
+						<div class="card-body flex items-center">
+
+							<div class="px-3 py-2 rounded bg-yellow-600 text-white mr-3">
+								<i class="fad fa-blog"></i>
+							</div>
+
+							<div class="flex flex-col">
+								<h1 class="font-semibold">
+									<span class="num-2"></span>
+									posts</h1>
+								<p class="text-xs">
+									<span class="num-2"></span>
+									active</p>
+							</div>
+
+						</div>
+					</div>
+					<!-- end card -->
+
+					<!-- card -->
+					<div class="card mt-6 xl:mt-1">
+						<div class="card-body flex items-center">
+
+							<div class="px-3 py-2 rounded bg-red-600 text-white mr-3">
+								<i class="fad fa-comments"></i>
+							</div>
+
+							<div class="flex flex-col">
+								<h1 class="font-semibold">
+									<span class="num-2"></span>
+									comments</h1>
+								<p class="text-xs">
+									<span class="num-2"></span>
+									approved</p>
+							</div>
+
+						</div>
+					</div>
+					<!-- end card -->
+
+					<!-- card -->
+					<div class="card mt-6 xl:mt-1 xl:col-span-2">
+						<div class="card-body flex items-center">
+
+							<div class="px-3 py-2 rounded bg-pink-600 text-white mr-3">
+								<i class="fad fa-user"></i>
+							</div>
+
+							<div class="flex flex-col">
+								<h1 class="font-semibold">
+									<span class="num-2"></span>
+									memebrs</h1>
+								<p class="text-xs">
+									<span class="num-2"></span>
+									online</p>
+							</div>
+
+						</div>
+					</div>
+					<!-- end card -->
+
+				</div>
+				<!-- end nmbers -->
 
 				<!-- start quick Info -->
 				<div class="grid grid-cols-3 gap-6 mt-6 xl:grid-cols-1">
@@ -730,9 +929,63 @@
 					</div>
 					<!-- End Recent Sales -->
 				</div>
-				<!-- end quick Info --> #}
+				<!-- end quick Info -->
 
-				
+				<!-- <div class="overflow-x-auto"> -->
+				<table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+					<thead class="bg-gray-800 text-white">
+						<tr>
+							<th class="py-2 px-4">Username</th>
+							<th class="py-2 px-4">Email</th>
+							<th class="py-2 px-4">Role</th>
+							<th class="py-2 px-4">Status</th>
+							<th class="py-2 px-4">Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% if users %}
+							{% for row in users %}
+								<form method="POST">
+									<tr class="border-b">
+										<td class="py-2 px-4">{{ row.username }}</td>
+										<td class="py-2 px-4">{{ row.email }}</td>
+										<td class="py-2 px-4">
+											<select name="role">
+												{% if row.role != 'Admin' %}
+													<option value="{{ row.role }}">{{ row.role }}</option>
+													<option value="Teacher">organisateur</option>
+													<option value="Student">Participant</option>
+												{% endif %}
+											</select>
+										</td>
+										<td class="py-2 px-4">
+											<select name="status">
+												<option value="{{ row.status }}">{{ row.status }}</option>
+												<option value="banned">banned</option>
+												<option value="accepte">accepte</option>
+												<option value="pendding">pendding</option>
+											</select>
+										</td>
+										<td class="py-2 px-4">
+											<input type="hidden" name="UserId" value="{{ row.id }}">
+											<button type="submit" name="updateUser" class="text-blue-500 hover:underline">
+												<i class="fa-solid fa-pencil"></i>
+											</button>
+											|
+											<button type="submit" name="deleteUser" onclick="return confirm('Are you sure you want to delete this player?')" class="text-red-500 hover:underline">
+												<i class="fa-solid fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</form>
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="8" class="py-2 px-4 text-center">No data available</td>
+							</tr>
+						{% endif %}
+					</tbody>
+				</table>
 
 
 			</div>

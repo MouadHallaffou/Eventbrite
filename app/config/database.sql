@@ -55,7 +55,6 @@ CREATE TABLE tags (
 );
 
 
--- TABLE EVENTS
 CREATE TABLE events (
     event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -87,6 +86,8 @@ CREATE TABLE events_tag (
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
 
 -- TABLE NOTIFICATIONS
 CREATE TABLE notifications (
@@ -150,3 +151,71 @@ CREATE INDEX idx_email ON users(email);
 CREATE INDEX idx_event_title ON events(title);
 CREATE INDEX idx_event_status ON events(status);
 CREATE INDEX idx_order_status ON orders(STATUS);
+
+
+
+
+INSERT INTO roles (name_role) VALUES
+('Admin'),
+('Organizer'),
+('Participant');
+
+INSERT INTO users (username, email, password, avatar, gender, STATUS, is_verified) VALUES
+('john_doe', 'john.doe@example.com', 'password123', 'avatar1.jpg', 'homme', 'accepted', 'yes'),
+('jane_smith', 'jane.smith@example.com', 'password456', 'avatar2.jpg', 'femme', 'accepted', 'yes'),
+('alice_wonder', 'alice.wonder@example.com', 'password789', 'avatar3.jpg', 'femme', 'accepted', 'no');
+
+INSERT INTO user_roles (user_id, role_id) VALUES
+(1, 1), -- john_doe is an Admin
+(2, 2), -- jane_smith is an Organizer
+(3, 3); -- alice_wonder is a Participant
+
+INSERT INTO categories (name, img) VALUES
+('Music', 'music.jpg'),
+('Technology', 'tech.jpg'),
+('Sports', 'sports.jpg');
+
+INSERT INTO sponsors (name, img) VALUES
+('TechCorp', 'techcorp.jpg'),
+('MusicWorld', 'musicworld.jpg'),
+('Sportify', 'sportify.jpg');
+
+
+INSERT INTO tags (name) VALUES
+('Concert'),
+('Conference'),
+('Workshop'),
+('Marathon');
+
+
+INSERT INTO events (title, description, adresse, image, status, eventMode, price, capacite, lienEvent, startEventAt, endEventAt, sponsor_id, category_id, user_id) VALUES
+('Tech Conference 2023', 'Annual tech conference for developers.', '123 Tech Street, San Francisco', 'tech_conf.jpg', 'accepted', 'presentiel', 100.00, 500, NULL, '2023-12-15', '2023-12-17', 1, 2, 2),
+('Summer Music Festival', 'Enjoy the best music of the year.', '456 Music Avenue, Los Angeles', 'music_fest.jpg', 'pending', 'presentiel', 50.00, 1000, NULL, '2023-07-20', '2023-07-22', 2, 1, 2),
+('City Marathon', 'Run through the city and stay fit.', '789 Sports Road, New York', 'marathon.jpg', 'accepted', 'presentiel', 20.00, 2000, NULL, '2023-09-10', '2023-09-10', 3, 3, 2);
+
+INSERT INTO events_tag (event_id, tag_id) VALUES
+(1, 2), -- Tech Conference is a Conference
+(2, 1), -- Summer Music Festival is a Concert
+(3, 4); -- City Marathon is a Marathon
+
+INSERT INTO notifications (user_id, content, status) VALUES
+(1, 'Your admin account has been created.', 'lu'),
+(2, 'Your event Tech Conference 2023 has been accepted.', 'nonlu'),
+(3, 'Welcome to Eventbrite! Verify your email to get started.', 'nonlu');
+
+INSERT INTO tickets (event_id, user_id) VALUES
+(1, 3), -- alice_wonder bought a ticket for Tech Conference 2023
+(2, 3); -- alice_wonder bought a ticket for Summer Music Festival
+
+INSERT INTO feedback (event_id, user_id, content) VALUES
+(1, 3, 'Great event! Learned a lot about new technologies.'),
+(2, 3, 'Amazing music and atmosphere!');
+
+INSERT INTO orders (participant_id, totalAmount, status, paymentMethod, transaction_id) VALUES
+(3, 100.00, 'paye', 'carte', 'txn_123456'),
+(3, 50.00, 'paye', 'PayPal', 'txn_789012');
+
+
+INSERT INTO orderdetails (order_id, event_id, quantity, unitPrice, subtotal) VALUES
+(1, 1, 1, 100.00, 100.00), -- Order for Tech Conference 2023
+(2, 2, 1, 50.00, 50.00); -- Order for Summer Music Festival
