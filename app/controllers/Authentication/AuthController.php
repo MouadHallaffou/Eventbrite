@@ -5,16 +5,14 @@ namespace App\controllers\Authentication;
 use App\core\view;
 use App\core\Auth;
 
-
-
 class AuthController extends Auth {
 
 
     public function loginView() {
-        View::render('Auth/Login.twig');
+        View::render('Authentication/login.twig');
     }
     public function registerView() {
-        View::render('Auth/register.twig');
+        View::render('Authentication/register.twig');
     }
 
     public function register(){
@@ -22,11 +20,11 @@ class AuthController extends Auth {
         if (isset($_POST['register']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'];
             $userName = $_POST['username'];
-            $bio = $_POST['bio'];
+            $gender = $_POST['gender'];
             $password = $_POST['password'];
-            // $role = $_POST['role'];
-            
-            $result = $this->registerUser($userName, $email, $password, $bio);
+            $avatar = $_POST['avatar'];
+            $role = $_POST['roleId'];
+            $result = $this->registerUser($userName, $email, $password, $avatar ,$gender ,$role);
             return $result;
             if ($result) {
                 View::render('Authentication/login.twig');
@@ -37,6 +35,7 @@ class AuthController extends Auth {
     }
 
     public function login(){
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["login"])) {
 
             $email = $_POST['email'];
@@ -48,8 +47,4 @@ class AuthController extends Auth {
         }
 
     }
-
-
-
-
 }

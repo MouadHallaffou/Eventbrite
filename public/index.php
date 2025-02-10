@@ -5,16 +5,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
+use App\controllers\ParticipantController;
+
 
 
 $router = new Router();
 
+
+
+$router->get('/addEvent', ParticipantController::class, 'affichevent');
 $router->post('/addEvent', EventController::class, 'createEvent');
 
 $router->get('/addEvent', EventController::class, 'displayEventForm');
 $router->get('/addEvent', EventController::class, 'afficheEvents');
-
-
 
 $router->get('/register', AuthController::class, 'registerView');
 $router->get('/login', AuthController::class, 'loginView');

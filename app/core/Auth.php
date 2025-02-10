@@ -4,8 +4,6 @@ namespace App\core;
 use App\models\User;
 use App\config\OrmMethodes;
 
-
-
 class Auth extends User {
 
     public function loginUser($email, $password){
