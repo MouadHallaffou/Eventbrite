@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Événement</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-4 text-center">Modifier un Événement</h2>
+        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <input type="hidden" name="event_id" value="" />
+            <!-- Titre -->
+            <div>
+                <label class="block font-semibold">Titre de l'événement</label>
+                <input type="text" name="title" class="w-full p-2 border rounded-lg" required />
+            </div>
+            <!-- Description -->
+            <div>
+                <label class="block font-semibold">Description</label>
+                <textarea name="description" class="w-full p-2 border rounded-lg" required></textarea>
+            </div>
+            <!-- Image -->
+            <div>
+                <label class="block font-semibold">Image de l'événement</label>
+                <input type="file" name="image" class="w-full p-2 border rounded-lg" accept="image/*" />
+                <img id="eventImagePreview" src="" alt="Image de l'événement" class="mt-2 w-full h-40 object-cover rounded-lg hidden" />
+            </div>
+            <!-- Mode de l'événement -->
+            <div>
+                <label class="block font-semibold">Mode de l'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="eventMode" value="presentiel" class="event-mode" required />
+                        <span>Présentiel</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="eventMode" value="en ligne" class="event-mode" />
+                        <span>En ligne</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Adresse -->
+            <div id="adresseField" class="hidden">
+                <label class="block font-semibold">Adresse</label>
+                <input type="text" name="adresse" class="w-full p-2 border rounded-lg" />
+            </div>
+            <!-- Lien URL -->
+            <div id="lienEventField" class="hidden">
+                <label class="block font-semibold">Lien de l'événement</label>
+                <input type="url" name="lienEvent" class="w-full p-2 border rounded-lg" />
+            </div>
+            <!-- Type d'événement -->
+            <div>
+                <label class="block font-semibold">Type d'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="isPaid" value="gratuit" class="payment-type" required />
+                        <span>Gratuit</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input type="radio" name="isPaid" value="payant" class="payment-type" />
+                        <span>Payant</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Prix -->
+            <div id="priceField" class="hidden">
+                <label class="block font-semibold">Prix (en €)</label>
+                <input type="number" name="price" class="w-full p-2 border rounded-lg" min="0" step="0.01" />
+            </div>
+            <!-- Capacité -->
+            <div>
+                <label class="block font-semibold">Capacité</label>
+                <input type="number" name="capacite" class="w-full p-2 border rounded-lg" min="1" required />
+            </div>
+            <!-- Catégorie -->
+            <div>
+                <label class="block font-semibold">Catégorie</label>
+                <select name="category_id" class="w-full p-2 border rounded-lg" required>
+                    <option value="" disabled>Choisir une catégorie</option>
+                    {% for category in categories %}
+                    <option value="{{ category.category_id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Sponsor (Optionnel) -->
+            <div>
+                <label class="block font-semibold">Sponsor (Optionnel)</label>
+                <select name="sponsor_id" class="w-full p-2 border rounded-lg">
+                    <option value="">Aucun sponsor</option>
+                    {% for sponsor in sponsors %}
+                    <option value="{{ sponsor.sponsor_id }}">{{ sponsor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <!-- Dates -->
+            <div>
+                <label class="block font-semibold">Date de début</label>
+                <input type="date" name="startEventAt" class="w-full p-2 border rounded-lg" required />
+            </div>
+            <div>
+                <label class="block font-semibold">Date de fin</label>
+                <input type="date" name="endEventAt" class="w-full p-2 border rounded-lg" required />
+            </div>
+            <!-- User ID (Organisateur) -->
+            <input type="hidden" name="user_id" value="1" />
+            <!-- Bouton Soumettre -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Modifier
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('id');
+
+            if (eventId) {
+                loadEventData(eventId);
+            } else {
+                console.error("ID de l'événement manquant dans l'URL.");
+            }
+
+            $(".event-mode").change(function() {
+                let selectedMode = $("input[name='eventMode']:checked").val();
+                $("#adresseField").toggle(selectedMode === "presentiel");
+                $("#lienEventField").toggle(selectedMode === "en ligne");
+            });
+
+            $(".payment-type").change(function() {
+                let selectedPayment = $("input[name='isPaid']:checked").val();
+                $("#priceField").toggle(selectedPayment === "payant");
+            });
+
+            $("#eventForm").submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                formData.append("action", "update");
+
+                $.ajax({
+                    url: '/../../../app/controllers/frontOffice/EventController.php',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            alert("Événement mis à jour avec succès.");
+                            window.location.href = "/Event.twig"; 
+                        } else {
+                            alert("Erreur lors de la mise à jour : " + result.error);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur lors de la mise à jour :", error);
+                    }
+                });
+            });
+        });
+
+
+        function loadEventData(eventId) {
+            $.ajax({
+                url: '/../../../app/controllers/frontOffice/EventController.php',
+                type: 'POST',
+                data: { action: 'fetchEvent', id: eventId },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        populateForm(result.data);
+                    } else {
+                        console.error(result.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors du chargement des données :", error);
+                }
+            });
+
+
+            // Charger les catégories et sponsors via AJAX
+            $.ajax({
+                url: "/../../../app/controllers/frontOffice/EventController.php",
+                type: "POST",
+                data: { action: "fetchFormData" },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.categories && result.sponsors) {
+                        // Remplir les options des catégories
+                        let categoryOptions = '<option value="" disabled selected>Choisir une catégorie</option>';
+                        result.categories.forEach(category => {
+                            categoryOptions += `<option value="${category.category_id}">${category.name}</option>`;
+                        });
+                        $("select[name='category_id']").html(categoryOptions);
+
+                        // Remplir les options des sponsors
+                        let sponsorOptions = '<option value="" selected>Aucun sponsor</option>';
+                        result.sponsors.forEach(sponsor => {
+                            sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
+                        });
+                        $("select[name='sponsor_id']").html(sponsorOptions);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors du chargement des données :", error);
+                }
+            });
+
+            function populateForm(event) {
+            $("#event_id'").val(event.event_id);
+            $("input[name='title']").val(event.title);
+            $("textarea[name='description']").val(event.description);
+            $("input[name='eventMode'][value='" + event.eventMode + "']").prop("checked", true);
+            $("input[name='capacite']").val(event.capacite);
+            $("input[name='startEventAt']").val(event.startEventAt.split(' ')[0]);
+            $("input[name='endEventAt']").val(event.endEventAt.split(' ')[0]);
+            $("input[name='adresse']").val(event.adresse || '');
+            $("input[name='lienEvent']").val(event.lienEvent || '');
+            $("input[name='price']").val(event.price || '');
+            $("select[name='category_id']").val(event.category_id);
+            $("select[name='sponsor_id']").val(event.sponsor_id || '');
+
+            if (event.image) {
+                $("#eventImagePreview").attr("src", "/assets/images/" + event.image).removeClass("hidden");
+            }
+
+            if (event.eventMode === "presentiel") {
+                $("#adresseField").removeClass("hidden");
+                $("#lienEventField").addClass("hidden");
+            } else {
+                $("#adresseField").addClass("hidden");
+                $("#lienEventField").removeClass("hidden");
+            }
+
+            if (event.price !== null) {
+                $("#priceField").removeClass("hidden");
+            }
+        }
+
+
+    }
+
+    </script>
+</body>
+</html>

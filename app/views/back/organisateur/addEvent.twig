@@ -10,7 +10,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
         <h2 class="text-2xl font-bold mb-4 text-center">Créer un Nouvel Événement</h2>
-        <form id="eventForm" action="/../../../app/controllers/frontOffice/EventController.php" method="POST" class="space-y-4">
+        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
             <!-- Titre -->
             <div>
                 <label class="block font-semibold">Titre de l'événement</label>
@@ -115,6 +115,7 @@
     </div>
     <script>
         $(document).ready(function() {
+
             // Gestion du mode d'événement (présentiel / en ligne)
             $(".event-mode").change(function() {
                 let selectedMode = $("input[name='eventMode']:checked").val();
@@ -137,42 +138,22 @@
                 }
             });
 
-
-            function showAllEventsAccepted() {
-                $.ajax({
-                    type: "POST",
-                    url: "/../../../app/controllers/frontOffice/EventController.php", 
-                    data: {
-                        action: "view"
-                    },
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            console.log(result);
-                        } else {
-                            console.error(result.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching event:", error);
-                    }
-                });
-            }
-            showAllEventsAccepted();
-
-
             // Soumission du formulaire via AJAX
             $("#eventForm").submit(function(e) {
                 e.preventDefault();
-                var eventData = $(this).serialize() + "&action=insert";
+                var formData = new FormData(this);
+                formData.append("action", "insert");
+
                 $.ajax({
                     url: "/../../../app/controllers/frontOffice/EventController.php",
                     type: "POST",
-                    data: eventData,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(response) {
                         const result = JSON.parse(response);
                         if (result.success) {
-                            window.location.href = result.redirect_url;
+                            window.location.href = result.redirect_url; 
                         } else {
                             console.error(result.error);
                         }
@@ -182,8 +163,36 @@
                     }
                 });
             });
-            
+
+            // Charger les catégories et sponsors via AJAX
+            $.ajax({
+                url: "/../../../app/controllers/frontOffice/EventController.php",
+                type: "POST",
+                data: { action: "fetchFormData" },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.categories && result.sponsors) {
+                        // Remplir les options des catégories
+                        let categoryOptions = '<option value="" disabled selected>Choisir une catégorie</option>';
+                        result.categories.forEach(category => {
+                            categoryOptions += `<option value="${category.category_id}">${category.name}</option>`;
+                        });
+                        $("select[name='category_id']").html(categoryOptions);
+
+                        // Remplir les options des sponsors
+                        let sponsorOptions = '<option value="" selected>Aucun sponsor</option>';
+                        result.sponsors.forEach(sponsor => {
+                            sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
+                        });
+                        $("select[name='sponsor_id']").html(sponsorOptions);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors du chargement des données :", error);
+                }
+            });
+
         });
     </script>
 </body>
-</html>
+</html
