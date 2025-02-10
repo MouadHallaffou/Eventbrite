@@ -87,6 +87,8 @@ CREATE TABLE events_tag (
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
+
 -- TABLE NOTIFICATIONS
 CREATE TABLE notifications (
     notification_id BIGINT AUTO_INCREMENT PRIMARY KEY,
