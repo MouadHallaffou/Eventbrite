@@ -22,9 +22,9 @@ class AuthController extends Auth {
             $userName = $_POST['username'];
             $gender = $_POST['gender'];
             $password = $_POST['password'];
-            $avatar = $_POST['avatar'];
             $role = $_POST['roleId'];
-            $result = $this->registerUser($userName, $email, $password, $avatar ,$gender ,$role);
+            
+            $result = $this->registerUser($userName, $email, $password ,$gender ,$role);
             return $result;
             if ($result) {
                 View::render('Authentication/login.twig');
