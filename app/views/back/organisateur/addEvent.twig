@@ -84,6 +84,15 @@
                     {% endfor %}
                 </select>
             </div>
+            <!-- Tags -->
+            <div>
+                <label class="block font-semibold">Tags</label>
+                <select name="tags[]" class="w-full p-2 border rounded-lg" multiple>
+                    {% for tag in tags %}
+                    <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <!-- Sponsor (Optionnel) -->
             <div>
                 <label class="block font-semibold">Sponsor (Optionnel)</label>
@@ -185,7 +194,20 @@
                             sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
                         });
                         $("select[name='sponsor_id']").html(sponsorOptions);
+
+                        // Remplir les options des tags
+                        let tagOptions = "";
+                        if (result.tags && result.tags.length > 0) {
+                            result.tags.forEach(tag => {
+                                tagOptions += `<option value="${tag.tag_id}">${tag.name}</option>`;
+                            });
+                        } else {
+                            tagOptions = '<option value="" disabled>Aucun tag disponible</option>';
+                        }
+                        $("select[name='tags[]']").html(tagOptions);
+
                     }
+
                 },
                 error: function(xhr, status, error) {
                     console.error("Erreur lors du chargement des données :", error);

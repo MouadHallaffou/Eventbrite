@@ -223,6 +223,65 @@ class Event
     }
 
 
+
+    public function getTagsByEventId(int $eventId): array
+    {
+        $sql = "SELECT t.tag_id, t.name 
+                FROM tags t
+                JOIN events_tag et ON et.tag_id = t.tag_id
+                WHERE et.event_id = :event_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['event_id' => $eventId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private function insertEventTags(int $eventId, array $tagIds): bool
+    {
+        foreach ($tagIds as $tagId) {
+            $sql = "INSERT INTO events_tag (event_id, tag_id) VALUES (:event_id, :tag_id)";
+            $stmt = $this->pdo->prepare($sql);
+            if (!$stmt->execute([
+                ':event_id' => $eventId,
+                ':tag_id' => $tagId,
+            ])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public function addTagsToEvent(int $eventId, array $tagIds): bool
+    {
+        return $this->insertEventTags($eventId, $tagIds);
+    }
+
+
+    public function deleteEventTags(int $eventId): bool
+    {
+        $sql = "DELETE FROM events_tag WHERE event_id = :event_id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute(['event_id' => $eventId]);
+    }
+
+  
+    public function updateEventTags(int $eventId, array $tagIds): bool
+    {
+        // Supprimer les anciens tags
+        $this->deleteEventTags($eventId);
+
+        // Ajouter les nouveaux tags
+        return $this->addTagsToEvent($eventId, $tagIds);
+    }
+
+    public function getAllTags()
+    {
+        $sql = "SELECT tag_id, name FROM tags";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     public function update()
     {
         $sql = "UPDATE events 
@@ -265,7 +324,7 @@ class Event
     {
         $sql = "SELECT e.event_id, u.user_id, u.username, c.name AS category_name, c.img AS category_img, 
                 s.name AS sponsor_name, s.img AS sponsor_img, e.eventMode, e.title, e.description, 
-                e.price, e.endEventAt, e.image, c.category_id, e.createdAt, s.sponsor_id 
+                e.price, e.endEventAt, e.image As image,e.adresse, c.category_id, e.createdAt, s.sponsor_id 
                 FROM events e
                 LEFT JOIN users u ON u.user_id = e.user_id
                 LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
@@ -286,11 +345,26 @@ class Event
     }
 
 
-    public function delete($event_id)
+    public function delete($event_id): bool
     {
-        $sql = "DELETE FROM events WHERE event_id = :event_id";
+        try {
+            $sql = "DELETE FROM events WHERE event_id = :event_id";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':event_id' => $event_id]);
+            return $stmt->rowCount() > 0;
+        } catch (\Exception $e) {
+            throw new \Exception("Erreur lors de la suppression de l'événement : " . $e->getMessage());
+        }
+    }
+
+
+
+    public function getEventById($event_id)
+    {
+        $sql = "SELECT * FROM events WHERE event_id = :event_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':event_id' => $event_id]);
-        return $stmt->rowCount();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
 }

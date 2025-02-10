@@ -18,71 +18,130 @@
     </div>
 
     <script>
-        $(document).ready(function() {
 
-            loadEvents();
-
-            //charger les événements via AJAX
-            function loadEvents() {
-                $.ajax({
-                    url: '/../../../app/controllers/frontOffice/EventController.php',
-                    type: 'POST',
-                    data: { action: 'view' },
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            const events = result.data;
-                            let eventsHtml = '';
-                            events.forEach(event => {
-                                eventsHtml += `
-                                    <div id="event-${event.event_id}" class="event bg-white shadow-lg rounded-lg p-4">
-                                        <img src="/public/assets/images/${event.image}" alt="Image de l'événement" class="w-full h-40 object-cover rounded-t-lg">
-                                        <h2 class="text-2xl font-semibold mt-2">${event.title}</h2>
-                                        <p class="text-gray-700">${event.description}</p>
-                                        <p class="text-lg font-medium mt-2">Date de fin : ${new Date(event.endEventAt).toLocaleDateString()}</p>
-                                        <p><strong>Adresse :</strong> ${event.adresse || ' '}</p>
-                                        <p><strong>Capacité :</strong> ${event.capacite} personnes</p>
-                                        <p><strong>Prix :</strong> ${event.price !== null ? event.price + ' €' : 'Gratuit'}</p>
-                                        <p><strong>Mode :</strong> ${event.eventMode}</p>
-                                        <div class="mt-4">
-                                            <a href="editEvent.twig?id=${event.event_id}" class="editBtn inline-block bg-yellow-500 text-white rounded-lg p-2 hover:bg-yellow-600">Éditer</a>
-                                            <button onclick="confirmDelete(${event.event_id})" class="inline-block bg-red-500 text-white rounded-lg p-2 hover:bg-red-600">Supprimer</button>
-                                            <button onclick="cancelEvent(${event.event_id})" class="inline-block bg-blue-500 text-white rounded-lg p-2 hover:bg-blue-600">Annuler</button>
-                                        </div>
-                                    </div>
-                                `;
-                            });
-                            $('#eventsContainer').html(eventsHtml);
-                        } else {
-                            console.error(result.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors du chargement des événements :", error);
-                    }
-                });
+    // Charger les événements via AJAX
+    function loadEvents() {
+        $.ajax({
+            url: '/../../../app/controllers/frontOffice/EventController.php',
+            type: 'POST',
+            data: { action: 'view' },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    const events = result.data;
+                    let eventsHtml = '';
+                    events.forEach(event => {
+                        eventsHtml += `
+                            <div id="event-${event.event_id}" class="event bg-white shadow-lg rounded-lg p-4">
+                                <img src="/public/assets/images/${event.image}" alt="Image de l'événement" class="w-full h-40 object-cover rounded-t-lg">
+                                <h2 class="text-2xl font-semibold mt-2">${event.title}</h2>
+                                <p class="text-gray-700">${event.description}</p>
+                                <p class="text-lg font-medium mt-2">Date de fin : ${new Date(event.endEventAt).toLocaleDateString()}</p>
+                                <p><strong>Adresse :</strong> ${event.adresse || 'N/A'}</p>
+                                <p><strong>Capacité :</strong> ${event.capacite} personnes</p>
+                                <p><strong>Prix :</strong> ${event.price !== null ? event.price + ' €' : 'Gratuit'}</p>
+                                <p><strong>Mode :</strong> ${event.eventMode}</p>
+                                <div class="mt-4">
+                                    <a href="editEvent.twig?id=${event.event_id}" class="editBtn inline-block bg-yellow-500 text-white rounded-lg p-2 hover:bg-yellow-600">Éditer</a>
+                                    <a href="?id=${event.event_id}" onclick="confirmDelete(${event.event_id})" class="inline-block bg-red-500 text-white rounded-lg p-2 hover:bg-red-600">Supprimer</a>
+                                    <a href="" onclick="cancelEvent(${event.event_id})" class="inline-block bg-blue-500 text-white rounded-lg p-2 hover:bg-blue-600">Annuler</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $('#eventsContainer').html(eventsHtml);
+                } else {
+                    console.error(result.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors du chargement des événements :", error);
             }
-
-            function update() {
-                $("body").on("click", ".editBtn", function(e){
-                    e.preventDefault();
-
-                    var id = $("event_id").attr('id');
-
-                    $.ajax({
-                        url: "/../../app/controllers/frontOffice/EventController.php",
-                        type: "POST",
-                        data: {id: id},
-
-                        success: function(response){
-                            
-                        }
-                    })
-                })
-            }
-
-            
         });
-    </script>
+    }
+
+// Confirmer la suppression d'un événement
+function confirmDelete(eventId) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
+        $.ajax({
+            url: '/../../../app/controllers/frontOffice/EventController.php',
+            type: 'POST',
+            data: { action: 'delete', id: eventId },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    // Supprimer l'événement de l'interface utilisateur
+                    $(`#event-${eventId}`).remove();
+                    alert("Événement supprimé avec succès.");
+                } else {
+                    alert("Erreur lors de la suppression : " + result.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de la suppression :", error);
+            }
+        });
+    }
+}
+
+// Annuler un événement
+function cancelEvent(eventId) {
+    if (confirm("Êtes-vous sûr de vouloir annuler cet événement ?")) {
+        $.ajax({
+            url: '/../../../app/controllers/frontOffice/EventController.php',
+            type: 'POST',
+            data: { action: 'annuledEvent', id: eventId },
+            success: function(response) {
+                const result = JSON.parse(response);
+                if (result.success) {
+                    alert("Événement annulé avec succès.");
+                    loadEvents(); // Recharger la liste des événements
+                } else {
+                    alert("Erreur lors de l'annulation : " + result.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur lors de l'annulation :", error);
+            }
+        });
+    }
+}
+
+// Charger les événements au démarrage
+$(document).ready(function() {
+    loadEvents();
+});
+
+    // supprimer un événement
+    function confirmDelete(eventId) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet événement ?")) {
+        $.ajax({
+            url: '/../../../app/controllers/frontOffice/EventController.php',
+            type: 'POST',
+            data: { action: 'delete', id: eventId },
+            success: function(response) {
+                try {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        console.log("Événement supprimé avec succès");
+                        $("#event-" + eventId).fadeOut(300, function () {
+                            $(this).remove();
+                        });
+                    } else {
+                        console.error("Erreur :", result.error);
+                    }
+                } catch (error) {
+                    console.error("Erreur de parsing JSON :", error, "Réponse reçue :", response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Erreur AJAX :", xhr.responseText);
+            }
+        });
+    }
+}
+
+</script>
+
 </body>
 </html>

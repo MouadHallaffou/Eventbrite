@@ -16,7 +16,9 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     avatar VARCHAR(255) DEFAULT NULL, 
-    gender ENUM('homme', 'femme') DEFAULT NULL,
+    gender ENUM('homme', 'femme') NOT NULL,
+    STATUS ENUM('banned','accepted') NOT NULL DEFAULT 'accepted',
+    is_verified ENUM('yes','no') NOT NULL DEFAULT 'no',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -52,24 +54,16 @@ CREATE TABLE tags (
     PRIMARY KEY (tag_id)
 );
 
--- TABLE EVENTS_TAGS
-CREATE TABLE events_tag (
-    event_id BIGINT UNSIGNED NOT NULL,
-    tag_id BIGINT UNSIGNED NOT NULL,
-    PRIMARY KEY (event_id, tag_id),
-    FOREIGN KEY (event_id) REFERENCES courses(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 -- TABLE EVENTS
 CREATE TABLE events (
     event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    adresse TEXT NOT NULL,
+    adresse TEXT DEFAULT NULL,
     image VARCHAR(255) DEFAULT NULL,
     status ENUM('pending', 'refused', 'accepted') NOT NULL DEFAULT 'pending',
-    eventMode ENUM('en ligne', 'presentiel') NOT NULL,
+    eventMode ENUM('enligne', 'presentiel') NOT NULL,
     price FLOAT DEFAULT NULL CHECK (price >= 0),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     situation ENUM('completed', 'annulled', 'encours') NOT NULL DEFAULT 'encours',
@@ -83,6 +77,15 @@ CREATE TABLE events (
     FOREIGN KEY (sponsor_id) REFERENCES sponsors(sponsor_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- TABLE events_TAGS
+CREATE TABLE events_tag (
+    event_id BIGINT NOT NULL,
+    tag_id BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (event_id, tag_id),
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- TABLE NOTIFICATIONS
@@ -146,4 +149,4 @@ CREATE INDEX idx_username ON users(username);
 CREATE INDEX idx_email ON users(email);
 CREATE INDEX idx_event_title ON events(title);
 CREATE INDEX idx_event_status ON events(status);
-CREATE INDEX idx_order_status ON orders(status);
+CREATE INDEX idx_order_status ON orders(STATUS);
