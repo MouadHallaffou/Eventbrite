@@ -1,5 +1,5 @@
-
 $(document).ready(function() {
+
     // Gestion du mode d'événement (présentiel / en ligne)
     $(".event-mode").change(function() {
         let selectedMode = $("input[name='eventMode']:checked").val();
@@ -37,7 +37,7 @@ $(document).ready(function() {
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
-                    window.location.href = result.redirect_url;
+                    window.location.href = result.redirect_url; 
                 } else {
                     console.error(result.error);
                 }
@@ -69,12 +69,24 @@ $(document).ready(function() {
                     sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
                 });
                 $("select[name='sponsor_id']").html(sponsorOptions);
+
+                // Remplir les options des tags
+                let tagOptions = "";
+                if (result.tags && result.tags.length > 0) {
+                    result.tags.forEach(tag => {
+                        tagOptions += `<option value="${tag.tag_id}">${tag.name}</option>`;
+                    });
+                } else {
+                    tagOptions = '<option value="" disabled>Aucun tag disponible</option>';
+                }
+                $("select[name='tags[]']").html(tagOptions);
+
             }
+
         },
         error: function(xhr, status, error) {
             console.error("Erreur lors du chargement des données :", error);
         }
     });
-});
 
-    // <script src="../../../../public/assets/js/script.js"></script> 
+});
