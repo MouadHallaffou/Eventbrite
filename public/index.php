@@ -7,7 +7,8 @@ use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
-use App\controllers\backsOffice\DashboardController;
+use App\controllers\backsOffice\AdminController;
+use App\core\Session;
 
 
 use Twig\Environment;
@@ -16,9 +17,13 @@ use Twig\Loader\FilesystemLoader;
 
 
 $router = new Router();
+Session::checkSession();
 
+$router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
-$router->get('/', EventController::class, 'showEvents');
+
+$router->get('/dashboard', AdminController::class, 'index');
+
 
 
 

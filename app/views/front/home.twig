@@ -4,87 +4,13 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Home</title>
-		<link
-		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-		 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-		{# <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> #}
-		 <script src="https://cdn.tailwindcss.com"></script>
-		 <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="../../../public/assets/styles/home.css"> 
-        <style>
-			.carousel-container {
-				perspective: 1000px;
-				touch-action: pan-y pinch-zoom;
-			}
-			
-			.carousel-track {
-				transform-style: preserve-3d;
-				transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-			}
-			
-			.carousel-item {
-				backface-visibility: hidden;
-				transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-			}
-			
-			.carousel-item.active {
-				opacity: 1;
-				transform: scale(1) translateZ(0);
-			}
-			
-			@media(max-width: 640px) {
-				.carousel-item.prev {
-					opacity: 0;
-					transform: scale(0.8) translateX(-50%) translateZ(-100px);
-				}
-			
-				.carousel-item.next {
-					opacity: 0;
-					transform: scale(0.8) translateX(50%) translateZ(-100px);
-				}
-			}
-			
-			@media(min-width: 641px) {
-				.carousel-item.prev {
-					opacity: 0.7;
-					transform: scale(0.9) translateX(-100%) translateZ(-100px);
-				}
-			
-				.carousel-item.next {
-					opacity: 0.7;
-					transform: scale(0.9) translateX(100%) translateZ(-100px);
-				}
-			}
-			
-			.carousel-item.hidden {
-				opacity: 0;
-				transform: scale(0.8) translateZ(-200px);
-			}
-			
-			.nav-button {
-				transition: all 0.3s;
-				background: rgba(255, 255, 255, 0.1);
-				backdrop-filter: blur(8px);
-				-webkit-backdrop-filter: blur(8px);
-			}
-			
-			@media(hover: hover) {
-				.nav-button:hover {
-					background: rgba(255, 255, 255, 0.2);
-					transform: scale(1.1);
-				}
-			}
-			
-			.nav-button:active {
-				transform: scale(0.95);
-			}
-			
-			.progress-bar {
-				transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-			}   
-
-        </style>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="/assets/styles/home.css"> 
+        
 	</head>
 			
 	<body class="bg-white min-h-screen flex-col items-center justify-center">
@@ -156,13 +82,13 @@
 											{% if session.role is defined %}
 												{% if session.role == 'Admin' %}
 													<li>
-														<a href="app/views/Admin/dashboard/dashboard.php" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+														<a href="/dashboard" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
 															Dashboard
 														</a>
 													</li>
 												{% elseif session.role == 'Teacher' %}
 													<li>
-														<a href="app/views/Teacher/teacher.php" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+														<a href="/organisateur" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
 															Dashboard
 														</a>
 													</li>
