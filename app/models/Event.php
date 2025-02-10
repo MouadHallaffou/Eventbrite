@@ -1,12 +1,16 @@
 <?php
+
 namespace App\Models;
 
 use PDO;
 use DateTime;
 
-class Event {
-    private ?int $id = null;
+class Event
+{
+    private ?int $event_id = null;
+    private ?int $user_id;
     private string $title;
+    private ?string $image = null;
     private string $description;
     private ?string $adresse = null;
     private string $eventMode;
@@ -25,154 +29,261 @@ class Event {
     {
         $this->pdo = $conn;
         $this->createdAt = new DateTime();
+        $this->situation = 'encours';
     }
 
     // Getters et Setters
-
-    public function getId(): ?int {
-        return $this->id;
+    public function getId(): ?int
+    {
+        return $this->event_id;
     }
 
-    public function getTitle(): string {
+    public function getTitle(): string
+    {
         return $this->title;
     }
 
-    public function setTitle(string $title): void {
+    public function setTitle(string $title): void
+    {
         $this->title = $title;
     }
 
-    public function getDescription(): string {
+    public function getDescription(): string
+    {
         return $this->description;
     }
 
-    public function setDescription(string $description): void {
+    // Getter
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    // Setter
+    public function setImage(?string $image): void
+    {
+        $this->image = $image;
+    }
+
+    public function setDescription(string $description): void
+    {
         $this->description = $description;
     }
 
-    public function getAdresse(): ?string {
+    public function getAdresse(): ?string
+    {
         return $this->adresse;
     }
 
-    public function setAdresse(?string $adresse): void {
+    public function setAdresse(?string $adresse): void
+    {
         $this->adresse = $adresse;
     }
 
-    public function getEventMode(): string {
+    public function getEventMode(): string
+    {
         return $this->eventMode;
     }
 
-    public function setEventMode(string $eventMode): void {
+    public function setEventMode(string $eventMode): void
+    {
         $this->eventMode = $eventMode;
     }
 
-    public function getPrice(): ?float {
+    public function getPrice(): ?float
+    {
         return $this->price;
     }
 
-    public function setPrice(?float $price): void {
+    public function setPrice(?float $price): void
+    {
         $this->price = $price;
     }
 
-    public function getCreatedAt(): DateTime {
+    public function getCreatedAt(): DateTime
+    {
         return $this->createdAt;
     }
 
-    public function getSituation(): string {
+    public function getSituation(): string
+    {
         return $this->situation;
     }
 
-    public function setSituation(string $situation): void {
+    public function setSituation(string $situation): void
+    {
         $this->situation = $situation;
     }
 
-    public function getCapacite(): int {
+    public function getCapacite(): int
+    {
         return $this->capacite;
     }
 
-    public function setCapacite(int $capacite): void {
+    public function setCapacite(int $capacite): void
+    {
         $this->capacite = $capacite;
     }
 
-    public function getLienEvent(): ?string {
+    public function getLienEvent(): ?string
+    {
         return $this->lienEvent;
     }
 
-    public function setLienEvent(?string $lienEvent): void {
+    public function setLienEvent(?string $lienEvent): void
+    {
         $this->lienEvent = $lienEvent;
     }
 
-    public function getStartEventAt(): DateTime {
+    public function getStartEventAt(): DateTime
+    {
         return $this->startEventAt;
     }
 
-    public function setStartEventAt(DateTime $startEventAt): void {
+    public function setStartEventAt(DateTime $startEventAt): void
+    {
         $this->startEventAt = $startEventAt;
     }
 
-    public function getEndEventAt(): DateTime {
+    public function getEndEventAt(): DateTime
+    {
         return $this->endEventAt;
     }
 
-    public function setEndEventAt(DateTime $endEventAt): void {
+    public function setEndEventAt(DateTime $endEventAt): void
+    {
         $this->endEventAt = $endEventAt;
     }
 
-    public function getSponsorId(): ?int {
+    public function getSponsorId(): ?int
+    {
         return $this->sponsor_id;
     }
 
-    public function setSponsorId(?int $sponsor_id): void {
+    public function setSponsorId(?int $sponsor_id): void
+    {
         $this->sponsor_id = $sponsor_id;
     }
 
-    public function getCategoryId(): ?int {
+    public function getCategoryId(): ?int
+    {
         return $this->category_id;
     }
 
-    public function setCategoryId(?int $category_id): void {
+    public function setCategoryId(?int $category_id): void
+    {
         $this->category_id = $category_id;
     }
 
-    // Méthode d'insertion d'un événement
-    public function insert(){
-        $sql = "INSERT INTO events 
-                (title, description, adresse, eventMode, price, createdAt, situation, capacite, lienEvent, startEventAt, endEventAt, sponsor_id, category_id) 
-                VALUES 
-                (:title, :description, :adresse, :eventMode, :price, NOW(), :situation, :capacite, :lienEvent, :startEventAt, :endEventAt, :sponsor_id, :category_id)";
-        
-        $stmt = $this->pdo->prepare($sql);
+    public function setUserId(?int $user_id)
+    {
+        $this->user_id = $user_id;
+    }
 
+    public function setEventId(?int $event_id)
+    {
+        $this->event_id = $event_id;
+    }
+
+
+    public function insert()
+    {
+        $sql = "INSERT INTO events 
+                (title, description,image, adresse, eventMode, price, createdAt, situation, capacite, lienEvent, startEventAt, endEventAt, sponsor_id, category_id, user_id) 
+                VALUES 
+                (:title, :description, :image, :adresse, :eventMode, :price, NOW(), :situation, :capacite, :lienEvent, :startEventAt, :endEventAt, :sponsor_id, :category_id, :user_id)";
+
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':title' => $this->title,
+            ':image' => $this->image,
             ':description' => $this->description,
             ':adresse' => $this->adresse,
             ':eventMode' => $this->eventMode,
-            ':price' => $this->price ?? null,
+            ':price' => $this->price,
             ':situation' => $this->situation,
             ':capacite' => $this->capacite,
             ':lienEvent' => $this->lienEvent,
             ':startEventAt' => $this->startEventAt->format('Y-m-d'),
             ':endEventAt' => $this->endEventAt->format('Y-m-d'),
             ':sponsor_id' => $this->sponsor_id,
-            ':category_id' => $this->category_id
+            ':category_id' => $this->category_id,
+            'user_id' => $this->user_id
         ]);
-
         return $this->pdo->lastInsertId();
     }
 
-    
-    public function fetchCategoriesAndSponsors(){
-        // Récupérer les catégories
-        $stmtCategories = $this->pdo->query("SELECT id, name FROM categories");
-        $categories = $stmtCategories->fetchAll(PDO::FETCH_ASSOC);
+    public function fetchCategories()
+    {
+        $stmtCategories = $this->pdo->query("SELECT category_id, name FROM categories;");
+        return ['category' => $stmtCategories->fetchAll(PDO::FETCH_ASSOC)];
+    }
 
-        // Récupérer les sponsors
-        $stmtSponsors = $this->pdo->query("SELECT id, name FROM sponsors");
-        $sponsors = $stmtSponsors->fetchAll(PDO::FETCH_ASSOC);
+    public function fetchSponsors()
+    {
+        $stmtSponsors = $this->pdo->query("SELECT sponsor_id, name FROM sponsors;");
+        return ['sponsor' => $stmtSponsors->fetchAll(PDO::FETCH_ASSOC)];
+    }
 
-        return [
-            'categories' => $categories,
-            'sponsors' => $sponsors
-        ];
+
+    public function update()
+    {
+        $sql = "UPDATE events 
+                SET title = :title, 
+                    description = :description, 
+                    adresse = :adresse, 
+                    eventMode = :eventMode, 
+                    price = :price, 
+                    situation = :situation, 
+                    capacite = :capacite, 
+                    lienEvent = :lienEvent, 
+                    startEventAt = :startEventAt, 
+                    endEventAt = :endEventAt, 
+                    sponsor_id = :sponsor_id, 
+                    category_id = :category_id,
+                    image = :image 
+                WHERE id = :id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':title' => $this->title,
+            ':description' => $this->description,
+            ':adresse' => $this->adresse,
+            ':eventMode' => $this->eventMode,
+            ':price' => $this->price,
+            ':situation' => $this->situation,
+            ':capacite' => $this->capacite,
+            ':lienEvent' => $this->lienEvent,
+            ':startEventAt' => $this->startEventAt->format('Y-m-d H:i:s'),
+            ':endEventAt' => $this->endEventAt->format('Y-m-d H:i:s'),
+            ':sponsor_id' => $this->sponsor_id,
+            ':category_id' => $this->category_id,
+            ':image' => $this->image,
+            ':id' => $this->event_id
+        ]);
+    }
+
+    public function displayAll()
+    {
+        $sql = "select e.event_id,u.user_id,u.username, c.name,c.img,s.name,s.img, 
+                e.eventMode, e.title, e.description,e.price,e.endEventAt, e.image, 
+                c.category_id, e.createdAt, s.sponsor_id from events e
+                left join users u on u.user_id = e.user_id
+                left join sponsors s on s.sponsor_id = e.sponsor_id
+                left join categories c on c.category_id = e.category_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function delete($event_id)
+    {
+        $sql = "DELETE FROM events where evet_id = :event_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(["event_id" => $event_id]);
+
+        return $stmt->rowCount();
     }
 }

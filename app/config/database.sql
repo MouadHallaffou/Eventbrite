@@ -55,7 +55,6 @@ CREATE TABLE tags (
 );
 
 
--- TABLE events
 CREATE TABLE events (
     event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
