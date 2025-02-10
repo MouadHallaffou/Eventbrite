@@ -53,13 +53,11 @@ class Event
         return $this->description;
     }
 
-    // Getter
     public function getImage(): ?string
     {
         return $this->image;
     }
 
-    // Setter
     public function setImage(?string $image): void
     {
         $this->image = $image;
@@ -185,19 +183,18 @@ class Event
         $this->event_id = $event_id;
     }
 
-
+    
     public function insert()
     {
-        $sql = "INSERT INTO events 
-                (title, description,image, adresse, eventMode, price, createdAt, situation, capacite, lienEvent, startEventAt, endEventAt, sponsor_id, category_id, user_id) 
-                VALUES 
-                (:title, :description, :image, :adresse, :eventMode, :price, NOW(), :situation, :capacite, :lienEvent, :startEventAt, :endEventAt, :sponsor_id, :category_id, :user_id)";
+        $sql = "INSERT INTO events (title, description, image, adresse, eventMode, price, createdAt, situation, capacite, lienEvent, 
+                startEventAt, endEventAt, sponsor_id, category_id, user_id) VALUES (:title, :description, :image, :adresse, :eventMode, 
+                :price, NOW(), :situation, :capacite, :lienEvent, :startEventAt, :endEventAt, :sponsor_id, :category_id, :user_id)";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':title' => $this->title,
-            ':image' => $this->image,
             ':description' => $this->description,
+            ':image' => $this->image,
             ':adresse' => $this->adresse,
             ':eventMode' => $this->eventMode,
             ':price' => $this->price,
@@ -208,7 +205,7 @@ class Event
             ':endEventAt' => $this->endEventAt->format('Y-m-d'),
             ':sponsor_id' => $this->sponsor_id,
             ':category_id' => $this->category_id,
-            'user_id' => $this->user_id
+            ':user_id' => $this->user_id
         ]);
         return $this->pdo->lastInsertId();
     }
@@ -242,7 +239,7 @@ class Event
                     sponsor_id = :sponsor_id, 
                     category_id = :category_id,
                     image = :image 
-                WHERE id = :id";
+                    WHERE event_id = :event_id";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -259,20 +256,31 @@ class Event
             ':sponsor_id' => $this->sponsor_id,
             ':category_id' => $this->category_id,
             ':image' => $this->image,
-            ':id' => $this->event_id
+            ':event_id' => $this->event_id
         ]);
     }
 
-    public function displayAll()
+
+    public function displayAll($eventId = null)
     {
-        $sql = "select e.event_id,u.user_id,u.username, c.name,c.img,s.name,s.img, 
-                e.eventMode, e.title, e.description,e.price,e.endEventAt, e.image, 
-                c.category_id, e.createdAt, s.sponsor_id from events e
-                left join users u on u.user_id = e.user_id
-                left join sponsors s on s.sponsor_id = e.sponsor_id
-                left join categories c on c.category_id = e.category_id";
+        $sql = "SELECT e.event_id, u.user_id, u.username, c.name AS category_name, c.img AS category_img, 
+                s.name AS sponsor_name, s.img AS sponsor_img, e.eventMode, e.title, e.description, 
+                e.price, e.endEventAt, e.image, c.category_id, e.createdAt, s.sponsor_id 
+                FROM events e
+                LEFT JOIN users u ON u.user_id = e.user_id
+                LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
+                LEFT JOIN categories c ON c.category_id = e.category_id";
+
+        if ($eventId) {
+            $sql .= " WHERE e.event_id = :event_id";
+        }
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
+        if ($eventId) {
+            $stmt->execute([':event_id' => $eventId]);
+        } else {
+            $stmt->execute();
+        }
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -280,10 +288,9 @@ class Event
 
     public function delete($event_id)
     {
-        $sql = "DELETE FROM events where evet_id = :event_id";
+        $sql = "DELETE FROM events WHERE event_id = :event_id";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(["event_id" => $event_id]);
-
+        $stmt->execute([':event_id' => $event_id]);
         return $stmt->rowCount();
     }
 }
