@@ -13,17 +13,18 @@ protected $email;
 protected $password;
 protected $avatar;
 protected $gender;
-protected $role;
+protected $status;
 
 
-// public function __construct($username,$email,$password,$bio,$profile_picture,$role Role){
+
+// public function __construct($username,$email,$password,$gender,$avatar,$status){
 
 // $this->username = $username;
 // $this->email = $email;
 // $this->password = $password;
-// $this->bio = $bio;
-// $this->profile_picture = $profile_picture;
-// $this->role = $role;
+// $this->gender = $gender;
+// $this->avatar = $avatar;
+// $this->status = $status;
 
 // }
 
@@ -39,13 +40,14 @@ public function setPassword($password){
 
     $this->password = $password;
 }
-public function setBio($bio){
+public function setGender($gender){
 
-    $this->bio = $bio;
+    $this->gender = $gender;
 }
-public function setRole($role){
 
-    $this->role = $role;
+public function setStatus($status){
+
+    $this->status = $status;
 }
 
 public function getUsername(){
@@ -56,17 +58,21 @@ public function getEmail(){
 
     return $this->email;
 }
-public function getbio(){
+public function getGender(){
 
-    return $this->bio;
+    return $this->gender;
 }
 public function getPassword(){
 
     return $this->password;
 }
-public function getRole(){
+public function getAvatar(){
 
-    return $this->role;
+    return $this->avatar;
+}
+public function getStatus(){
+
+    return $this->status;
 }
 
 // |---------------------- AddUser -----------------|
@@ -95,6 +101,7 @@ public static function AddUser($columns, $values ,$roleId)
 
 }
 public static function AddRoleUser($lastid, $roleId){
+
     $conn = Database::getInstanse()->getConnection();
     try {
             if (!empty($roleId)) {
@@ -121,6 +128,32 @@ public static function findByEmail($email){
   $stmt->execute();
   return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+public function getAllUsers(){
+
+}
+
+
+public static function getData(){
+
+    $conn = Database::getInstanse()->getConnection();
+
+    $query = "SELECT * FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
+     roles r ON  r.role_id = ur.role_id WHERE r.name_role = Organizer ";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $users = $stmt->fetchAll();
+    return $users;
+   }
+
+
+
+
+
+
+
+
+
 
 
 }

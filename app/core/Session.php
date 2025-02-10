@@ -5,7 +5,7 @@ namespace App\core;
 class Session{
 
 
-    public function checkSession(){
+    public static function checkSession(){
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
