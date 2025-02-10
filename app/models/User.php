@@ -99,30 +99,22 @@ public static function findByEmail($email){
   return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-
-
-
-
-
 //addParticipant --
-public static function addParticipant($username, $email, $password, $avatar = null, $gender = null) {
-    $password_hash = password_hash($password, PASSWORD_BCRYPT);
-    $columns = 'username, email, password, avatar, gender';
-    $values = [$username, $email, $password_hash, $avatar, $gender];
 
-    $success = self::addUser($columns, $values);
+// public static function  addParticipant($username, $email, $password, $avatar = null, $gender = null)
+// {
+//     $connection = Database::getInstanse()->getConnection();
+//     $password_hash = password_hash($password, PASSWORD_BCRYPT);
+//     $X = "insert into users (username, email, password, avatar, gender) values(?, ?, ?, ?, ?)";
+//     $y = $connection->prepare($X);
+//     $res =  $y->execute([$username, $email, $password_hash, $avatar, $gender]);
+//     if ($res) {
+//         $user_id = $connection->lastInsertId();
+//         $role_sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, (SELECT role_id FROM roles WHERE name_role = 'Participant'))";
+//         $role_stmt = $connection->prepare($role_sql);
+//         return $role_stmt->execute([$user_id]);
+//     }
 
-    if ($success) {
-        $conn = Database::getInstanse()->getConnection();
-        $user_id = $conn->lastInsertId();
-
-        $role_sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, (SELECT role_id FROM roles WHERE name_role = 'Participant'))";
-        $role_stmt = $conn->prepare($role_sql);
-        return $role_stmt->execute([$user_id]);
-    }
-
-    return false;
-}
-
-
+//     return false;
+// }
 }
