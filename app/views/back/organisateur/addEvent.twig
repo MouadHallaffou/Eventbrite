@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Événements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img src="{{ user.profile_image }}" alt="Photo de {{ user.name }}" class="w-12 h-12 rounded-full">
+            <span class="text-lg font-semibold">{{ user.name }}</span>
+        </div>
+        <div class="space-x-4">
+            <a href="" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                Déconnexion
+            </a>
+            <button onclick="openModal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                Créer un Événement
+            </button>
+        </div>
+    </header>
+
+    <!-- Section affichant tous les événements -->
+    <main class="p-6">
+        <h1 class="text-3xl font-bold mb-6">Tous les Événements</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for event in events %}
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <img src="{{ '/assets/images/' ~ event.image }}" alt="{{ event.title }}" class="w-full h-40 object-cover rounded-lg">
+                    <h2 class="text-xl font-bold mt-4">{{ event.title }}</h2>
+                    <p class="text-gray-600 mt-2">{{ event.description | slice(0, 100) ~ '...' }}</p>
+                    <span class="block mt-2 text-sm text-gray-500">
+                        📅 {{ event.startEventAt | date('d/m/Y') }} - {{ event.endEventAt | date('d/m/Y') }}
+                    </span>
+                    <span class="block text-sm mt-1 {{ event.status == 'accepted' ? 'text-green-600' : event.status == 'pending' ? 'text-yellow-600' : 'text-red-600' }}">
+                        {{ event.status | capitalize }}
+                    </span>
+                    
+                    <div class="mt-4 flex justify-between">
+                        <a href="/edit-event/{{ event.event_id }}" class="text-blue-500 font-semibold">
+                            ✏️ Modifier
+                        </a>
+                         <!-- Bouton de suppression -->
+                        <button
+                            onclick="deleteEvent({{ event.event_id }})"
+                            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 mt-2">
+                            🗑️ Supprimer
+                        </button>
+                    </div>
+
+                </div>
+            {% else %}
+                <p>Aucun événement disponible.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+<!-- Modal pour créer un événement -->
+<div id="eventModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <h2 class="text-2xl font-bold mb-6 text-center">Créer un Nouvel Événement</h2>
+        
+        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <!-- Titre -->
+            <div>
+                <label class="block font-semibold mb-2">Titre de l'événement</label>
+                <input
+                    type="text"
+                    name="title"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le titre"
+                    required>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block font-semibold mb-2">Description</label>
+                <textarea
+                    name="description"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Décrivez l'événement"
+                    required></textarea>
+            </div>
+
+            <!-- Image -->
+            <div>
+                <label class="block font-semibold mb-2">Image de l'événement</label>
+                <input
+                    type="file"
+                    name="image"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*"
+                    required>
+            </div>
+
+            <!-- Mode de l'événement -->
+            <div>
+                <label class="block font-semibold mb-2">Mode de l'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="presentiel"
+                            class="event-mode"
+                            onclick="toggleEventMode()"
+                            required>
+                        <span>Présentiel</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="enligne"
+                            class="event-mode"
+                            onclick="toggleEventMode()">
+                        <span>En ligne</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Adresse (conditionnelle) -->
+            <div id="adresseField" class="hidden">
+                <label class="block font-semibold mb-2">Adresse</label>
+                <input
+                    type="text"
+                    name="adresse"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="123 Rue 10 casa maroc">
+            </div>
+
+            <!-- Lien URL (conditionnelle) -->
+            <div id="lienEventField" class="hidden">
+                <label class="block font-semibold mb-2">Lien de l'événement</label>
+                <input
+                    type="url"
+                    name="lienEvent"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ex: https://zoom.com/event">
+            </div>
+
+            <!-- Type d'événement -->
+            <div>
+                <label class="block font-semibold mb-2">Type d'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="gratuit"
+                            class="payment-type"
+                            onclick="togglePaymentType()"
+                            required>
+                        <span>Gratuit</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="payant"
+                            class="payment-type"
+                            onclick="togglePaymentType()">
+                        <span>Payant</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Prix (conditionnelle) -->
+            <div id="priceField" class="hidden">
+                <label class="block font-semibold mb-2">Prix (en €)</label>
+                <input
+                    type="number"
+                    name="price"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="0"
+                    step="0.01"
+                    placeholder="Entrez le prix">
+            </div>
+
+            <!-- Capacité -->
+            <div>
+                <label class="block font-semibold mb-2">Capacité</label>
+                <input
+                    type="number"
+                    name="capacite"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="1"
+                    placeholder="Nombre maximum de participants"
+                    required>
+            </div>
+
+            <!-- Catégorie -->
+            <div>
+                <label class="block font-semibold mb-2">Catégorie</label>
+                <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                    <option value="" disabled selected>Choisir une catégorie</option>
+                    {% for category in categories %}
+                    <option value="{{ category.category_id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tags -->
+            <div>
+                <label class="block font-semibold mb-2">Tags</label>
+                <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" multiple>
+                    {% for tag in tags %}
+                    <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Nom du Sponsor</label>
+                <input
+                    type="text"
+                    name="sponsor_name"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le nom du sponsor">
+            </div>
+
+            <!-- Image du Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Image du Sponsor</label>
+                <input
+                    type="file"
+                    name="image_sponsor"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*">
+            </div>
+
+            <!-- Dates -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-2">Date de début</label>
+                    <input
+                        type="date"
+                        name="startEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        required>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Date de fin</label>
+                    <input
+                        type="date"
+                        name="endEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        required>
+                </div>
+            </div>
+
+            <!-- User ID (hidden) -->
+            <input type="hidden" name="user_id" value="1">
+
+            <!-- Bouton Soumettre -->
+            <div class="text-center mt-6">
+                <button
+                    type="submit"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full transition duration-300">
+                    Créer l'Événement
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    // Définir la fonction deleteEvent avant son utilisation
+    function deleteEvent(eventId) {
+        if (confirm("Voulez-vous vraiment supprimer cet événement ?")) {
+            $.ajax({
+                url: '/delete-event',
+                type: 'POST',
+                data: { event_id: eventId },
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        alert(result.message);
+                        // Recharger la page ou mettre à jour la liste des événements
+                        window.location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors de la suppression :", error);
+                }
+            });
+        }
+    }
+
+    $(document).ready(function() {
+        // Gestion du mode d'événement (présentiel / en ligne)
+        $(".event-mode").change(function() {
+            let selectedMode = $("input[name='eventMode']:checked").val();
+            if (selectedMode === "presentiel") {
+                $("#adresseField").removeClass("hidden");
+                $("#lienEventField").addClass("hidden");
+            } else {
+                $("#adresseField").addClass("hidden");
+                $("#lienEventField").removeClass("hidden");
+            }
+        });
+
+        // Gestion du type de paiement (gratuit / payant)
+        $(".payment-type").change(function() {
+            let selectedPayment = $("input[name='isPaid']:checked").val();
+            if (selectedPayment === "payant") {
+                $("#priceField").removeClass("hidden");
+            } else {
+                $("#priceField").addClass("hidden");
+            }
+        });
+
+        // Soumission du formulaire via AJAX
+        $("#eventForm").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append("action", "insert");
+
+            $.ajax({
+                url: "/create-event",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    const result = JSON.parse(response);
+                    if (result.success) {
+                        window.location.href = result.redirect_url;
+                    } else {
+                        console.error(result.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors de l'envoi du formulaire :", error);
+                }
+            });
+        });
+    });
+
+    function toggleEventMode() {
+        const presentielFields = document.getElementById('adresseField');
+        const onlineFields = document.getElementById('lienEventField');
+        const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+        
+        if (presentielRadio.checked) {
+            presentielFields.classList.remove('hidden');
+            onlineFields.classList.add('hidden');
+        } else {
+            presentielFields.classList.add('hidden');
+            onlineFields.classList.remove('hidden');
+        }
+    }
+
+    function togglePaymentType() {
+        const priceField = document.getElementById('priceField');
+        const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+        
+        if (payantRadio.checked) {
+            priceField.classList.remove('hidden');
+        } else {
+            priceField.classList.add('hidden');
+        }
+    }
+
+    function openModal() {
+        document.getElementById('eventModal').classList.remove('hidden');
+        document.getElementById('eventModal').classList.add('flex');
+    }
+
+    function closeModal() {
+        document.getElementById('eventModal').classList.add('hidden');
+        document.getElementById('eventModal').classList.remove('flex');
+    }
+</script>
+
+</body>
+</html>

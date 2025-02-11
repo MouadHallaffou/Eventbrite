@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un Événement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img src="{{ user.profile_image }}" alt="Photo de {{ user.name }}" class="w-12 h-12 rounded-full">
+            <span class="text-lg font-semibold">{{ user.name }}</span>
+        </div>
+        <div class="space-x-4">
+            <a href="/events" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                Retour à la liste
+            </a>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <h1 class="text-3xl font-bold mb-6">Modifier l'Événement</h1>
+
+        <form id="editEventForm" method="POST" action="/update-event/{{ event.event_id }}" enctype="multipart/form-data" class="space-y-4">
+            <!-- Titre -->
+            <div>
+                <label class="block font-semibold mb-2">Titre de l'événement</label>
+                <input
+                    type="text"
+                    name="title"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le titre"
+                    value="{{ event.title }}"
+                    required>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <label class="block font-semibold mb-2">Description</label>
+                <textarea
+                    name="description"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Décrivez l'événement"
+                    required>{{ event.description }}</textarea>
+            </div>
+
+            <!-- Image -->
+            <div>
+                <label class="block font-semibold mb-2">Image de l'événement</label>
+                <input
+                    type="file"
+                    name="image"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*">
+                <p class="text-sm text-gray-500 mt-2">Image actuelle : <a href="/assets/images/{{ event.image }}" target="_blank">{{ event.image }}</a></p>
+            </div>
+
+            <!-- Mode de l'événement -->
+            <div>
+                <label class="block font-semibold mb-2">Mode de l'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="presentiel"
+                            class="event-mode"
+                            onclick="toggleEventMode()"
+                            {{ event.eventMode == 'presentiel' ? 'checked' : '' }}
+                            required>
+                        <span>Présentiel</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="enligne"
+                            class="event-mode"
+                            onclick="toggleEventMode()"
+                            {{ event.eventMode == 'enligne' ? 'checked' : '' }}>
+                        <span>En ligne</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Adresse (conditionnelle) -->
+            <div id="adresseField" class="{{ event.eventMode == 'presentiel' ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Adresse</label>
+                <input
+                    type="text"
+                    name="adresse"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="123 Rue 10 casa maroc"
+                    value="{{ event.adresse }}">
+            </div>
+
+            <!-- Lien URL (conditionnelle) -->
+            <div id="lienEventField" class="{{ event.eventMode == 'enligne' ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Lien de l'événement</label>
+                <input
+                    type="url"
+                    name="lienEvent"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ex: https://zoom.com/event"
+                    value="{{ event.lienEvent }}">
+            </div>
+
+            <!-- Type d'événement -->
+            <div>
+                <label class="block font-semibold mb-2">Type d'événement</label>
+                <div class="flex space-x-4">
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="gratuit"
+                            class="payment-type"
+                            onclick="togglePaymentType()"
+                            {{ event.price == null ? 'checked' : '' }}
+                            required>
+                        <span>Gratuit</span>
+                    </label>
+                    <label class="flex items-center space-x-2">
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="payant"
+                            class="payment-type"
+                            onclick="togglePaymentType()"
+                            {{ event.price != null ? 'checked' : '' }}>
+                        <span>Payant</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Prix (conditionnelle) -->
+            <div id="priceField" class="{{ event.price != null ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Prix (en €)</label>
+                <input
+                    type="number"
+                    name="price"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="0"
+                    step="0.01"
+                    placeholder="Entrez le prix"
+                    value="{{ event.price }}">
+            </div>
+
+            <!-- Capacité -->
+            <div>
+                <label class="block font-semibold mb-2">Capacité</label>
+                <input
+                    type="number"
+                    name="capacite"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="1"
+                    placeholder="Nombre maximum de participants"
+                    value="{{ event.capacite }}"
+                    required>
+            </div>
+
+            <!-- Catégorie -->
+            <div>
+                <label class="block font-semibold mb-2">Catégorie</label>
+                <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                    <option value="" disabled>Choisir une catégorie</option>
+                    {% for category in categories %}
+                    <option value="{{ category.category_id }}" {{ event.category_id == category.category_id ? 'selected' : '' }}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tags -->
+            <div>
+                <label class="block font-semibold mb-2">Tags</label>
+                <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" multiple>
+                    {% for tag in tags %}
+                    <option value="{{ tag.tag_id }}" {{ tag.tag_id in event.tags|map(t => t.tag_id) ? 'selected' : '' }}>{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Nom du Sponsor</label>
+                <input
+                    type="text"
+                    name="sponsor_name"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le nom du sponsor"
+                    value="{{ event.sponsor_name }}">
+            </div>
+
+            <!-- Image du Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Image du Sponsor</label>
+                <input
+                    type="file"
+                    name="image_sponsor"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*">
+                <p class="text-sm text-gray-500 mt-2">Image actuelle : <a href="/assets/images/{{ event.sponsor_image }}" target="_blank">{{ event.sponsor_image }}</a></p>
+            </div>
+
+            <!-- Dates -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-2">Date de début</label>
+                    <input
+                        type="date"
+                        name="startEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        value="{{ event.startEventAt|date('Y-m-d') }}"
+                        required>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Date de fin</label>
+                    <input
+                        type="date"
+                        name="endEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        value="{{ event.endEventAt|date('Y-m-d') }}"
+                        required>
+                </div>
+            </div>
+
+            <!-- Bouton Soumettre -->
+            <div class="text-center mt-6">
+                <button
+                    type="submit"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full transition duration-300">
+                    Modifier l'Événement
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        function toggleEventMode() {
+            const presentielFields = document.getElementById('adresseField');
+            const onlineFields = document.getElementById('lienEventField');
+            const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+            
+            if (presentielRadio.checked) {
+                presentielFields.classList.remove('hidden');
+                onlineFields.classList.add('hidden');
+            } else {
+                presentielFields.classList.add('hidden');
+                onlineFields.classList.remove('hidden');
+            }
+        }
+        function togglePaymentType() {
+            const priceField = document.getElementById('priceField');
+            const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+            
+            if (payantRadio.checked) {
+                priceField.classList.remove('hidden');
+            } else {
+                priceField.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
