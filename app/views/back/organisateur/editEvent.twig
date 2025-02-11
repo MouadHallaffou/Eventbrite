@@ -174,7 +174,7 @@
                 success: function(response) {
                     const result = JSON.parse(response);
                     if (result.success) {
-                        populateForm(result.data);
+                        dataFormRemplir(result.data);
                     } else {
                         console.error(result.message);
                     }
@@ -213,7 +213,7 @@
                 }
             });
 
-            function populateForm(event) {
+            function dataFormRemplir(event) {
             $("#event_id'").val(event.event_id);
             $("input[name='title']").val(event.title);
             $("textarea[name='description']").val(event.description);

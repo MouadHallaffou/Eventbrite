@@ -323,12 +323,15 @@ class Event
     public function displayAll($eventId = null)
     {
         $sql = "SELECT e.event_id, u.user_id, u.username, c.name AS category_name, c.img AS category_img, 
-                s.name AS sponsor_name, s.img AS sponsor_img, e.eventMode, e.title, e.description, 
-                e.price, e.endEventAt, e.image As image,e.adresse, c.category_id, e.createdAt, s.sponsor_id 
+                s.name AS sponsor_name,e.startEventAt, s.img AS sponsor_img, e.eventMode, e.title, e.description, 
+                e.price, e.endEventAt, e.image As image,e.adresse, c.category_id, e.createdAt, s.sponsor_id,
+                tv.tag_id, GROUP_CONCAT(t.name SEPARATOR ', ') AS tags 
                 FROM events e
                 LEFT JOIN users u ON u.user_id = e.user_id
                 LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
-                LEFT JOIN categories c ON c.category_id = e.category_id";
+                LEFT JOIN categories c ON c.category_id = e.category_id
+                left join events_tag tv on tv.event_id = e.event_id
+                left join tags t on t.tag_id = tv.tag_id;";
 
         if ($eventId) {
             $sql .= " WHERE e.event_id = :event_id";

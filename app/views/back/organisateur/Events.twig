@@ -70,7 +70,6 @@ function confirmDelete(eventId) {
             success: function(response) {
                 const result = JSON.parse(response);
                 if (result.success) {
-                    // Supprimer l'événement de l'interface utilisateur
                     $(`#event-${eventId}`).remove();
                     alert("Événement supprimé avec succès.");
                 } else {
@@ -95,7 +94,7 @@ function cancelEvent(eventId) {
                 const result = JSON.parse(response);
                 if (result.success) {
                     alert("Événement annulé avec succès.");
-                    loadEvents(); // Recharger la liste des événements
+                    loadEvents(); 
                 } else {
                     alert("Erreur lors de l'annulation : " + result.error);
                 }
@@ -107,7 +106,6 @@ function cancelEvent(eventId) {
     }
 }
 
-// Charger les événements au démarrage
 $(document).ready(function() {
     loadEvents();
 });
