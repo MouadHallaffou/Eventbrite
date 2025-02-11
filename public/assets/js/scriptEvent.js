@@ -22,7 +22,7 @@ $(document).ready(function() {
         }
     });
 
-    // Soumission du formulaire via AJAX
+  // Soumission du formulaire via AJAX
     $("#eventForm").submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
@@ -88,7 +88,7 @@ $(document).ready(function() {
             console.error("Erreur lors du chargement des données :", error);
         }
     });
-
+    
 });
 
 function toggleEventMode() {
@@ -125,8 +125,3 @@ function closeModal() {
     document.getElementById('eventModal').classList.add('hidden');
     document.getElementById('eventModal').classList.remove('flex');
 }
-
-
-
-
-
