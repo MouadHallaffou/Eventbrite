@@ -6,54 +6,67 @@ use App\config\OrmMethodes;
 
 class Auth extends User {
 
-    public function loginUser($email, $password){
-
-        $row = User::findByEmail($email);
-        if($row){
     
-            $_SESSION["role"] = $row['role'];
-            $_SESSION["id"] = $row['id'];
-            $_SESSION["username"] = $row['username'];
-            $_SESSION["email"] = $row['email'];
-            
-            if(password_verify($password,$row['password_hash'])){
-    
-                    if($_SESSION['role'] == 'admin'){
-                        // View::render('back/home.twig');
-                        header("Location: /dashbaord");
+
+    public function loginUser($email, $password)
+    {
+        Session::checkSession();
+        try {            
+            $row = User::findByEmail($email);
+
+            if ($row) {
+
+                $_SESSION["role"] = $row['roleId'];
+                $_SESSION["userId"] = $row['userId'];
+                $_SESSION["username"] = $row['userName'];
+                $_SESSION["email"] = $row['userEmail'];
 
 
-                        exit;
+                if (password_verify($password, $row['password'])) {
+                    if ($_SESSION["role"] == 2) {
+                        header("Location: /home");
+                        exit();
+                    } else if ($_SESSION["role"] == 1) {
+                        header("Location: /dashboard");
+                        exit();
                     }
-                    elseif($_SESSION['role'] == 'user'){
-                        header("Location: /");
-                        // View::render('front/home.twig');
-                        exit;        
+                    else if ($_SESSION["role"] == 3) {
+                        header("Location: /home");
+                        exit();
                     }
-                    elseif($_SESSION['role'] == 'author'){
-                        header("Location: ../../views/front");
-                        exit;        
-                    }else{
-                        header("Location: signUp.php");
-                        exit;
-                    }
-            }else{
-                die("Incorrect password.");
+                } else {
+                    $_SESSION["error"] = "Incorrect password";
+                    header("Location: /login");
+                    exit();
+                }
+            } else {
+                $_SESSION["error"] = "Email does not exist";
+                header("Location: /login");
+                exit();
             }
-        }else{
-            die("Incorrect email or password.");
+        } catch (PDOException $e) {
+            $_SESSION["error"] = "Something went wrong: " . $e->getMessage();
+            header("Location: login");
+            exit();
         }
     }
 
-    public function registerUser($userName, $email, $password, $bio )
+
+    public function registerUser($userName, $email, $password, $gender ,$roleId )
      {
      $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-     $columns = "username, email, password_hash, bio";
-     $values = [$userName, $email, $hashedPassword, $bio];
+     $columns = "username, email, password, gender";
+     $values = [$userName, $email, $hashedPassword, $gender];
 
-     $result= User::AddUser($columns, $values);
-     return $result; 
+     $result= User::AddUser($columns, $values , $roleId);
+     if($result){
+        // return $result;
+        header("Location: /login");
+     }else {
+        $_SESSION["error"] = "Email does not exist";
+        exit();
+    }
      
    }
 

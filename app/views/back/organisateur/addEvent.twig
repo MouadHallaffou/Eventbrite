@@ -10,7 +10,7 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
         <h2 class="text-2xl font-bold mb-4 text-center">Créer un Nouvel Événement</h2>
-        <form id="eventForm" action="/../../../app/controllers/frontOffice/EventController.php" method="POST" class="space-y-4">
+        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
             <!-- Titre -->
             <div>
                 <label class="block font-semibold">Titre de l'événement</label>
@@ -84,6 +84,15 @@
                     {% endfor %}
                 </select>
             </div>
+            <!-- Tags -->
+            <div>
+                <label class="block font-semibold">Tags</label>
+                <select name="tags[]" class="w-full p-2 border rounded-lg" multiple>
+                    {% for tag in tags %}
+                    <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <!-- Sponsor (Optionnel) -->
             <div>
                 <label class="block font-semibold">Sponsor (Optionnel)</label>
@@ -113,77 +122,6 @@
             </div>
         </form>
     </div>
-    <script>
-        $(document).ready(function() {
-            // Gestion du mode d'événement (présentiel / en ligne)
-            $(".event-mode").change(function() {
-                let selectedMode = $("input[name='eventMode']:checked").val();
-                if (selectedMode === "presentiel") {
-                    $("#adresseField").removeClass("hidden");
-                    $("#lienEventField").addClass("hidden");
-                } else {
-                    $("#adresseField").addClass("hidden");
-                    $("#lienEventField").removeClass("hidden");
-                }
-            });
-
-            // Gestion du type de paiement (gratuit / payant)
-            $(".payment-type").change(function() {
-                let selectedPayment = $("input[name='isPaid']:checked").val();
-                if (selectedPayment === "payant") {
-                    $("#priceField").removeClass("hidden");
-                } else {
-                    $("#priceField").addClass("hidden");
-                }
-            });
-
-
-            function showAllEventsAccepted() {
-                $.ajax({
-                    type: "POST",
-                    url: "/../../../app/controllers/frontOffice/EventController.php", 
-                    data: {
-                        action: "view"
-                    },
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            console.log(result);
-                        } else {
-                            console.error(result.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching event:", error);
-                    }
-                });
-            }
-            showAllEventsAccepted();
-
-
-            // Soumission du formulaire via AJAX
-            $("#eventForm").submit(function(e) {
-                e.preventDefault();
-                var eventData = $(this).serialize() + "&action=insert";
-                $.ajax({
-                    url: "/../../../app/controllers/frontOffice/EventController.php",
-                    type: "POST",
-                    data: eventData,
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            window.location.href = result.redirect_url;
-                        } else {
-                            console.error(result.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors de l'envoi du formulaire :", error);
-                    }
-                });
-            });
-            
-        });
-    </script>
+    <script src="../../../../public/assets/js/script.js"></script> 
 </body>
-</html>
+</html

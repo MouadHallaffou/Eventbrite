@@ -6,24 +6,25 @@ use App\config\Database;
 use PDO;
 
 
-class User{
+abstract class User{
 
 protected $username;
 protected $email;
 protected $password;
-protected $bio;
-protected $profile_picture;
-protected $role;
+protected $avatar;
+protected $gender;
+protected $status;
 
 
-// public function __construct($username,$email,$password,$bio,$profile_picture,$role){
+
+// public function __construct($username,$email,$password,$gender,$avatar,$status){
 
 // $this->username = $username;
 // $this->email = $email;
 // $this->password = $password;
-// $this->bio = $bio;
-// $this->profile_picture = $profile_picture;
-// $this->role = $role;
+// $this->gender = $gender;
+// $this->avatar = $avatar;
+// $this->status = $status;
 
 // }
 
@@ -39,13 +40,14 @@ public function setPassword($password){
 
     $this->password = $password;
 }
-public function setBio($bio){
+public function setGender($gender){
 
-    $this->bio = $bio;
+    $this->gender = $gender;
 }
-public function setRole($role){
 
-    $this->role = $role;
+public function setStatus($status){
+
+    $this->status = $status;
 }
 
 public function getUsername(){
@@ -56,22 +58,26 @@ public function getEmail(){
 
     return $this->email;
 }
-public function getbio(){
+public function getGender(){
 
-    return $this->bio;
+    return $this->gender;
 }
 public function getPassword(){
 
     return $this->password;
 }
-public function getRole(){
+public function getAvatar(){
 
-    return $this->role;
+    return $this->avatar;
+}
+public function getStatus(){
+
+    return $this->status;
 }
 
 // |---------------------- AddUser -----------------|
 
-public static function AddUser($columns, $values)
+public static function AddUser($columns, $values ,$roleId)
 {
   $conn = Database::getInstanse()->getConnection();
 
@@ -83,38 +89,71 @@ public static function AddUser($columns, $values)
   $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
   $stmt = $conn->prepare($query);
 
-  return $stmt->execute($values);
-}
+  $result =  $stmt->execute($values);
 
+  if($result){
+    $lastid = $conn->lastInsertId();
+
+    $role = self::AddRoleUser($lastid,$roleId);
+    return true;
+
+  }
+
+}
+public static function AddRoleUser($lastid, $roleId){
+
+    $conn = Database::getInstanse()->getConnection();
+    try {
+            if (!empty($roleId)) {
+                $sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([$lastid , $roleId]);
+            } else {
+                echo "Error: Tag not found - $roleId";
+            }
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
+    }
+}
 // |---------------------- findByEmail -----------------|
 
 public static function findByEmail($email){
 
   $conn = Database::getInstanse()->getConnection();
 
-  $query = "SELECT * FROM users WHERE email = :email";
+  $query ="SELECT u.user_id AS userId, u.username AS userName, u.avatar AS avatar, u.email AS userEmail , u.password , r.role_id AS roleId ,r.name_role AS UserRole
+      FROM users u INNER JOIN user_roles ur ON ur.user_id = u.user_id INNER JOIN roles r on r.role_id = ur.role_id  WHERE email = :email";
   $stmt=$conn->prepare($query);
   $stmt->bindParam(':email', $email, PDO::PARAM_STR);
   $stmt->execute();
   return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-//addParticipant --
+public function getAllUsers(){
 
-// public static function  addParticipant($username, $email, $password, $avatar = null, $gender = null)
-// {
-//     $connection = Database::getInstanse()->getConnection();
-//     $password_hash = password_hash($password, PASSWORD_BCRYPT);
-//     $X = "insert into users (username, email, password, avatar, gender) values(?, ?, ?, ?, ?)";
-//     $y = $connection->prepare($X);
-//     $res =  $y->execute([$username, $email, $password_hash, $avatar, $gender]);
-//     if ($res) {
-//         $user_id = $connection->lastInsertId();
-//         $role_sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, (SELECT role_id FROM roles WHERE name_role = 'Participant'))";
-//         $role_stmt = $connection->prepare($role_sql);
-//         return $role_stmt->execute([$user_id]);
-//     }
+}
 
-//     return false;
-// }
+
+public static function getData(){
+
+    $conn = Database::getInstanse()->getConnection();
+
+    $query = "SELECT * FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
+     roles r ON  r.role_id = ur.role_id WHERE r.name_role = Organizer ";
+    $stmt = $conn->prepare($query);
+    $stmt->execute();
+    $users = $stmt->fetchAll();
+    return $users;
+   }
+
+
+
+
+
+
+
+
+
+
+
 }
