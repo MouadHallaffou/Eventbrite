@@ -14,19 +14,8 @@ protected $password;
 protected $avatar;
 protected $gender;
 protected $status;
+protected $table = 'users';
 
-
-
-// public function __construct($username,$email,$password,$gender,$avatar,$status){
-
-// $this->username = $username;
-// $this->email = $email;
-// $this->password = $password;
-// $this->gender = $gender;
-// $this->avatar = $avatar;
-// $this->status = $status;
-
-// }
 
 public function setUsername($username){
 
@@ -129,31 +118,59 @@ public static function findByEmail($email){
   return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-public function getAllUsers(){
-
-}
-
-
-public static function getData(){
+public function getUsersData(){
 
     $conn = Database::getInstanse()->getConnection();
 
-    $query = "SELECT * FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
-     roles r ON  r.role_id = ur.role_id WHERE r.name_role = Organizer ";
+    $query = "SELECT u.*,r.role_id,r.name_role as role FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
+     roles r ON  r.role_id = ur.role_id WHERE r.name_role = 'Organizer' ";
     $stmt = $conn->prepare($query);
     $stmt->execute();
     $users = $stmt->fetchAll();
     return $users;
-   }
+}
 
 
+public function deleteUsers($id) {
+    $conn = Database::getInstanse()->getConnection();
+    try {
+        // Delete the user from the database
+        $stmt = $conn->prepare("DELETE FROM users WHERE user_id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $result = $stmt->execute();
+
+        if ($result) {
+            return true; // Deletion successful
+        } else {
+            error_log('Failed to delete user with ID: ' . $id);
+            return false; // Deletion failed
+        }
+    } catch (\PDOException $e) {
+        error_log('Database error: ' . $e->getMessage());
+        return false; // Deletion failed due to an exception
+    }
+}
 
 
+public function updateUserStatus($userId, $status) {
+    $conn = Database::getInstanse()->getConnection();
+    try {
+        $stmt = $conn->prepare("UPDATE users SET status = :status WHERE user_id = :userId");
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $result = $stmt->execute();
 
-
-
-
-
+        if ($result) {
+            return true; // Update successful
+        } else {
+            error_log('Failed to update user status with ID: ' . $userId);
+            return false; // Update failed
+        }
+    } catch (\PDOException $e) {
+        error_log('Database error: ' . $e->getMessage());
+        return false; // Update failed due to an exception
+    }
+}
 
 
 }
