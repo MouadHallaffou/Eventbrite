@@ -4,249 +4,263 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Événement</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <h2 class="text-2xl font-bold mb-4 text-center">Modifier un Événement</h2>
-        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
-            <input type="hidden" name="event_id" value="" />
+<body class="bg-gray-100">
+    <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img src="{{ user.profile_image }}" alt="Photo de {{ user.name }}" class="w-12 h-12 rounded-full">
+            <span class="text-lg font-semibold">{{ user.name }}</span>
+        </div>
+        <div class="space-x-4">
+            <a href="/events" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                Retour à la liste
+            </a>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <h1 class="text-3xl font-bold mb-6">Modifier l'Événement</h1>
+
+        <form id="editEventForm" method="POST" action="/update-event/{{ event.event_id }}" enctype="multipart/form-data" class="space-y-4">
             <!-- Titre -->
             <div>
-                <label class="block font-semibold">Titre de l'événement</label>
-                <input type="text" name="title" class="w-full p-2 border rounded-lg" required />
+                <label class="block font-semibold mb-2">Titre de l'événement</label>
+                <input
+                    type="text"
+                    name="title"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le titre"
+                    value="{{ event.title }}"
+                    required>
             </div>
+
             <!-- Description -->
             <div>
-                <label class="block font-semibold">Description</label>
-                <textarea name="description" class="w-full p-2 border rounded-lg" required></textarea>
+                <label class="block font-semibold mb-2">Description</label>
+                <textarea
+                    name="description"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Décrivez l'événement"
+                    required>{{ event.description }}</textarea>
             </div>
+
             <!-- Image -->
             <div>
-                <label class="block font-semibold">Image de l'événement</label>
-                <input type="file" name="image" class="w-full p-2 border rounded-lg" accept="image/*" />
-                <img id="eventImagePreview" src="" alt="Image de l'événement" class="mt-2 w-full h-40 object-cover rounded-lg hidden" />
+                <label class="block font-semibold mb-2">Image de l'événement</label>
+                <input
+                    type="file"
+                    name="image"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*">
+                <p class="text-sm text-gray-500 mt-2">Image actuelle : <a href="/assets/images/{{ event.image }}" target="_blank">{{ event.image }}</a></p>
             </div>
+
             <!-- Mode de l'événement -->
             <div>
-                <label class="block font-semibold">Mode de l'événement</label>
+                <label class="block font-semibold mb-2">Mode de l'événement</label>
                 <div class="flex space-x-4">
                     <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="presentiel" class="event-mode" required />
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="presentiel"
+                            class="event-mode"
+                            onclick="toggleEventMode()"
+                            {{ event.eventMode == 'presentiel' ? 'checked' : '' }}
+                            required>
                         <span>Présentiel</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="en ligne" class="event-mode" />
+                        <input
+                            type="radio"
+                            name="eventMode"
+                            value="enligne"
+                            class="event-mode"
+                            onclick="toggleEventMode()"
+                            {{ event.eventMode == 'enligne' ? 'checked' : '' }}>
                         <span>En ligne</span>
                     </label>
                 </div>
             </div>
-            <!-- Adresse -->
-            <div id="adresseField" class="hidden">
-                <label class="block font-semibold">Adresse</label>
-                <input type="text" name="adresse" class="w-full p-2 border rounded-lg" />
+
+            <!-- Adresse (conditionnelle) -->
+            <div id="adresseField" class="{{ event.eventMode == 'presentiel' ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Adresse</label>
+                <input
+                    type="text"
+                    name="adresse"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="123 Rue 10 casa maroc"
+                    value="{{ event.adresse }}">
             </div>
-            <!-- Lien URL -->
-            <div id="lienEventField" class="hidden">
-                <label class="block font-semibold">Lien de l'événement</label>
-                <input type="url" name="lienEvent" class="w-full p-2 border rounded-lg" />
+
+            <!-- Lien URL (conditionnelle) -->
+            <div id="lienEventField" class="{{ event.eventMode == 'enligne' ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Lien de l'événement</label>
+                <input
+                    type="url"
+                    name="lienEvent"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Ex: https://zoom.com/event"
+                    value="{{ event.lienEvent }}">
             </div>
+
             <!-- Type d'événement -->
             <div>
-                <label class="block font-semibold">Type d'événement</label>
+                <label class="block font-semibold mb-2">Type d'événement</label>
                 <div class="flex space-x-4">
                     <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="gratuit" class="payment-type" required />
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="gratuit"
+                            class="payment-type"
+                            onclick="togglePaymentType()"
+                            {{ event.price == null ? 'checked' : '' }}
+                            required>
                         <span>Gratuit</span>
                     </label>
                     <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="payant" class="payment-type" />
+                        <input
+                            type="radio"
+                            name="isPaid"
+                            value="payant"
+                            class="payment-type"
+                            onclick="togglePaymentType()"
+                            {{ event.price != null ? 'checked' : '' }}>
                         <span>Payant</span>
                     </label>
                 </div>
             </div>
-            <!-- Prix -->
-            <div id="priceField" class="hidden">
-                <label class="block font-semibold">Prix (en €)</label>
-                <input type="number" name="price" class="w-full p-2 border rounded-lg" min="0" step="0.01" />
+
+            <!-- Prix (conditionnelle) -->
+            <div id="priceField" class="{{ event.price != null ? '' : 'hidden' }}">
+                <label class="block font-semibold mb-2">Prix (en €)</label>
+                <input
+                    type="number"
+                    name="price"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="0"
+                    step="0.01"
+                    placeholder="Entrez le prix"
+                    value="{{ event.price }}">
             </div>
+
             <!-- Capacité -->
             <div>
-                <label class="block font-semibold">Capacité</label>
-                <input type="number" name="capacite" class="w-full p-2 border rounded-lg" min="1" required />
+                <label class="block font-semibold mb-2">Capacité</label>
+                <input
+                    type="number"
+                    name="capacite"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    min="1"
+                    placeholder="Nombre maximum de participants"
+                    value="{{ event.capacite }}"
+                    required>
             </div>
+
             <!-- Catégorie -->
             <div>
-                <label class="block font-semibold">Catégorie</label>
-                <select name="category_id" class="w-full p-2 border rounded-lg" required>
+                <label class="block font-semibold mb-2">Catégorie</label>
+                <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
                     <option value="" disabled>Choisir une catégorie</option>
                     {% for category in categories %}
-                    <option value="{{ category.category_id }}">{{ category.name }}</option>
+                    <option value="{{ category.category_id }}" {{ event.category_id == category.category_id ? 'selected' : '' }}>{{ category.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <!-- Sponsor (Optionnel) -->
+
+            <!-- Tags -->
             <div>
-                <label class="block font-semibold">Sponsor (Optionnel)</label>
-                <select name="sponsor_id" class="w-full p-2 border rounded-lg">
-                    <option value="">Aucun sponsor</option>
-                    {% for sponsor in sponsors %}
-                    <option value="{{ sponsor.sponsor_id }}">{{ sponsor.name }}</option>
+                <label class="block font-semibold mb-2">Tags</label>
+                <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" multiple>
+                    {% for tag in tags %}
+                    <option value="{{ tag.tag_id }}" {{ tag.tag_id in event.tags|map(t => t.tag_id) ? 'selected' : '' }}>{{ tag.name }}</option>
                     {% endfor %}
                 </select>
             </div>
+
+            <!-- Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Nom du Sponsor</label>
+                <input
+                    type="text"
+                    name="sponsor_name"
+                    class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Entrez le nom du sponsor"
+                    value="{{ event.sponsor_name }}">
+            </div>
+
+            <!-- Image du Sponsor -->
+            <div>
+                <label class="block font-semibold mb-2">Image du Sponsor</label>
+                <input
+                    type="file"
+                    name="image_sponsor"
+                    class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                    accept="image/*">
+                <p class="text-sm text-gray-500 mt-2">Image actuelle : <a href="/assets/images/{{ event.sponsor_image }}" target="_blank">{{ event.sponsor_image }}</a></p>
+            </div>
+
             <!-- Dates -->
-            <div>
-                <label class="block font-semibold">Date de début</label>
-                <input type="date" name="startEventAt" class="w-full p-2 border rounded-lg" required />
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-2">Date de début</label>
+                    <input
+                        type="date"
+                        name="startEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        value="{{ event.startEventAt|date('Y-m-d') }}"
+                        required>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Date de fin</label>
+                    <input
+                        type="date"
+                        name="endEventAt"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        value="{{ event.endEventAt|date('Y-m-d') }}"
+                        required>
+                </div>
             </div>
-            <div>
-                <label class="block font-semibold">Date de fin</label>
-                <input type="date" name="endEventAt" class="w-full p-2 border rounded-lg" required />
-            </div>
-            <!-- User ID (Organisateur) -->
-            <input type="hidden" name="user_id" value="1" />
+
             <!-- Bouton Soumettre -->
-            <div class="text-center">
-                <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    Modifier
+            <div class="text-center mt-6">
+                <button
+                    type="submit"
+                    class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full transition duration-300">
+                    Modifier l'Événement
                 </button>
             </div>
         </form>
-    </div>
+    </main>
 
     <script>
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const eventId = urlParams.get('id');
-
-            if (eventId) {
-                loadEventData(eventId);
+        function toggleEventMode() {
+            const presentielFields = document.getElementById('adresseField');
+            const onlineFields = document.getElementById('lienEventField');
+            const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+            
+            if (presentielRadio.checked) {
+                presentielFields.classList.remove('hidden');
+                onlineFields.classList.add('hidden');
             } else {
-                console.error("ID de l'événement manquant dans l'URL.");
-            }
-
-            $(".event-mode").change(function() {
-                let selectedMode = $("input[name='eventMode']:checked").val();
-                $("#adresseField").toggle(selectedMode === "presentiel");
-                $("#lienEventField").toggle(selectedMode === "en ligne");
-            });
-
-            $(".payment-type").change(function() {
-                let selectedPayment = $("input[name='isPaid']:checked").val();
-                $("#priceField").toggle(selectedPayment === "payant");
-            });
-
-            $("#eventForm").submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                formData.append("action", "update");
-
-                $.ajax({
-                    url: '/../../../app/controllers/frontOffice/EventController.php',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            alert("Événement mis à jour avec succès.");
-                            window.location.href = "/Event.twig"; 
-                        } else {
-                            alert("Erreur lors de la mise à jour : " + result.error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors de la mise à jour :", error);
-                    }
-                });
-            });
-        });
-
-
-        function loadEventData(eventId) {
-            $.ajax({
-                url: '/../../../app/controllers/frontOffice/EventController.php',
-                type: 'POST',
-                data: { action: 'fetchEvent', id: eventId },
-                success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.success) {
-                        dataFormRemplir(result.data);
-                    } else {
-                        console.error(result.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erreur lors du chargement des données :", error);
-                }
-            });
-
-
-            // Charger les catégories et sponsors via AJAX
-            $.ajax({
-                url: "/../../../app/controllers/frontOffice/EventController.php",
-                type: "POST",
-                data: { action: "fetchFormData" },
-                success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.categories && result.sponsors) {
-                        // Remplir les options des catégories
-                        let categoryOptions = '<option value="" disabled selected>Choisir une catégorie</option>';
-                        result.categories.forEach(category => {
-                            categoryOptions += `<option value="${category.category_id}">${category.name}</option>`;
-                        });
-                        $("select[name='category_id']").html(categoryOptions);
-
-                        // Remplir les options des sponsors
-                        let sponsorOptions = '<option value="" selected>Aucun sponsor</option>';
-                        result.sponsors.forEach(sponsor => {
-                            sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
-                        });
-                        $("select[name='sponsor_id']").html(sponsorOptions);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erreur lors du chargement des données :", error);
-                }
-            });
-
-            function dataFormRemplir(event) {
-            $("#event_id'").val(event.event_id);
-            $("input[name='title']").val(event.title);
-            $("textarea[name='description']").val(event.description);
-            $("input[name='eventMode'][value='" + event.eventMode + "']").prop("checked", true);
-            $("input[name='capacite']").val(event.capacite);
-            $("input[name='startEventAt']").val(event.startEventAt.split(' ')[0]);
-            $("input[name='endEventAt']").val(event.endEventAt.split(' ')[0]);
-            $("input[name='adresse']").val(event.adresse || '');
-            $("input[name='lienEvent']").val(event.lienEvent || '');
-            $("input[name='price']").val(event.price || '');
-            $("select[name='category_id']").val(event.category_id);
-            $("select[name='sponsor_id']").val(event.sponsor_id || '');
-
-            if (event.image) {
-                $("#eventImagePreview").attr("src", "/assets/images/" + event.image).removeClass("hidden");
-            }
-
-            if (event.eventMode === "presentiel") {
-                $("#adresseField").removeClass("hidden");
-                $("#lienEventField").addClass("hidden");
-            } else {
-                $("#adresseField").addClass("hidden");
-                $("#lienEventField").removeClass("hidden");
-            }
-
-            if (event.price !== null) {
-                $("#priceField").removeClass("hidden");
+                presentielFields.classList.add('hidden');
+                onlineFields.classList.remove('hidden');
             }
         }
-
-
-    }
-
+        function togglePaymentType() {
+            const priceField = document.getElementById('priceField');
+            const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+            
+            if (payantRadio.checked) {
+                priceField.classList.remove('hidden');
+            } else {
+                priceField.classList.add('hidden');
+            }
+        }
     </script>
 </body>
 </html>
