@@ -4,6 +4,8 @@ namespace App\core;
 use App\models\User;
 use App\config\OrmMethodes;
 
+use PDOException;
+
 class Auth extends User {
 
     
