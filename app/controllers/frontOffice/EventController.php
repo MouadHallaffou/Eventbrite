@@ -20,7 +20,9 @@ class EventController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
             $event = new Event($this->pdo);
-
+                            
+            // $errors = Validator::validateEvent($_POST);
+            
             // Set event properties
             $event->setTitle($_POST['title']);
             $event->setDescription($_POST['description']);
@@ -196,6 +198,14 @@ class EventController
         } else {
             echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
         }
+    }
+
+    public function displayEventsAcceptedHome(){
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        View::render('front/home.twig', [
+            'eventsAccepted' => $eventsAccepted,
+        ]);
     }
 
 }

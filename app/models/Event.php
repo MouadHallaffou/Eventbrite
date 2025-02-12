@@ -399,12 +399,24 @@ class Event
         $stmt->execute([':event_id' => $eventId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function displayEventsAccepted()
+    {
+        $sql = "SELECT e.event_id, e.title, e.description, e.image, e.price, e.startEventAt, e.endEventAt,
+                e.lienEvent, e.capacite,e.situation, e.eventMode, e.status , t.tag_id,GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,
+                c.category_id, c.name as category_name, c.img As image_category, s.sponsor_id, s.name As sponsor_name,s.img AS sponsor_image,
+                u.user_id, u.username  FROM events e 
+                left join sponsors s on s.sponsor_id = e.sponsor_id
+                left join events_tag et on et.event_id = e.event_id
+                left join tags t on t.tag_id = et.tag_id
+                left JOIN users u on u.user_id = e.user_id
+                left JOIN categories c on c.category_id = e.category_id
+                WHERE e.status = 'accepted'
+                GROUP BY e.event_id;";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     
 }
-
-
-// les principes de responsabilite unique , PRS
-// pricipe ouvert/fermer , OCP
-// pricipe de subtitution de liskov , LSP
-// pricipe de segregation des interfaces , ISP (separtion de methodes interface )
-// principe d'inversion de depence , DIP
