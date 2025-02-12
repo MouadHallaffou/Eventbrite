@@ -401,3 +401,10 @@ class Event
     }
     
 }
+
+
+// les principes de responsabilite unique , PRS
+// pricipe ouvert/fermer , OCP
+// pricipe de subtitution de liskov , LSP
+// pricipe de segregation des interfaces , ISP (separtion de methodes interface )
+// principe d'inversion de depence , DIP

@@ -43,14 +43,14 @@
                         {{ event.status | capitalize }}
                     </span>
                     
-                    <div class="mt-4 flex justify-between">
-                        <a href="/edit-event/{{ event.event_id }}" class="text-blue-500 font-semibold">
+                    <div class="mt-4 flex gap-2">
+                        <a href="/edit-event/{{ event.event_id }}" class="bg-blue-500 text-white px-2 py-2 rounded-lg hover:bg-blue-700 mt-2">
                             ✏️ Modifier
                         </a>
                          <!-- Bouton de suppression -->
                         <button
                             onclick="deleteEvent({{ event.event_id }})"
-                            class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-700 mt-2">
+                            class="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-700 mt-2">
                             🗑️ Supprimer
                         </button>
                     </div>
@@ -75,7 +75,7 @@
         <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
             <!-- Titre -->
             <div>
-                <label class="block font-semibold mb-2">Titre de l'événement</label>
+                <label class="block font-semibold mb-2">Titre :</label>
                 <input
                     type="text"
                     name="title"

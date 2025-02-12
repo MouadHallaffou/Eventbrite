@@ -188,7 +188,7 @@ class EventController
 
             if ($success) {
                 echo json_encode(['success' => true, 'message' => 'Événement mis à jour avec succès.']);
-                header('Location: /addEvent/' . $eventId);
+                header('Location: /events');
                 exit;
             } else {
                 echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour.']);
