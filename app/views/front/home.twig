@@ -410,14 +410,15 @@
 									</div>
 			
 									<!-- Second Row (3 Columns) -->
-									<div
-										class="grid grid-cols-1 md:grid-cols-3 gap-8">
+								
+									{% for event in eventsAccepted %}
+									 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 										<!-- Event Item 3 -->
 										<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
 											<div class="relative h-72">
 												<img class="h-72 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image"/>
 												<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-													Networking
+													{{event.category_name }}/ networking
 												</span>
 											</div>
 											<div class="p-6">
@@ -483,8 +484,15 @@
 												</p>
 											</div>
 										</div>
-									</div>
-			
+									 </div>
+									 {% else %}
+									 <p>Aucun événement disponible.</p>
+									 {% endfor %}
+			                    
+								
+
+
+
 									<!-- Load More Button -->
 									<div class="mt-12 text-center">
 										<button class="px-8 py-3 bg-[#FF9800] text-gray-800 hover:text-white  rounded-lg hover:bg-gray-800 transition-all duration-300">
