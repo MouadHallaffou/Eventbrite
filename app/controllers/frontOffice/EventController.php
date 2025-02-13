@@ -21,9 +21,9 @@ class EventController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
             $event = new Event($this->pdo);
-                        
+
             // $errors = Validator::validateEvent($_POST);
-       
+
             $event->setTitle($_POST['title']);
             $event->setDescription($_POST['description']);
             $event->setEventMode($_POST['eventMode']);
@@ -33,6 +33,7 @@ class EventController
             $event->setPrice($_POST['isPaid'] === "payant" ? (float)$_POST['price'] : null);
             $event->setCategoryId((int)$_POST['category_id']);
             $event->setUserId((int)$_POST['user_id']);
+            $event->setVilleId((int)$_POST['ville_id']); // Ajout de ville_id
 
             // Handle address and link
             if ($_POST['eventMode'] === "presentiel") {
@@ -80,20 +81,30 @@ class EventController
         }
     }
 
+    public function getVillesByRegion()
+    {
+        if (isset($_GET['region_id'])) {
+            $regionId = (int)$_GET['region_id'];
+            $eventModel = new Event($this->pdo);
+            $villes = $eventModel->fetchVillesByRegion($regionId); // Utiliser la méthode du modèle
+            echo json_encode($villes);
+        }
+    }
+
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
 
         $events = $eventModel->fetchAll();
-
         $categories = $eventModel->fetchCategories();
-
         $tags = $eventModel->fetchTags();
+        $regions = $eventModel->fetchRegions(); // Utiliser la méthode du modèle
 
         View::render('back/organisateur/addEvent.twig', [
             'events' => $events,
             'categories' => $categories,
             'tags' => $tags,
+            'regions' => $regions, // Passer les régions au template
         ]);
     }
 
@@ -123,25 +134,33 @@ class EventController
     // Afficher le formulaire d'édition
     public function editEvent($eventId)
     {
-           $eventModel = new Event($this->pdo);
-   
-           $event = $eventModel->findById($eventId);
-   
-           if (!$event) {
-               echo "Événement non trouvé.";
-               return;
-           }
-   
-           $categories = $eventModel->fetchCategories();
-           $tags = $eventModel->fetchTags();
-   
-           View::render('back/organisateur/editEvent.twig', [
-               'event' => $event,
-               'categories' => $categories,
-               'tags' => $tags,
-           ]);
+        $eventModel = new Event($this->pdo);
+
+        $event = $eventModel->findById($eventId);
+
+        if (!$event) {
+            echo "Événement non trouvé.";
+            return;
+        }
+
+        $categories = $eventModel->fetchCategories();
+        $tags = $eventModel->fetchTags();
+        $regions = $eventModel->fetchRegions();
+
+        $villes = [];
+        if (isset($event['ville']) && $event['ville']['region']) {
+            $villes = $eventModel->fetchVillesByRegion($event['ville']['region']);
+        }
+
+        View::render('back/organisateur/editEvent.twig', [
+            'event' => $event,
+            'categories' => $categories,
+            'tags' => $tags,
+            'regions' => $regions,
+            'villes' => $villes,
+        ]);
     }
-   
+
     // Mettre à jour un événement
     public function updateEvent($eventId)
     {
@@ -166,11 +185,12 @@ class EventController
                 'sponsor_image_path' => $currentEvent['sponsor_image'] ?? null,
                 'startEventAt' => $_POST['startEventAt'],
                 'endEventAt' => $_POST['endEventAt'],
-                'image' => $currentEvent['image'] ?? null, 
+                'image' => $currentEvent['image'] ?? null,
+                'ville_id' => (int)$_POST['ville_id'],
             ];
 
             if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = __DIR__ . "/../../../public/assets/images/"; 
+                $uploadDir = __DIR__ . "/../../../public/assets/images/";
                 $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
 
                 if (!empty($currentEvent['image'])) {
@@ -181,7 +201,7 @@ class EventController
                 }
 
                 if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
-                    $data['image'] = basename($_FILES['event_image']['name']); 
+                    $data['image'] = basename($_FILES['event_image']['name']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'upload de l\'image.']);
                     return;
@@ -215,6 +235,4 @@ class EventController
             'SponsorsHomePage' => $SponsorsHomePage,
         ]);
     }
-
-
 }
