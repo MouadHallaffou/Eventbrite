@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 class Controller {
     public static function render($view,$data=[]){
         extract($data);
-        include __DIR__ ."/../views/back/$view";
+        include __DIR__ ."/../views/front/$view";
     }
 }                         
 

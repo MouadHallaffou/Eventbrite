@@ -7,6 +7,8 @@ use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
+use App\controllers\frontOffice\ContactController;
+
 use App\core\Session;
 
 use Twig\Environment;
@@ -18,7 +20,11 @@ Session::checkSession();
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
 
-// $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
+$router->get('/help/contact', ContactController::class, 'index');
+
+$router->get('/help', ContactController::class, 'helpcenter');
+
+
 // $router->get('/', EventController::class, 'displayEventsAcceptedHome');
 
 
