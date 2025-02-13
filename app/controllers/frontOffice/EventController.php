@@ -5,6 +5,7 @@ namespace App\Controllers\FrontOffice;
 use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
+use App\core\Validator;
 use PDO;
 
 class EventController
@@ -206,7 +207,7 @@ class EventController
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
         View::render('front/home.twig', [
-            'eventsAccepted' => $eventsAccepted,
+            'events' => $eventsAccepted,
         ]);
     }
 

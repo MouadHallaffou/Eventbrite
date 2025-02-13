@@ -212,8 +212,8 @@ class Event
             ':situation' => $this->situation,
             ':capacite' => $this->capacite,
             ':lienEvent' => $this->lienEvent,
-            ':startEventAt' => $this->startEventAt->format('Y-m-d'),
-            ':endEventAt' => $this->endEventAt->format('Y-m-d'),
+            ':startEventAt' => $this->startEventAt->format('Y-m-d H:i:s'),
+            ':endEventAt' => $this->endEventAt->format('Y-m-d H:i:s'),
             ':sponsor_id' => $this->sponsor_id,
             ':category_id' => $this->category_id,
             ':user_id' => $this->user_id
@@ -326,7 +326,7 @@ class Event
         $success = $stmt->execute([
             ':title' => $data['title'],
             ':description' => $data['description'],
-            ':image' => $data['image'] ?? null, // Nouvelle image ou ancienne image
+            ':image' => $data['image'] ?? null, 
             ':adresse' => $data['adresse'],
             ':eventMode' => $data['eventMode'],
             ':price' => $data['price'],

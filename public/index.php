@@ -16,7 +16,10 @@ Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
+
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
+$router->get('/', EventController::class, 'displayEventsAcceptedHome');
+
 
 
 $router->get('/dashboard', AdminController::class, 'index');

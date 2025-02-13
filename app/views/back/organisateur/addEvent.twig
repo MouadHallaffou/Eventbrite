@@ -79,7 +79,7 @@
 
                     <div class="flex items-center justify-between mt-2">
                         <span class="text-sm text-gray-500">
-                            📅 {{ event.startEventAt | date('d/m/Y') }} - {{ event.endEventAt | date('d/m/Y') }}
+                            📅 {{ event.startEventAt | date('Y-m-d H:i') }} - {{ event.endEventAt | date('Y-m-d H:i') }}
                         </span>
                         <span class="text-sm {{ event.status == 'accepted' ? 'text-green-600' : event.status == 'pending' ? 'text-yellow-600' : 'text-red-600' }}">
                             {{ event.status | capitalize }}
@@ -324,7 +324,7 @@
                     <div>
                         <label class="block font-semibold mb-2">Date de début</label>
                         <input
-                            type="date"
+                            type="datetime-local"
                             name="startEventAt"
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required>
@@ -334,7 +334,7 @@
                     <div>
                         <label class="block font-semibold mb-2">Date de fin</label>
                         <input
-                            type="date"
+                            type="datetime-local"
                             name="endEventAt"
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             required>
