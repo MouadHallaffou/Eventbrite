@@ -416,81 +416,40 @@
 					</div>
 
 					<!-- Second Row (3 Columns) -->
-					<div
-						class="grid grid-cols-1 md:grid-cols-3 gap-8">
+				
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+					{% for event in eventsAccepted %}
 						<!-- Event Item 3 -->
 						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
 							<div class="relative h-72">
-								<img class="h-72 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
+								<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image}}" alt="Event Image" />
 								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Networking
+									{{event.category_name }}
 								</span>
 							</div>
 							<div class="p-6">
 								<h2 class="text-xl font-bold mb-2">
-									Startup Networking Night
+									{{event.title }}
 								</h2>
 								<p class="text-gray-600">
-									Connect with entrepreneurs and investors in the tech industry.
+									{{event.description }}
 								</p>
 								<p class="text-gray-500 text-sm mt-2">
-									📅 October 20, 2023 | 🕒 7:00 PM
+									📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }} 
+								</p>
+								<p class="text-gray-500 text-sm mt-2">
+									📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}  
 								</p>
 								<p class="text-gray-500 text-sm">
-									📍 Tech Hub, Austin
+									📍 {{event.adresse ?? 'En ligne'}}
 								</p>
 							</div>
-						</div>
 
-						<!-- Event Item 4 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-72">
-								<img class="h-72 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Festival
-								</span>
-							</div>
-							<div class="p-6">
-								<h2 class="text-xl font-bold mb-2">
-									Food & Wine Festival
-								</h2>
-								<p class="text-gray-600">
-									Savor the finest cuisines and wines from around the world.
-								</p>
-								<p class="text-gray-500 text-sm mt-2">
-									📅 November 12, 2023 | 🕒 12:00 PM
-								</p>
-								<p class="text-gray-500 text-sm">
-									📍 Riverside Park, Chicago
-								</p>
-							</div>
-						</div>
-
-						<!-- Event Item 5 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-72">
-								<img class="h-72 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Art
-								</span>
-							</div>
-							<div class="p-6">
-								<h2 class="text-xl font-bold mb-2">
-									Modern Art Exhibition
-								</h2>
-								<p class="text-gray-600">
-									Explore contemporary art from emerging and established artists.
-								</p>
-								<p class="text-gray-500 text-sm mt-2">
-									📅 December 1, 2023 | 🕒 9:00 AM
-								</p>
-								<p class="text-gray-500 text-sm">
-									📍 Art Gallery, Los Angeles
-								</p>
-							</div>
-						</div>
 					</div>
-
+					{% else %}
+					<p>Aucun événement disponible.</p>
+					{% endfor %}
+					</div>
 					<!-- Load More Button -->
 					<div class="mt-12 text-center">
 						<button class="px-8 py-3 bg-[#FF9800] text-gray-800 hover:text-white  rounded-lg hover:bg-gray-800 transition-all duration-300">
