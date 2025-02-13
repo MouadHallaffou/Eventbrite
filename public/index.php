@@ -14,20 +14,15 @@ use Twig\Loader\FilesystemLoader;
 
 
 
-
 $router = new Router();
 Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
 
-// $router->get('/home', EventController::class, 'displayCategoriesPageHome');
-// $router->get('/', EventController::class, 'displayCategoriesPageHome');
 
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
 $router->get('/', EventController::class, 'displayEventsAcceptedHome');
-
-
 
 
 $router->get('/dashboard', AdminController::class, 'index');
@@ -37,6 +32,8 @@ $router->get('/addEvent', EventController::class, 'displayEventForm');
 $router->get('/addEvent', EventController::class, 'afficheEvents');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
+
+$router->get('/get-villes-by-region', EventController::class, 'getVillesByRegion');
 
 // Route pour créer un événement
 $router->post('/create-event', EventController::class, 'createEvent');

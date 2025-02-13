@@ -392,40 +392,67 @@
 					</div>
 
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
 						{% for event in eventsAccepted %}
-						<!-- Event Item 3 -->
+						<!-- Event Item -->
 						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+							<!-- Event Image -->
 							<div class="relative h-72">
-								<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image}}" alt="Event Image" />
+								<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}" alt="Event Image" />
+								<!-- Category Badge -->
 								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									{{event.category_name }}
+									{{ event.category_name }}
 								</span>
 							</div>
+
+							<!-- Event Details -->
 							<div class="p-6">
+								<!-- Event Title -->
 								<h2 class="text-xl font-bold mb-2">
-									{{event.title }}
+									{{ event.title }}
 								</h2>
+
+								<!-- Event Description -->
 								<p class="text-gray-600">
-									{{event.description }}
+									{{ event.description }}
 								</p>
+
+								<!-- Event Dates -->
 								<p class="text-gray-500 text-sm mt-2">
 									📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
 								</p>
 								<p class="text-gray-500 text-sm mt-2">
 									📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
 								</p>
-								<p class="text-gray-500 text-sm">
-									📍 {{event.adresse ?? 'En ligne'}}
+
+								<!-- Event Location -->
+								<p class="text-gray-500 text-sm mt-2">
+									📍 {{ event.adresse ?? 'En ligne' }}
 								</p>
+
+								<!-- Rating Stars -->
+								<div class="flex items-center mt-4 justify-between">
+									<div>
+									{% for i in 1..5 %}
+										{% if i <= event.rating %}
+											<span class="text-yellow-400">★</span>
+										{% else %}
+											<span class="text-gray-300">★</span>
+										{% endif %}
+									{% endfor %}
+									<span class="ml-2 text-gray-500 text-sm">({{ event.rating }}/5)</span>
+									</div>
+									<div>
+									<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
+										Réserver
+									</a>
+									</div>
+								</div>
 							</div>
-
-
 						</div>
 						{% else %}
-						<p>Aucun événement disponible.</p>
+						<!-- No Events Message -->
+						<p class="text-gray-600">Aucun événement disponible.</p>
 						{% endfor %}
-
 					</div>
 
 					<!-- Load More Button -->

@@ -17,7 +17,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     avatar VARCHAR(255) DEFAULT NULL, 
     gender ENUM('homme', 'femme') NOT NULL,
-    STATUS ENUM('banned','accepted') NOT NULL DEFAULT 'accepted',
+    status ENUM('banned','accepted') NOT NULL DEFAULT 'accepted',
     is_verified ENUM('yes','no') NOT NULL DEFAULT 'no',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -32,7 +32,6 @@ CREATE TABLE user_roles (
     FOREIGN KEY (role_id) REFERENCES roles(role_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-
 -- TABLE CATEGORIES
 CREATE TABLE categories (
     category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -43,18 +42,32 @@ CREATE TABLE categories (
 -- TABLE SPONSORS
 CREATE TABLE sponsors (
     sponsor_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     img VARCHAR(255) DEFAULT NULL
 );
 
 -- TABLE TAGS
 CREATE TABLE tags (
     tag_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(250) NOT NULL,
+    name VARCHAR(250) NOT NULL UNIQUE,
     PRIMARY KEY (tag_id)
 );
 
+-- TABLE REGION
+CREATE TABLE region (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    region VARCHAR(40) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=17;
 
+-- TABLE VILLE
+CREATE TABLE IF NOT EXISTS ville (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ville VARCHAR(40) NOT NULL,
+    region INT NOT NULL,
+    FOREIGN KEY (region) REFERENCES region(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=403;
+
+-- TABLE EVENTS
 CREATE TABLE events (
     event_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -63,22 +76,24 @@ CREATE TABLE events (
     image VARCHAR(255) DEFAULT NULL,
     status ENUM('pending', 'refused', 'accepted') NOT NULL DEFAULT 'pending',
     eventMode ENUM('enligne', 'presentiel') NOT NULL,
-    price FLOAT DEFAULT NULL CHECK (price >= 0),
+    price DECIMAL(10,2) DEFAULT NULL CHECK (price >= 0),
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     situation ENUM('completed', 'annulled', 'encours') NOT NULL DEFAULT 'encours',
     capacite BIGINT NOT NULL CHECK (capacite > 0),
     lienEvent VARCHAR(255) DEFAULT NULL,
-    startEventAt DATE NOT NULL, 
-    endEventAt DATE NOT NULL,
+    startEventAt DATETIME NOT NULL, 
+    endEventAt DATETIME NOT NULL,
     sponsor_id BIGINT DEFAULT NULL,
     category_id BIGINT DEFAULT NULL,
     user_id BIGINT NOT NULL,
+    ville_id INT DEFAULT NULL,
+    FOREIGN KEY (ville_id) REFERENCES ville(id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (sponsor_id) REFERENCES sponsors(sponsor_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- TABLE events_TAGS
+-- TABLE EVENTS_TAGS
 CREATE TABLE events_tag (
     event_id BIGINT NOT NULL,
     tag_id BIGINT UNSIGNED NOT NULL,
@@ -86,8 +101,6 @@ CREATE TABLE events_tag (
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
 
 -- TABLE NOTIFICATIONS
 CREATE TABLE notifications (
@@ -124,8 +137,8 @@ CREATE TABLE feedback (
 CREATE TABLE orders (
     order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     participant_id BIGINT NOT NULL,
-    totalAmount FLOAT NOT NULL CHECK (totalAmount >= 0),
-    status ENUM('en attente', 'paye', 'annule', 'rembourse') NOT NULL DEFAULT 'en attente',
+    totalAmount DECIMAL(10,2) NOT NULL CHECK (totalAmount >= 0),
+    status ENUM('enattente', 'paye', 'annule', 'rembourse') NOT NULL DEFAULT 'enattente',
     paymentMethod ENUM('carte', 'PayPal') NOT NULL,
     transaction_id VARCHAR(100) UNIQUE DEFAULT NULL,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -139,25 +152,21 @@ CREATE TABLE orderdetails (
     order_id BIGINT NOT NULL,
     event_id BIGINT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
-    unitPrice FLOAT NOT NULL CHECK (unitPrice >= 0),
-    subtotal FLOAT NOT NULL CHECK (subtotal >= 0),
+    unitPrice DECIMAL(10,2) NOT NULL CHECK (unitPrice >= 0),
+    subtotal DECIMAL(10,2) NOT NULL CHECK (subtotal >= 0),
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
 -- INDEXATION POUR OPTIMISATION
 CREATE INDEX idx_username ON users(username);
 CREATE INDEX idx_email ON users(email);
 CREATE INDEX idx_event_title ON events(title);
 CREATE INDEX idx_event_status ON events(status);
-CREATE INDEX idx_order_status ON orders(STATUS);
+CREATE INDEX idx_order_status ON orders(status);
 
-
-CREATE TABLE IF NOT EXISTS `region` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `region` varchar(40) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
+--------------------------------------------------------------------------
 
 INSERT INTO `region` (`id`, `region`) VALUES
 (1, 'Tanger-Tétouan-Al Hoceïma'),
@@ -172,16 +181,6 @@ INSERT INTO `region` (`id`, `region`) VALUES
 (10, 'Guelmim-Oued Noun'),
 (11, 'Laâyoune-Sakia El Hamra'),
 (12, 'Dakhla-Oued Ed Dahab');
-
-
-CREATE TABLE IF NOT EXISTS `ville` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ville` varchar(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `region` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`region`) REFERENCES region(`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=403 ;
-
 
 
 INSERT INTO `ville` (`id`, `ville`, `region`) VALUES
@@ -579,7 +578,6 @@ INSERT INTO `ville` (`id`, `ville`, `region`) VALUES
 (402, 'Oued-Eddahab', 12),
 (403, 'Stehat', 1),
 (404, 'Aït Attab', 5);
-
 
 INSERT INTO roles (name_role) VALUES
 ('Admin'),
