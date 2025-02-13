@@ -206,12 +206,15 @@ class EventController
     {
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        $categoryHomePage = $eventsHomePage->fetchCategories();
+        $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
         // var_dump($eventsAccepted);
         View::render('front/home.twig', [
             'eventsAccepted' => $eventsAccepted,
+            'categoryHomePage' => $categoryHomePage,
+            'SponsorsHomePage' => $SponsorsHomePage,
         ]);
     }
-
 
 
 }

@@ -266,6 +266,15 @@ class Event
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+     // Fetch all tags
+     public function fetchAllSponsors(): array
+     {
+         $sql = "SELECT sponsor_id,s.img As sponsor_image, s.name As name_sponsor FROM sponsors s";
+         $stmt = $this->pdo->query($sql);
+         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+     }
+ 
+
     public function delete(int $eventId): bool
     {
         // Supprimer les tags associe a l'evenement
@@ -356,7 +365,7 @@ class Event
             return null;
         }
 
-        $sql = "SELECT sponsor_id FROM sponsors WHERE name = :name";
+        $sql = "SELECT sponsor_id, FROM sponsors WHERE name = :name";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':name' => $sponsorName]);
         $sponsor = $stmt->fetch(PDO::FETCH_ASSOC);
