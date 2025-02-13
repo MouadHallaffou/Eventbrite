@@ -5,6 +5,7 @@ namespace App\Controllers\FrontOffice;
 use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
+use App\core\Validator;
 use PDO;
 
 class EventController
@@ -20,8 +21,9 @@ class EventController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
             $event = new Event($this->pdo);
-
-            // Set event properties
+                        
+            // $errors = Validator::validateEvent($_POST);
+       
             $event->setTitle($_POST['title']);
             $event->setDescription($_POST['description']);
             $event->setEventMode($_POST['eventMode']);
@@ -78,13 +80,6 @@ class EventController
         }
     }
 
-    public function fetchAllEvents()
-    {
-        $event = new Event($this->pdo);
-        $events = $event->fetchAll();
-        return $events;
-    }
-
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
@@ -125,32 +120,37 @@ class EventController
         }
     }
 
+    // Afficher le formulaire d'édition
     public function editEvent($eventId)
     {
-        $eventModel = new Event($this->pdo);
-
-        $event = $eventModel->findById($eventId);
-
-        if (!$event) {
-            echo "Événement non trouvé.";
-            return;
-        }
-
-        $categories = $eventModel->fetchCategories();
-        $tags = $eventModel->fetchTags();
-
-        View::render('back/organisateur/editEvent.twig', [
-            'event' => $event,
-            'categories' => $categories,
-            'tags' => $tags,
-        ]);
+           $eventModel = new Event($this->pdo);
+   
+           $event = $eventModel->findById($eventId);
+   
+           if (!$event) {
+               echo "Événement non trouvé.";
+               return;
+           }
+   
+           $categories = $eventModel->fetchCategories();
+           $tags = $eventModel->fetchTags();
+   
+           View::render('back/organisateur/editEvent.twig', [
+               'event' => $event,
+               'categories' => $categories,
+               'tags' => $tags,
+           ]);
     }
-
-    
+   
+    // Mettre à jour un événement
     public function updateEvent($eventId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eventModel = new Event($this->pdo);
+
+            $currentEvent = $eventModel->findById($eventId);
+
+            // $errors = Validator::validateEvent($_POST);
 
             $data = [
                 'title' => $_POST['title'],
@@ -163,21 +163,25 @@ class EventController
                 'category_id' => (int)$_POST['category_id'],
                 'tags' => $_POST['tags'] ?? [],
                 'sponsor_name' => $_POST['sponsor_name'] ?? null,
-                'sponsor_image' => $_FILES['image_sponsor'] ?? null,
+                'sponsor_image_path' => $currentEvent['sponsor_image'] ?? null,
                 'startEventAt' => $_POST['startEventAt'],
                 'endEventAt' => $_POST['endEventAt'],
+                'image' => $currentEvent['image'] ?? null, 
             ];
 
-            if (isset($_FILES['image_sponsor']) && $_FILES['image_sponsor']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = 'uploads/sponsors/'; 
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
+            if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . "/../../../public/assets/images/"; 
+                $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
+
+                if (!empty($currentEvent['image'])) {
+                    $oldImagePath = $uploadDir . $currentEvent['image'];
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
                 }
 
-                $uploadFile = $uploadDir . basename($_FILES['image_sponsor']['name']);
-
-                if (move_uploaded_file($_FILES['image_sponsor']['tmp_name'], $uploadFile)) {
-                    $data['sponsor_image_path'] = $uploadFile; 
+                if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
+                    $data['image'] = basename($_FILES['event_image']['name']); 
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'upload de l\'image.']);
                     return;
@@ -188,7 +192,7 @@ class EventController
 
             if ($success) {
                 echo json_encode(['success' => true, 'message' => 'Événement mis à jour avec succès.']);
-                header('Location: /addEvent/' . $eventId);
+                header('Location: /events');
                 exit;
             } else {
                 echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour.']);
@@ -197,5 +201,17 @@ class EventController
             echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
         }
     }
+
+    public function displayEventsAcceptedHome()
+    {
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        // var_dump($eventsAccepted);
+        View::render('front/home.twig', [
+            'eventsAccepted' => $eventsAccepted,
+        ]);
+    }
+
+
 
 }

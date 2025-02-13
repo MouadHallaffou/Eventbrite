@@ -17,12 +17,18 @@ Session::checkSession();
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
 
+$router->get('/home', EventController::class, 'displayEventsAcceptedHome');
+$router->get('/', EventController::class, 'displayEventsAcceptedHome');
+
+
+
 $router->get('/dashboard', AdminController::class, 'index');
 
 $router->post('/addEvent', EventController::class, 'createEvent');
 $router->get('/addEvent', EventController::class, 'displayEventForm');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
+
 // Route pour créer un événement
 $router->post('/create-event', EventController::class, 'createEvent');
 // Route pour supprimer un événement

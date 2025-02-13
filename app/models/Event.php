@@ -212,8 +212,8 @@ class Event
             ':situation' => $this->situation,
             ':capacite' => $this->capacite,
             ':lienEvent' => $this->lienEvent,
-            ':startEventAt' => $this->startEventAt->format('Y-m-d'),
-            ':endEventAt' => $this->endEventAt->format('Y-m-d'),
+            ':startEventAt' => $this->startEventAt->format('Y-m-d H:i:s'),
+            ':endEventAt' => $this->endEventAt->format('Y-m-d H:i:s'),
             ':sponsor_id' => $this->sponsor_id,
             ':category_id' => $this->category_id,
             ':user_id' => $this->user_id
@@ -268,10 +268,9 @@ class Event
 
     public function delete(int $eventId): bool
     {
-        // Supprimer les tags associés à l'événement
+        // Supprimer les tags associe a l'evenement
         $this->deleteEventTags($eventId);
 
-        // Supprimer l'événement
         $sql = "DELETE FROM events WHERE event_id = :event_id";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([':event_id' => $eventId]);
@@ -283,10 +282,14 @@ class Event
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([':event_id' => $eventId]);
     }
+
     // Récupérer un événement par son ID
     public function findById(int $eventId): ?array
     {
-        $sql = "SELECT * FROM events WHERE event_id = :event_id";
+        $sql = "SELECT e.*, s.name AS sponsor_name, s.img AS sponsor_image 
+                FROM events e
+                LEFT JOIN sponsors s ON e.sponsor_id = s.sponsor_id
+                WHERE e.event_id = :event_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':event_id' => $eventId]);
         $event = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -323,7 +326,7 @@ class Event
         $success = $stmt->execute([
             ':title' => $data['title'],
             ':description' => $data['description'],
-            ':image' => $data['image'] ?? null,
+            ':image' => $data['image'] ?? null, 
             ':adresse' => $data['adresse'],
             ':eventMode' => $data['eventMode'],
             ':price' => $data['price'],
@@ -332,7 +335,7 @@ class Event
             ':startEventAt' => $data['startEventAt'],
             ':endEventAt' => $data['endEventAt'],
             ':category_id' => $data['category_id'],
-            ':sponsor_id' => $this->handleSponsor($data['sponsor_name'], $data['sponsor_image']),
+            ':sponsor_id' => $this->handleSponsor($data['sponsor_name'], $data['sponsor_image_path']),
             ':event_id' => $eventId,
         ]);
 
@@ -347,7 +350,7 @@ class Event
     }
 
     // Gérer le sponsor
-    public function handleSponsor(?string $sponsorName, ?array $sponsorImage): ?int
+    public function handleSponsor(?string $sponsorName, ?string $sponsorImagePath): ?int
     {
         if (empty($sponsorName)) {
             return null;
@@ -366,13 +369,13 @@ class Event
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':name' => $sponsorName,
-            ':image' => $sponsorImage ? $sponsorImage['name'] : null,
+            ':image' => $sponsorImagePath,
         ]);
 
         return $this->pdo->lastInsertId();
     }
 
-
+    // Mettre à jour les tags de l'événement
     public function updateEventTags(int $eventId, array $tagIds): bool
     {
         $this->deleteEventTags($eventId);
@@ -388,16 +391,37 @@ class Event
         return true;
     }
 
-
+    // Récupérer les tags associés à un événement
     public function getTagsByEventId(int $eventId): array
     {
         $sql = "SELECT t.tag_id, t.name 
-                FROM tags t
-                JOIN events_tag et ON et.tag_id = t.tag_id
-                WHERE et.event_id = :event_id";
+                    FROM tags t
+                    JOIN events_tag et ON et.tag_id = t.tag_id
+                    WHERE et.event_id = :event_id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':event_id' => $eventId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    public function displayEventsAccepted()
+    {
+        $sql = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
+                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status, t.tag_id,
+                GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,c.category_id, c.name as category_name, 
+                c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
+                u.user_id, u.username, e.adresse
+            FROM events e 
+            LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
+            LEFT JOIN events_tag et ON et.event_id = e.event_id
+            LEFT JOIN tags t ON t.tag_id = et.tag_id
+            LEFT JOIN users u ON u.user_id = e.user_id
+            LEFT JOIN categories c ON c.category_id = e.category_id
+            WHERE e.status = 'accepted'
+            GROUP BY e.event_id;";
+            
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
