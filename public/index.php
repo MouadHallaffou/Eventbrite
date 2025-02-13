@@ -8,8 +8,12 @@ use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
 use App\core\Session;
 
+
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+
+
+
 
 $router = new Router();
 Session::checkSession();
@@ -25,6 +29,7 @@ $router->get('/dashboard', AdminController::class, 'index');
 
 $router->post('/addEvent', EventController::class, 'createEvent');
 $router->get('/addEvent', EventController::class, 'displayEventForm');
+$router->get('/addEvent', EventController::class, 'afficheEvents');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
 

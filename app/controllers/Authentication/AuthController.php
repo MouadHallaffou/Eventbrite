@@ -18,11 +18,15 @@ class AuthController extends Auth {
     public function register(){
 
         if (isset($_POST['register']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $email = $_POST['email'];
             $userName = $_POST['username'];
             $gender = $_POST['gender'];
             $password = $_POST['password'];
+            // $avatar = $_POST['avatar'];
             $role = $_POST['roleId'];
+            $result = $this->registerUser($userName, $email, $password, $gender ,$role);
+            // $role = $_POST['roleId'];
             
             $result = $this->registerUser($userName, $email, $password ,$gender ,$role);
             return $result;
@@ -47,8 +51,4 @@ class AuthController extends Auth {
         }
 
     }
-
-
-
-
 }

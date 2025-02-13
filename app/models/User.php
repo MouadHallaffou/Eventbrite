@@ -95,6 +95,7 @@ public static function AddUser($columns, $values ,$roleId)
     $lastid = $conn->lastInsertId();
 
     $role = self::AddRoleUser($lastid,$roleId);
+
     return true;
 
   }
