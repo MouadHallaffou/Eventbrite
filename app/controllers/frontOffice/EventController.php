@@ -120,7 +120,7 @@ class EventController
         }
     }
 
-    // Afficher le formulaire d'édition d'un événement
+    // Afficher le formulaire d'édition
     public function editEvent($eventId)
     {
            $eventModel = new Event($this->pdo);
@@ -206,9 +206,12 @@ class EventController
     {
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        // var_dump($eventsAccepted);
         View::render('front/home.twig', [
-            'events' => $eventsAccepted,
+            'eventsAccepted' => $eventsAccepted,
         ]);
     }
+
+
 
 }
