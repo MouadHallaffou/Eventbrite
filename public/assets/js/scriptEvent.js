@@ -22,7 +22,7 @@ $(document).ready(function() {
         }
     });
 
-    // Soumission du formulaire via AJAX
+  // Soumission du formulaire via AJAX
     $("#eventForm").submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
@@ -48,7 +48,7 @@ $(document).ready(function() {
         });
     });
 
-    // Charger les catégories et sponsors via AJAX
+    // Charger les catégories et sponsors et tags via AJAX
     $.ajax({
         url: "/../../../app/controllers/frontOffice/EventController.php",
         type: "POST",
@@ -88,5 +88,40 @@ $(document).ready(function() {
             console.error("Erreur lors du chargement des données :", error);
         }
     });
-
+    
 });
+
+function toggleEventMode() {
+    const presentielFields = document.getElementById('adresseField');
+    const onlineFields = document.getElementById('lienEventField');
+    const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+    
+    if (presentielRadio.checked) {
+        presentielFields.classList.remove('hidden');
+        onlineFields.classList.add('hidden');
+    } else {
+        presentielFields.classList.add('hidden');
+        onlineFields.classList.remove('hidden');
+    }
+}
+
+function togglePaymentType() {
+    const priceField = document.getElementById('priceField');
+    const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+    
+    if (payantRadio.checked) {
+        priceField.classList.remove('hidden');
+    } else {
+        priceField.classList.add('hidden');
+    }
+}
+
+function openModal() {
+    document.getElementById('eventModal').classList.remove('hidden');
+    document.getElementById('eventModal').classList.add('flex');
+}
+
+function closeModal() {
+    document.getElementById('eventModal').classList.add('hidden');
+    document.getElementById('eventModal').classList.remove('flex');
+}
