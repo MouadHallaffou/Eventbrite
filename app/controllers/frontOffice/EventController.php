@@ -2,7 +2,7 @@
 
 namespace App\controllers\frontOffice;
 
-require realpath(__DIR__ . '/../../../vendor/autoload.php');
+require __DIR__ . '/../../../vendor/autoload.php';
 
 use App\Models\Event;
 use App\Config\Database;

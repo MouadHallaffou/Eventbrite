@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Help</title>
+		<link
+		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+		 <script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" type="text/css" href="/assets/styles/home.css">
+	</head>
+
+
+	<body>
+			<nav class="bg-white shadow-md p-4 flex justify-between items-center border-gray-200 dark:bg-gray-900"> <div>
+				<img src="eventbrite-logo.png" alt="Eventbrite Logo" class="h-8">
+			</div>
+			<div class="flex-1 mx-4 flex justify-center">
+				<h1 class="text-3xl font-bold">Help Center</h1>
+			</div>
+			<div class="flex items-center space-x-6">
+				<a href="#" class="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 text-sm font-medium transition duration-200 ease-in-out">
+					Contact Support
+				</a>
+
+			</div>
+		</nav>
+
+		<!-- Main Section -->
+		<main
+			class="container mx-auto px-4 py-12">
+			<!-- Search Bar -->
+			<div class="mb-8">
+				<input type="text" id="searchInput" placeholder="Search for help..." class="w-full p-4 text-lg border rounded-lg shadow focus:ring-2 focus:ring-[#006A4E] focus:outline-none"/>
+			</div>
+
+			<!-- Categories Section -->
+			<section
+				class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E]mb-2">Getting Started</h2>
+					<p class="text-gray-700">Learn the basics of our platform to get started quickly.</p>
+					<a href="#" class="text-[#006A4E] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E]mb-2">Account Management</h2>
+					<p class="text-gray-700">Manage your account, settings, and privacy preferences.</p>
+					<a href="#" class="text-[#006A4E] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E] mb-2">Troubleshooting</h2>
+					<p class="text-gray-700">Resolve common issues with step-by-step solutions.</p>
+					<a href="#" class="text-[#006A4E] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Add more categories as needed -->
+			</section>
+
+			<!-- FAQ Section -->
+			<section class="mt-12">
+				<h2 class="text-2xl font-bold text-gray-800 mb-6">Frequently Asked Questions</h2>
+				<div
+					class="space-y-4">
+					<!-- Single FAQ -->
+					<div class="bg-white p-6 rounded-lg shadow">
+						<h3 class="text-lg font-semibold text-gray-800">How do I reset my password?</h3>
+						<p class="text-gray-600 mt-2">To reset your password, click on "Forgot Password" on the login page and follow the instructions.</p>
+					</div>
+					<!-- Single FAQ -->
+					<div class="bg-white p-6 rounded-lg shadow">
+						<h3 class="text-lg font-semibold text-gray-800">Can I upgrade my plan later?</h3>
+						<p class="text-gray-600 mt-2">Yes, you can upgrade or downgrade your plan anytime from the account settings page.</p>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		 <script>
+				    // JavaScript for Search Functionality
+				    const searchInput = document.getElementById('searchInput');
+				    const categories = document.querySelectorAll('.category');
+				
+				    searchInput.addEventListener('input', function () {
+				      const query = this.value.toLowerCase();
+				
+				      categories.forEach(category => {
+				        const text = category.textContent.toLowerCase();
+				        if (text.includes(query)) {
+				          category.classList.remove('hidden');
+				        } else {
+				          category.classList.add('hidden');
+				        }
+				      });
+				    });
+				  </script>
+	</body>
+</html>

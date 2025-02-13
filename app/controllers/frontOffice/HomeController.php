@@ -12,6 +12,9 @@ class HomeController{
     public function index(){
         View::render('front/home.twig');
      }
+
+
+     
 }
 
 

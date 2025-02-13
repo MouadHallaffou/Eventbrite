@@ -9,7 +9,6 @@ use PDOException;
 
 class Database {
 
-
     private $ServerName;
     private $UserName;
     private $PassWord;
@@ -46,13 +45,12 @@ class Database {
         if(self::$instance == null){
             self::$instance = new self();
         }
-        return self::$instance; 
+        return self::$instance;
     }
 
     public static function getConnection() {
         return self::$conn;
     }
-
 }
 
 // $new = new Database();
