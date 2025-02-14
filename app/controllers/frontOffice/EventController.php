@@ -22,7 +22,6 @@ class EventController
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
             $event = new Event($this->pdo);
 
-            // Assigner les valeurs du formulaire
             $event->setTitle($_POST['title']);
             $event->setDescription($_POST['description']);
             $event->setEventMode($_POST['eventMode']);
@@ -34,7 +33,6 @@ class EventController
             $event->setUserId((int)$_POST['user_id']);
             $event->setVilleId((int)$_POST['ville_id']);
 
-            // Gérer l'adresse et le lien
             if ($_POST['eventMode'] === "presentiel") {
                 $event->setAdresse($_POST['adresse']);
                 $event->setLienEvent(null);
@@ -43,7 +41,6 @@ class EventController
                 $event->setAdresse(null);
             }
 
-            // Gérer l'upload de l'image de l'événement
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $target_dir = __DIR__ . "/../../../public/assets/images/";
                 $target_file = $target_dir . basename($_FILES["image"]["name"]);
@@ -54,14 +51,12 @@ class EventController
                 }
             }
 
-            // Gérer les sponsors dynamiques
             $sponsors = [];
             if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
                 foreach ($_POST['sponsors'] as $index => $sponsorData) {
                     $sponsorName = $sponsorData['name'] ?? null;
                     $sponsorImage = null;
 
-                    // Gérer l'upload de l'image du sponsor
                     if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
                         $target_dir = __DIR__ . "/../../../public/assets/images/";
                         $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
@@ -86,7 +81,6 @@ class EventController
             $tags = $_POST['tags'] ?? [];
             $eventId = $event->insert($tags, $sponsors);
 
-            // Retourner une réponse JSON
             header('Content-Type: application/json');
             echo json_encode([
                 "success" => true,
@@ -97,9 +91,8 @@ class EventController
         }
     }
 
-    /**
-     * Récupère les villes par région.
-     */
+
+    //Récupère les villes par région.
     public function getVillesByRegion()
     {
         if (isset($_GET['region_id'])) {
@@ -109,10 +102,8 @@ class EventController
             echo json_encode($villes);
         }
     }
-
-    /**
-     * Affiche tous les événements.
-     */
+    
+    // Affiche tous les événements.
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
@@ -130,9 +121,7 @@ class EventController
         ]);
     }
 
-    /**
-     * Supprime un événement.
-     */
+    // Supprime un événement.
     public function deleteEvent()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
@@ -155,9 +144,7 @@ class EventController
         }
     }
 
-    /**
-     * Affiche le formulaire d'édition d'un événement.
-     */
+    // Affiche le formulaire d'édition d'un événement.
     public function editEvent($eventId)
     {
         $eventModel = new Event($this->pdo);
@@ -187,99 +174,92 @@ class EventController
         ]);
     }
 
-    /**
-     * Met à jour un événement.
-     */
+    // Met à jour un événement.
     public function updateEvent($eventId)
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $eventModel = new Event($this->pdo);
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $eventModel = new Event($this->pdo);
 
-        $currentEvent = $eventModel->findById($eventId);
+            $currentEvent = $eventModel->findById($eventId);
 
-        // Récupérer les sponsors
-        $sponsors = [];
-        if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
-            foreach ($_POST['sponsors'] as $index => $sponsorData) {
-                $sponsorName = $sponsorData['name'] ?? null;
-                $sponsorImage = null;
+            // Récupérer les sponsors
+            $sponsors = [];
+            if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
+                foreach ($_POST['sponsors'] as $index => $sponsorData) {
+                    $sponsorName = $sponsorData['name'] ?? null;
+                    $sponsorImage = null;
 
-                // Gérer l'upload de l'image du sponsor
-                if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
-                    $target_dir = __DIR__ . "/../../../public/assets/images/";
-                    $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
-                    if (move_uploaded_file($_FILES["sponsors"]["tmp_name"][$index]["image"], $target_file)) {
-                        $sponsorImage = basename($_FILES["sponsors"]["name"][$index]["image"]);
-                    } else {
-                        throw new \Exception("Erreur lors du téléchargement de l'image du sponsor.");
+                    if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
+                        $target_dir = __DIR__ . "/../../../public/assets/images/";
+                        $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        if (move_uploaded_file($_FILES["sponsors"]["tmp_name"][$index]["image"], $target_file)) {
+                            $sponsorImage = basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        } else {
+                            throw new \Exception("Erreur lors du téléchargement de l'image du sponsor.");
+                        }
+                    }
+
+                    if ($sponsorName) {
+                        $sponsors[] = [
+                            'name' => $sponsorName,
+                            'image' => $sponsorImage,
+                        ];
+                    }
+                }
+            }
+
+            $data = [
+                'title' => $_POST['title'],
+                'description' => $_POST['description'],
+                'eventMode' => $_POST['eventMode'],
+                'adresse' => $_POST['adresse'] ?? null,
+                'lienEvent' => $_POST['lienEvent'] ?? null,
+                'price' => $_POST['isPaid'] === 'payant' ? (float)$_POST['price'] : null,
+                'capacite' => (int)$_POST['capacite'],
+                'category_id' => (int)$_POST['category_id'],
+                'tags' => $_POST['tags'] ?? [],
+                'sponsors' => $sponsors, 
+                'startEventAt' => $_POST['startEventAt'],
+                'endEventAt' => $_POST['endEventAt'],
+                'image' => $currentEvent['image'] ?? null,
+                'ville_id' => (int)$_POST['ville_id'],
+            ];
+
+            if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . "/../../../public/assets/images/";
+                $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
+
+                if (!empty($currentEvent['image'])) {
+                    $oldImagePath = $uploadDir . $currentEvent['image'];
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
                     }
                 }
 
-                if ($sponsorName) {
-                    $sponsors[] = [
-                        'name' => $sponsorName,
-                        'image' => $sponsorImage,
-                    ];
-                }
-            }
-        }
-
-        // Données à mettre à jour
-        $data = [
-            'title' => $_POST['title'],
-            'description' => $_POST['description'],
-            'eventMode' => $_POST['eventMode'],
-            'adresse' => $_POST['adresse'] ?? null,
-            'lienEvent' => $_POST['lienEvent'] ?? null,
-            'price' => $_POST['isPaid'] === 'payant' ? (float)$_POST['price'] : null,
-            'capacite' => (int)$_POST['capacite'],
-            'category_id' => (int)$_POST['category_id'],
-            'tags' => $_POST['tags'] ?? [],
-            'sponsors' => $sponsors, // Ajouter les sponsors
-            'startEventAt' => $_POST['startEventAt'],
-            'endEventAt' => $_POST['endEventAt'],
-            'image' => $currentEvent['image'] ?? null,
-            'ville_id' => (int)$_POST['ville_id'],
-        ];
-
-        // Gérer l'upload de l'image de l'événement
-        if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . "/../../../public/assets/images/";
-            $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
-
-            if (!empty($currentEvent['image'])) {
-                $oldImagePath = $uploadDir . $currentEvent['image'];
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+                if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
+                    $data['image'] = basename($_FILES['event_image']['name']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'upload de l\'image.']);
+                    return;
                 }
             }
 
-            if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
-                $data['image'] = basename($_FILES['event_image']['name']);
+            // Mettre à jour l'événement
+            $success = $eventModel->update($eventId, $data);
+
+            if ($success) {
+                echo json_encode(['success' => true, 'message' => 'Événement mis à jour avec succès.']);
+                header('Location: /events');
+                exit;
             } else {
-                echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'upload de l\'image.']);
-                return;
+                echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour.']);
             }
-        }
-
-        // Mettre à jour l'événement
-        $success = $eventModel->update($eventId, $data);
-
-        if ($success) {
-            echo json_encode(['success' => true, 'message' => 'Événement mis à jour avec succès.']);
-            header('Location: /events');
-            exit;
         } else {
-            echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour.']);
+            echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Méthode non autorisée.']);
     }
-}
 
-    /**
-     * Affiche les événements acceptés sur la page d'accueil.
-     */
+    // Affiche les événements acceptés sur la page d'accueil.
     public function displayEventsAcceptedHome()
     {
         $eventsHomePage = new Event($this->pdo);
@@ -293,5 +273,6 @@ class EventController
             'SponsorsHomePage' => $SponsorsHomePage,
         ]);
     }
+
     
 }

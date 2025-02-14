@@ -43,6 +43,7 @@ $router->post('/delete-event', EventController::class, 'deleteEvent');
 $router->get('/edit-event/{event_id}', EventController::class, 'editEvent');
 $router->post('/update-event/{event_id}', EventController::class, 'updateEvent');
 
+
 $router->get('/register', AuthController::class, 'registerView');
 $router->get('/login', AuthController::class, 'loginView');
 
