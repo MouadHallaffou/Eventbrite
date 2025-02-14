@@ -10,6 +10,16 @@ class HomeController{
         View::render('front/home.twig');
      }
 
+
+     public function findevents(){
+        View::render('front/FindEvents.twig');
+     }
+
+
+     public function searchEvents(){
+        View::render('front/FindEvents.twig',);
+     }
+
 }
 
 
