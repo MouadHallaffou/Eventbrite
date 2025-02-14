@@ -205,50 +205,66 @@
                     </select>
                 </div>
 
-                <!-- Sponsors (dynamique) -->
-<div id="sponsorsSection">
-    <label class="block font-semibold mb-2">Sponsors</label>
-    <div id="sponsorsContainer">
-        {% for sponsor in event.sponsors %}
-        <div class="sponsor-entry mb-4">
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Nom du sponsor -->
-                <div>
-                    <input
-                        type="text"
-                        name="sponsors[{{ loop.index0 }}][name]"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        placeholder="Nom du sponsor"
-                        value="{{ sponsor.name }}">
+                <div id="sponsorsSection">
+                    <label class="block font-semibold mb-2">Sponsors</label>
+                    <div id="sponsorsContainer">
+                        {% for sponsor in event.sponsors %}
+                        <div class="sponsor-entry mb-4 relative">
+                            <!-- Bouton de suppression -->
+                            <button
+                                type="button"
+                                class="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 rounded-full hover:bg-red-700 transition duration-300"
+                                onclick="removeSponsor(this)">
+                                &times;
+                            </button>
+                            <!-- Champ caché pour marquer la suppression -->
+                            <input
+                                type="hidden"
+                                name="sponsors[{{ loop.index0 }}][delete]"
+                                value="0">
+                            <!-- Champ caché pour l'ID du sponsor -->
+                            <input
+                                type="hidden"
+                                name="sponsors[{{ loop.index0 }}][sponsor_id]"
+                                value="{{ sponsor.sponsor_id }}">
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Nom du sponsor -->
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="sponsors[{{ loop.index0 }}][name]"
+                                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        placeholder="Nom du sponsor"
+                                        value="{{ sponsor.name }}">
+                                </div>
+                                <!-- Image du sponsor -->
+                                <div>
+                                    <input
+                                        type="file"
+                                        name="sponsors[{{ loop.index0 }}][image]"
+                                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                                        accept="image/*">
+                                    {% if sponsor.img %}
+                                        <p class="text-sm text-gray-500 mt-2">
+                                            Image actuelle : 
+                                            <a href="/assets/images/{{ sponsor.img }}" target="_blank" class="text-blue-500 hover:underline">
+                                                {{ sponsor.img }}
+                                            </a>
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Bouton pour ajouter un nouveau sponsor -->
+                    <button
+                        type="button"
+                        id="addSponsorButton"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                        Ajouter un sponsor
+                    </button>
                 </div>
-                <!-- Image du sponsor -->
-                <div>
-                    <input
-                        type="file"
-                        name="sponsors[{{ loop.index0 }}][image]"
-                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
-                        accept="image/*">
-                    {% if sponsor.img %}
-                        <p class="text-sm text-gray-500 mt-2">
-                            Image actuelle : 
-                            <a href="/assets/images/{{ sponsor.img }}" target="_blank" class="text-blue-500 hover:underline">
-                                {{ sponsor.img }}
-                            </a>
-                        </p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- Bouton pour ajouter un nouveau sponsor -->
-    <button
-        type="button"
-        id="addSponsorButton"
-        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
-        Ajouter un sponsor
-    </button>
-</div>
 
                 <!-- Dates -->
                 <div class="grid grid-cols-2 gap-4">
@@ -290,18 +306,15 @@
     </footer>
 
     <script>
-        let sponsorIndex = {{ event.sponsors|length }};
 
-        // Fonction pour ajouter un nouveau champ sponsor
+        let sponsorIndex = {{ event.sponsors|length }};
         document.getElementById('addSponsorButton').addEventListener('click', function() {
             const sponsorsContainer = document.getElementById('sponsorsContainer');
 
-            // Créer un nouveau champ sponsor
             const newSponsorEntry = document.createElement('div');
             newSponsorEntry.classList.add('sponsor-entry', 'mb-4');
             newSponsorEntry.innerHTML = `
                 <div class="grid grid-cols-2 gap-4">
-                    <!-- Nom du sponsor -->
                     <div>
                         <input
                             type="text"
@@ -309,7 +322,6 @@
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             placeholder="Nom du sponsor">
                     </div>
-                    <!-- Image du sponsor -->
                     <div>
                         <input
                             type="file"
@@ -320,12 +332,20 @@
                 </div>
             `;
 
-            // Ajouter le nouveau champ au conteneur
             sponsorsContainer.appendChild(newSponsorEntry);
-
-            // Incrémenter l'index pour le prochain sponsor
             sponsorIndex++;
         });
+
+        function removeSponsor(button) {
+            const sponsorEntry = button.closest('.sponsor-entry');
+            const deleteInput = sponsorEntry.querySelector('input[type="hidden"]');
+
+            // Marquer le sponsor pour suppression
+            deleteInput.value = "1";
+
+            // Masquer le sponsor
+            sponsorEntry.style.display = "none";
+        }
 
         // Gestion du mode d'événement
         function toggleEventMode() {

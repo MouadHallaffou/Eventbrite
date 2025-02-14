@@ -614,32 +614,32 @@
 
             // Soumission du formulaire via AJAX
             $("#eventForm").submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                formData.append("action", "insert");
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append("action", "insert");
 
-                $.ajax({
-                    url: "/create-event",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            window.location.href = result.redirect_url;
-                        } else {
-                            $(".error-message").addClass("hidden"); 
-                            for (const [field, message] of Object.entries(result.errors)) {
-                                $(`#error-${field}`).text(message).removeClass("hidden");
-                            }
+            $.ajax({
+                url: "/create-event",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    // Pas besoin de JSON.parse si la réponse est déjà un objet
+                    if (response.success) {
+                        window.location.href = response.redirect_url;
+                    } else {
+                        $(".error-message").addClass("hidden");
+                        for (const [field, message] of Object.entries(response.errors)) {
+                            $(`#error-${field}`).text(message).removeClass("hidden");
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors de l'envoi du formulaire :", error);
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Erreur lors de l'envoi du formulaire :", error);
+                }
             });
+        });
 
             $('#region').change(function() {
             const regionId = $(this).val();

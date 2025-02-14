@@ -91,7 +91,7 @@ class EventController
             echo json_encode([
                 "success" => true,
                 "event_id" => $eventId,
-                "redirect_url" => "/events"
+                "redirect_url" => "/addEvent"
             ]);
             exit;
         }
@@ -190,28 +190,35 @@ class EventController
     /**
      * Met à jour un événement.
      */
-    public function updateEvent($eventId)
+
+     public function updateEvent($eventId)
 {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $eventModel = new Event($this->pdo);
-
-        $currentEvent = $eventModel->findById($eventId);
 
         // Récupérer les sponsors
         $sponsors = [];
         if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
             foreach ($_POST['sponsors'] as $index => $sponsorData) {
+                // Vérifier si le sponsor est marqué pour suppression
+                if (isset($sponsorData['delete']) && $sponsorData['delete'] === "1") {
+                    // Vérifier que sponsor_id est défini
+                    if (isset($sponsorData['sponsor_id']) && is_numeric($sponsorData['sponsor_id'])) {
+                        // Supprimer le sponsor de la base de données
+                        $eventModel->removeSponsorFromEvent($eventId, (int)$sponsorData['sponsor_id']);
+                    }
+                    continue;
+                }
+
                 $sponsorName = $sponsorData['name'] ?? null;
                 $sponsorImage = null;
 
                 // Gérer l'upload de l'image du sponsor
-                if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
+                if (isset($_FILES['sponsors']['tmp_name'][$index]['image'])) {
                     $target_dir = __DIR__ . "/../../../public/assets/images/";
                     $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
                     if (move_uploaded_file($_FILES["sponsors"]["tmp_name"][$index]["image"], $target_file)) {
                         $sponsorImage = basename($_FILES["sponsors"]["name"][$index]["image"]);
-                    } else {
-                        throw new \Exception("Erreur lors du téléchargement de l'image du sponsor.");
                     }
                 }
 
@@ -238,7 +245,7 @@ class EventController
             'sponsors' => $sponsors, // Ajouter les sponsors
             'startEventAt' => $_POST['startEventAt'],
             'endEventAt' => $_POST['endEventAt'],
-            'image' => $currentEvent['image'] ?? null,
+            'image' => $_FILES['event_image']['name'] ?? null,
             'ville_id' => (int)$_POST['ville_id'],
         ];
 
@@ -246,13 +253,6 @@ class EventController
         if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = __DIR__ . "/../../../public/assets/images/";
             $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
-
-            if (!empty($currentEvent['image'])) {
-                $oldImagePath = $uploadDir . $currentEvent['image'];
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-            }
 
             if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
                 $data['image'] = basename($_FILES['event_image']['name']);
