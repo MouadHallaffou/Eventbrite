@@ -1,7 +1,7 @@
 -- Supprime la base de données si elle existe déjà
-DROP DATABASE IF EXISTS Eventbrite;
-CREATE DATABASE Eventbrite;
-USE Eventbrite;
+DROP DATABASE IF EXISTS Eventbritetesting;
+CREATE DATABASE Eventbritetesting;
+USE Eventbritetesting;
 
 -- TABLE ROLES
 CREATE TABLE roles (
