@@ -105,13 +105,6 @@
 										<td class="py-2 px-4">{{ row.username }}</td>
 										<td class="py-2 px-4">{{ row.email }}</td>
 									    <td class="py-2 px-4">{{ row.role }}</td>
-										{# <td class="py-2 px-4">
-											<select name="role">
-												<option value="{{ row.role }}">{{ row.role }}</option>
-												<option value="Organizer">organisateur</option>
-												<option value="Participant">Participant</option>
-											</select>
-										</td> #}
 										<td class="py-2 px-4">
 											<select name="STATUS" onchange="updateStatus('{{ row.user_id }}', this.value, this)">
 												<option value="{{ row.STATUS }}">{{ row.STATUS }}</option>

@@ -76,16 +76,16 @@ public static function getData($table,$condetion = ''){
 
    // ---------------------- update -----------------
 
-   public static function update($table,$columns,$id){
+//    public static function update($table,$columns,$id){
        
-       $conn = Database::getInstanse()->getConnection();
+//        $conn = Database::getInstanse()->getConnection();
 
-       $query="UPDATE $table SET $columns where id=:id";
-       $stmt=$conn->prepare($query);
-       $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-       return $stmt->execute();
+//        $query="UPDATE $table SET $columns where id=:id";
+//        $stmt=$conn->prepare($query);
+//        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+//        return $stmt->execute();
 
-   }
+//    }
 
    // |---------------------- AddUser -----------------|
 
@@ -116,6 +116,15 @@ public static function getData($table,$condetion = ''){
    }
 
        
+   public static function Update($table, $values, $whereClause, $whereParams) {
+    $conn = Database::getInstanse()->getConnection();
+
+    $setClause = implode('=?, ', array_keys($values)) . '=?';
+    $query = "UPDATE $table SET $setClause WHERE $whereClause";
+
+    $stmt = $conn->prepare($query);
+    return $stmt->execute(array_merge(array_values($values), $whereParams));
+}
 
 
    

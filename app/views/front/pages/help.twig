@@ -13,169 +13,71 @@
 
 	<body>
 
-		<nav class="bg-white border-gray-200 dark:bg-gray-900">
-			<div
-				class="max-w-screen-xl flex flex-wrap items-center justify-evenly mx-auto">
-				<!-- Logo -->
-				<div class="flex items-center justify-center ml-2">
-					<a href="https://flowbite.com/" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
-						<span class="self-center text-xl font-semibold whitespace-nowrap text-[#fb8c00] dark:text-white">
-							EventsBro
-						</span>
-					</a>
-					<div class="p-4 text-gray-600 dark:text-gray-300 outline-none focus:outline-none">
-						<div class="relative flex">
-							<select class="bg-white dark:bg-gray-800 h-10 px-5 rounded-l-full text-sm focus:outline-none outline-none border-2 border-gray-500 dark:border-gray-600 border-r-1 cursor-pointer max-h-10 overflow-y-hidden">
-								<option class="font-medium cursor-pointer" value="filter">
-									filter
-								</option>
-							</select>
-							<input type="search" name="search" placeholder="Search" class="bg-white dark:bg-gray-800 h-10 flex px-5 w-full rounded-r-full text-sm focus:outline-none border-2 border-l-0 border-gray-500 dark:border-gray-600" autocomplete="off" spellcheck="false" required step="any" autocapitalize="none" autofocus/>
-							<button type="submit" class="absolute inset-y-0 right-0 mr-2 flex items-center px-2">
-								<svg class="h-4 w-4 fill-current dark:text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewbox="0 0 56.966 56.966" xml:space="preserve" width="512px" height="512px">
-									<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"/>
-								</svg>
-							</button>
-						</div>
-					</div>
-				</div>
-				<!-- Right Navigation -->
+		<nav class="bg-white shadow-md p-4 flex justify-between items-center border-gray-200 dark:bg-gray-900">
+			<div>
+				<img src="eventbrite-logo.png" alt="Eventbrite Logo" class="h-8">
+			</div>
+			<div class="flex-1 mx-4 flex justify-center">
+				<h1 class="text-3xl font-bold bg-text text-white">Help Center</h1>
+			</div>
+			<div class="flex items-center space-x-6">
+				<a href="/help/contact" class="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 text-sm font-medium transition duration-200 ease-in-out">
+					Contact Support	
+				</a>
 
-				<div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-					<div class="flex items-center gap-4">
-						{% if session.role is defined %}
-							{% if session.role in ['Admin', 'Participant', 'Organizer'] %}
-								<button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-									<span class="sr-only">
-										Open user menu
-									</span>
-									<img class="w-8 h-8 rounded-full" src="https://tailwindcss.com/img/jonathan.jpg" alt="user photo">
-								</button>
-							{% endif %}
-						{% else %}
-							<div class="sm:flex sm:gap-4">
-								<a class="rounded-md bg-[#fb8c00] hover:bg-[#fb8c00] px-5 py-2.5 text-sm font-medium text-white shadow inline-block" href="/login">
-									Login
-								</a>
-								<div class="hidden sm:flex">
-									<a class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-[#fb8c00] hover:text-white" href="/register">
-										Register
-									</a>
-								</div>
-							</div>
-						{% endif %}
-					</div>
-					<!-- Dropdown menu -->
-					<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-						<div class="px-4 py-3">
-							<span class="block text-sm text-gray-900 dark:text-white inline-block">
-								{{ session.username }}
-							</span>
-							<span class="block text-sm text-gray-500 truncate dark:text-gray-400 inline-block">
-								name@flowbite.com
-							</span>
-						</div>
-						<ul class="py-2" aria-labelledby="user-menu-button">
-							{% if session.role is defined %}
-								{% if session.role == 'Admin' %}
-									<li>
-										<a href="/dashboard" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-											Dashboard
-										</a>
-									</li>
-								{% elseif session.role == 'Teacher' %}
-									<li>
-										<a href="/organisateur" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-											Dashboard
-										</a>
-									</li>
-								{% endif %}
-								<li>
-									<a href="#" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-										Sign out
-									</a>
-								</li>
-							{% endif %}
-						</ul>
-					</div>
-					<button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
-						<span class="sr-only">
-							Open main menu
-						</span>
-						<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 17 14">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-						</svg>
-					</button>
-				</div>
-				<!-- Middle Navigation -->
-				<div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-
-					<ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-						<li>
-							<a href="home" class="block py-2 px-3 text-white bg-[#fb8c00] rounded md:bg-transparent md:text-[#fb8c00] md:p-0 md:dark:text-[#fb8c00]" aria-current="page">
-								Home
-							</a>
-						</li>
-						<li>
-							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Create Events
-							</a>
-						</li>
-						<li>
-							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Find my tickets
-							</a>
-						</li>
-						<li>
-							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Find Events
-							</a>
-						</li>
-						<li>
-							<a href="/pages/help.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Help Center
-							</a>
-						</li>
-					</ul>
-
-				</div>
 			</div>
 		</nav>
-		<div class="bg-gray-100">
-			<div class="container mx-auto py-12">
-				<div class="max-w-lg mx-auto px-4">
-					<h2 class="text-3xl font-semibold text-gray-900 mb-4">
-						How can we help you
-					</h2>
-					<p class="text-gray-700 mb-8">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sagittis velit
-																								                eget nisi lobortis dignissim.
-					</p>
-					<form action="https://fabform.io/f/{form-id}" method="post" class="bg-white rounded-lg px-6 py-8 shadow-md">
-						<div class="mb-4">
-							<label class="block text-gray-700 font-bold mb-2" for="name">Name</label>
-							<input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Enter your name">
-						</div>
-						<div class="mb-4">
-							<label class="block text-gray-700 font-bold mb-2" for="email">Email</label>
-							<input class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Enter your email">
-						</div>
-						<div class="mb-4">
-							<label class="block text-gray-700 font-bold mb-2" for="message">Message</label>
-							<textarea class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="message" rows="6" placeholder="Enter your message"></textarea>
-						</div>
-						<div class="flex justify-end">
-							<button class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-								Send
-							</button>
-						</div>
-						<a href="https://veilmail.io/e/FkKh7o" class="font-medium text-orange-500 hover:underline">Or click here to reveal our protected email address</a>
 
-					</form>
-				</div>
+		<!-- Main Section -->
+		<main
+			class="container mx-auto px-4 py-12">
+			<!-- Search Bar -->
+			<div class="mb-8">
+				<input type="text" id="searchInput" placeholder="Search for help..." class="w-full p-4 text-lg border rounded-lg shadow focus:ring-2 focus:ring-[#F973] focus:outline-none"/>
 			</div>
-		</div>
 
+			<!-- Categories Section -->
+			<section
+				class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E]mb-2">Getting Started</h2>
+					<p class="text-gray-700">Learn the basics of our platform to get started quickly.</p>
+					<a href="#" class="text-[#F97316] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E]mb-2">Account Management</h2>
+					<p class="text-gray-700">Manage your account, settings, and privacy preferences.</p>
+					<a href="#" class="text-[#F97316] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Single Category -->
+				<div class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
+					<h2 class="text-xl font-semibold text-[#006A4E	] mb-2">Troubleshooting</h2>
+					<p class="text-gray-700">Resolve common issues with step-by-step solutions.</p>
+					<a href="#" class="text-[#F97316] mt-4 inline-block">Learn More →</a>
+				</div>
+				<!-- Add more categories as needed -->
+			</section>
+
+			<!-- FAQ Section -->
+			<section class="mt-12">
+				<h2 class="text-2xl font-bold text-gray-800 mb-6">Frequently Asked Questions</h2>
+				<div
+					class="space-y-4">
+					<!-- Single FAQ -->
+					<div class="bg-white p-6 rounded-lg shadow">
+						<h3 class="text-lg font-semibold text-gray-800">How do I reset my password?</h3>
+						<p class="text-gray-600 mt-2">To reset your password, click on "Forgot Password" on the login page and follow the instructions.</p>
+					</div>
+					<!-- Single FAQ -->
+					<div class="bg-white p-6 rounded-lg shadow">
+						<h3 class="text-lg font-semibold text-gray-800">Can I upgrade my plan later?</h3>
+						<p class="text-gray-600 mt-2">Yes, you can upgrade or downgrade your plan anytime from the account settings page.</p>
+					</div>
+				</div>
+			</section>
+		</main>
 
 		<footer class="mt-8 dark:bg-gray-900 pt-9">
 			<div class="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
@@ -188,8 +90,8 @@
 							</p>
 						</p>
 						<p class="mt-[18px] text-[15px] font-normal text-white/[80%]">Lorem ipsum dolor sit amet consectetur adipisicing
-																																																																																																																																																																							elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis enim animi
-																																																																																																																																																																							placeat eaque nesciunt alias beatae id, at dicta.</p>
+																																																																																																																																																		elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis enim animi
+																																																																																																																																																		placeat eaque nesciunt alias beatae id, at dicta.</p>
 						<div class="mt-[18px] flex gap-4">
 							<a class="hover:scale-110" target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/facebook.svg"/></a>
 							<a class="hover:scale-110" target="_blank" href="/"><img alt="linkdin icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/linkdin.svg"/></a>
@@ -229,7 +131,7 @@
 							</div>
 							<div class="ml-[18px]">
 								<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">Sub Nerul, Mumbia,
-																																																																																																																																																																																																																						India, 123456</a>
+																																																																																																																																																																																											India, 123456</a>
 								<p class="font-Inter text-[12px] font-medium text-white">Address</p>
 							</div>
 						</div>
@@ -279,5 +181,24 @@
 				</div>
 			</div>
 		</footer>
+
+		 <script>
+						    // JavaScript for Search Functionality
+						    const searchInput = document.getElementById('searchInput');
+						    const categories = document.querySelectorAll('.category');
+						
+						    searchInput.addEventListener('input', function () {
+						      const query = this.value.toLowerCase();
+						
+						      categories.forEach(category => {
+						        const text = category.textContent.toLowerCase();
+						        if (text.includes(query)) {
+						          category.classList.remove('hidden');
+						        } else {
+						          category.classList.add('hidden');
+						        }
+						      });
+						    });
+						  </script>
 	</body>
 </html>

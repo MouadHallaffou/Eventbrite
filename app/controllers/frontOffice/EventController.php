@@ -115,7 +115,6 @@ class EventController
         ]);
     }
 
-
     public function editEvent()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "update") {
@@ -197,9 +196,43 @@ class EventController
             }
         }
     }
+
+
+    public function searchEvents() {
+        header('Content-Type: application/json');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] == 'view') {
+
+            if (isset($_POST['q'])) {
+                $q = $_POST['q'];
+                $event = new Event($this->pdo);
+                $dataEvents = $event->searchForEvents($q);
+    
+                if (is_array($dataEvents)) {
+                    if (!empty($dataEvents)) {
+                        echo json_encode([
+                            'success' => true,
+                            'data' => $dataEvents
+                        ]);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Aucun événement trouvé.']);
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Database error.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Search query is missing.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid action.']);
+        }
+    }
+    
 }
 
 $event = new EventController();
 $event->createEvent();
 $event->afficheEvents();
 $event->displayEventForm();
+$event->searchEvents();
+

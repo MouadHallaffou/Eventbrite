@@ -14,7 +14,14 @@ class HomeController{
      }
 
 
+     public function findevents(){
+        View::render('front/FindEvents.twig');
+     }
 
+
+     public function searchEvents(){
+        View::render('front/FindEvents.twig',);
+     }
 
 }
 
