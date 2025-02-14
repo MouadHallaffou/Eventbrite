@@ -245,8 +245,9 @@
 						<h2 class="mb-2 text-center text-2xl font-bold text-gray-800 lg:mb-0 lg:text-3xl">Categories</h2>
 
 						{# <p class="max-w-md text-center text-gray-400 lg:text-right">
-															Filler text is dummy text which has no meaning however looks very similar to real text.
-														</p> #}
+						Filler text is dummy text which has no meaning however looks very similar to real text.
+						</p> #}
+						
 					</div>
 
 					<div
@@ -430,7 +431,7 @@
 											<span class="text-gray-300">★</span>
 										{% endif %}
 									{% endfor %}
-									<span class="ml-2 text-gray-500 text-sm">({{ event.rating }}/5)</span>
+									<span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
 									</div>
 									<div>
 									<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
@@ -655,8 +656,8 @@
 			// Update indicators
 			indicators.forEach((indicator, index) => {
 				indicator.className = `w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors ${
-																										 index === currentSlide ? 'bg-white/40' : 'bg-white/20'
-																										 } hover:bg-white/60`;
+				index === currentSlide ? 'bg-white/40' : 'bg-white/20'
+				} hover:bg-white/60`;
 			});
 
 			// Update progress bar

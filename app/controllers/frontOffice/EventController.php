@@ -33,7 +33,7 @@ class EventController
             $event->setPrice($_POST['isPaid'] === "payant" ? (float)$_POST['price'] : null);
             $event->setCategoryId((int)$_POST['category_id']);
             $event->setUserId((int)$_POST['user_id']);
-            $event->setVilleId((int)$_POST['ville_id']); // Ajout de ville_id
+            $event->setVilleId((int)$_POST['ville_id']); 
 
             // Handle address and link
             if ($_POST['eventMode'] === "presentiel") {
@@ -86,7 +86,7 @@ class EventController
         if (isset($_GET['region_id'])) {
             $regionId = (int)$_GET['region_id'];
             $eventModel = new Event($this->pdo);
-            $villes = $eventModel->fetchVillesByRegion($regionId); // Utiliser la méthode du modèle
+            $villes = $eventModel->fetchVillesByRegion($regionId);
             echo json_encode($villes);
         }
     }
@@ -98,13 +98,13 @@ class EventController
         $events = $eventModel->fetchAll();
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
-        $regions = $eventModel->fetchRegions(); // Utiliser la méthode du modèle
+        $regions = $eventModel->fetchRegions();
 
         View::render('back/organisateur/addEvent.twig', [
             'events' => $events,
             'categories' => $categories,
             'tags' => $tags,
-            'regions' => $regions, // Passer les régions au template
+            'regions' => $regions, 
         ]);
     }
 
@@ -115,7 +115,6 @@ class EventController
             $eventModel = new Event($this->pdo);
 
             try {
-                // Supprimer l'événement
                 $success = $eventModel->delete($eventId);
 
                 if ($success) {
@@ -235,4 +234,5 @@ class EventController
             'SponsorsHomePage' => $SponsorsHomePage,
         ]);
     }
+    
 }
