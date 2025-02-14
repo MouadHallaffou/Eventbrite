@@ -340,7 +340,7 @@ class Event
     public function fetchVillesByRegion(int $regionId): array
     {
         if (!$regionId) {
-            return []; // Retourner un tableau vide si regionId est null
+            return [];
         }
 
         $sql = "SELECT * FROM ville WHERE region = ?";
@@ -382,7 +382,7 @@ class Event
             ':endEventAt' => $data['endEventAt'],
             ':category_id' => $data['category_id'],
             ':sponsor_id' => $this->handleSponsor($data['sponsor_name'], $data['sponsor_image_path']),
-            ':ville_id' => $data['ville_id'], // Ajout de ville_id
+            ':ville_id' => $data['ville_id'], 
             ':event_id' => $eventId,
         ]);
 
@@ -390,7 +390,6 @@ class Event
             return false;
         }
 
-        // Mettre à jour les tags
         $this->updateEventTags($eventId, $data['tags']);
 
         return true;

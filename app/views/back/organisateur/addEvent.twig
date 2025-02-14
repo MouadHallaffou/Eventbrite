@@ -7,6 +7,7 @@
     <title>Gestion des Événements</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body class="bg-gray-200">
@@ -24,7 +25,7 @@
             <!-- Search Bar and Filter -->
             <div class="flex items-center flex-grow mx-4">
                 <div class="relative flex w-full max-w-md">
-                    <select class="bg-black h-10 px-4 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fb8c00] cursor-pointer">
+                    <select class="bg-black h-10 px-4 rounded-l-lg border border-gray-300 focus:outline-none cursor-pointer">
                         <option value="filter">Filter</option>
                         <option value="accepted">Acceptés</option>
                         <option value="pending">En attente</option>
@@ -33,21 +34,21 @@
                     <input
                         type="search"
                         placeholder="Rechercher un événement..."
-                        class="text-gray-900 w-full h-10 px-4 border-t border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fb8c00]"
+                        class="text-gray-900 w-full h-10 px-4 border-t border-b border-gray-300 focus:outline-none"
                     />
                     <button class="bg-[#fb8c00] text-white h-10 px-4 rounded-r-lg hover:bg-[#e68900] transition-colors duration-300">
-                        🔍
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>
 
             <div class="flex items-center space-x-4">
                 <a href="/statistics" class="bg-[#fb8c00] text-white px-4 py-2 rounded-lg hover:bg-[#e68900] transition-colors duration-300 flex items-center">
-                    📊 Statistiques
+                    <i class="fas fa-chart-bar mr-2"></i> Statistiques
                 </a>
 
                 <button onclick="openModal()" class="bg-[#fb8c00] text-white px-4 py-2 rounded-lg hover:bg-[#e68900] transition-colors duration-300 flex items-center">
-                    ➕ Créer
+                    <i class="fas fa-plus mr-2"></i> Créer
                 </button>
 
                 <div class="relative">
@@ -59,62 +60,81 @@
                     </div>
 
                     <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
-                        <a href="/edit-profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                            ✏️ Modifier
+                        <a href="/edit-profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fas fa-edit mr-2"></i> Modifier
                         </a>
-                        <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                            🚪 Déconnexion
+                        <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-
     </header>
 
     <!-- Section affichant tous les événements -->
     <main class="p-8">
         <h1 class="text-3xl font-bold mb-6">Tous les Evenements</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             {% for event in events %}
-                <div class="bg-white p-2 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <img src="{{ '/assets/images/' ~ event.image }}" alt="{{ event.title }}" class="w-full h-48 object-cover rounded-lg">
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="relative h-64">
+                    <img class="h-64 w-full object-cover" src="{{ '/assets/images/' ~ event.image }}" alt="Event Image" />
+                    <span class="absolute bottom-1 right-1 bg-orange-500 text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-900">
+                        {{ event.category_name ?? 'Musique'}}
+                    </span>
+                </div>
 
-                    <h2 class="text-xl font-bold mt-4">{{ event.title }}</h2>
-                    <p class="text-gray-600 mt-2">{{ event.description | slice(0, 200) ~ '...' }}</p>
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2 text-gray-900">
+                        {{ event.title }}
+                    </h2>
+                    <p class="text-gray-600">
+                        {{ event.description | slice(0, 200) ~ '...'}}
+                    </p>
 
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-sm text-gray-500">
-                            📅 {{ event.startEventAt | date('Y-m-d H:i') }} - {{ event.endEventAt | date('Y-m-d H:i') }}
-                        </span>
-                        <span class="text-sm {{ event.status == 'accepted' ? 'text-green-600' : event.status == 'pending' ? 'text-yellow-600' : 'text-red-600' }}">
-                            {{ event.status | capitalize }}
-                        </span>
-                    </div>
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                        {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
+                    </p>
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                        {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
+                    </p>
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-orange-600"></i>
+                        {{ event.adresse ?? 'En ligne' }}
+                    </p>
 
                     <div class="mt-4">
-                        <p class="text-sm text-gray-600">
-                            Réservations : {{ event.reservations_count }} / {{ event.capacite }}
-                        </p>
+                        <p class="text-sm text-gray-600">Réservations : {{ event.reservations_count ?? '0'}} / {{ event.capacite }}</p>
                         <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-                            <div class="bg-blue-500 h-2 rounded-full" style="width: {{ (event.reservations_count / event.capacite) * 100 }}%;"></div>
+                            <div class="bg-orange-200 h-3 rounded-full" style="width: {{ (event.reservations_count / event.capacite) * 100 }}%;"></div>
                         </div>
                     </div>
 
-                    <div class="mt-4 flex gap-2">
-                        <a href="/edit-event/{{ event.event_id }}" class="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-700 transition-colors duration-300">
-                            ✏️
-                        </a>
-                        <button
-                            onclick="deleteEvent({{ event.event_id }})"
-                            class="bg-red-500 text-white p-2 rounded-full hover:bg-red-700 transition-colors duration-300">
-                            🗑️
-                        </button>
-                    </div>
-                </div>
+                        <div class="flex items-center mt-2 justify-between">
+									<div class="mt-2 flex gap-6">
+                                        <a href="/edit-event/{{ event.event_id }}" class="bg-gray-400 text-white p-2 rounded-full hover:bg-gray-600 transition-colors duration-300">
+                                            ✏️
+                                        </a>
+                                        <button
+                                            onclick="deleteEvent({{ event.event_id }})"
+                                            class="bg-orange-500 text-white p-2 rounded-full hover:bg-orange-700 transition-colors duration-300">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                    <div class="mt-4 flex gap-2">
+                                        <span class="text-lg text-semibold {{ event.status == 'accepted' ? 'text-green-500' : event.status == 'pending' ? 'text-yellow-500' : 'text-red-500' }}">
+                                                {{ event.status | capitalize }}
+                                        </span>
+                                    </div>
+								</div>
+							</div>
+						</div>
             {% else %}
-                <p class="text-gray-600">Aucun événement disponible.</p>
+            <p class="text-gray-600">Aucun événement disponible.</p>
             {% endfor %}
         </div>
 
@@ -137,7 +157,7 @@
                     <input
                         type="text"
                         name="title"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Entrez le titre"
                         required>
                     <!-- Message d'erreur pour le titre -->
@@ -149,7 +169,7 @@
                     <label class="block font-semibold mb-2">Description</label>
                     <textarea
                         name="description"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Décrivez l'événement"
                         required></textarea>
                     <!-- Message d'erreur pour la description -->
@@ -162,7 +182,7 @@
                     <input
                         type="file"
                         name="image"
-                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-150 file:px-4 file:py-2 hover:file:bg-orange-300"
                         accept="image/*"
                         required>
                     <!-- Message d'erreur pour l'image -->
@@ -200,7 +220,7 @@
                 <!-- Région -->
                 <div>
                     <label class="block font-semibold mb-2">Région :</label>
-                    <select id="region" name="region_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                    <select id="region" name="region_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" required>
                         <option value="">Sélectionnez une région</option>
                         {% for region in regions %}
                             <option value="{{ region.id }}">{{ region.region }}</option>
@@ -211,7 +231,7 @@
                 <!-- Ville -->
                 <div>
                     <label class="block font-semibold mb-2">Ville :</label>
-                    <select id="ville" name="ville_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" disabled required>
+                    <select id="ville" name="ville_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" disabled required>
                         <option value="">Sélectionnez une ville</option>
                     </select>
                 </div>
@@ -222,7 +242,7 @@
                     <input
                         type="text"
                         name="adresse"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="123 Rue 10 casa maroc">
                     <!-- Message d'erreur pour l'adresse -->
                     <span id="error-adresse" class="text-red-500 text-sm hidden"></span>
@@ -234,7 +254,7 @@
                     <input
                         type="url"
                         name="lienEvent"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Ex: https://zoom.com/event">
                     <!-- Message d'erreur pour le lien de l'événement -->
                     <span id="error-lienEvent" class="text-red-500 text-sm hidden"></span>
@@ -274,7 +294,7 @@
                     <input
                         type="number"
                         name="price"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         min="0"
                         step="0.01"
                         placeholder="Entrez le prix">
@@ -288,7 +308,7 @@
                     <input
                         type="number"
                         name="capacite"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         min="1"
                         placeholder="Nombre maximum de participants"
                         required>
@@ -299,7 +319,7 @@
                 <!-- Catégorie -->
                 <div>
                     <label class="block font-semibold mb-2">Catégorie</label>
-                    <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                    <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" required>
                         <option value="" disabled selected>Choisir une catégorie</option>
                         {% for category in categories %}
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
@@ -312,7 +332,7 @@
                 <!-- Tags -->
                 <div>
                     <label class="block font-semibold mb-2">Tags</label>
-                    <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" multiple>
+                    <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" multiple>
                         {% for tag in tags %}
                         <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
                         {% endfor %}
@@ -327,7 +347,7 @@
                     <input
                         type="text"
                         name="sponsor_name"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Entrez le nom du sponsor">
                     <!-- Message d'erreur pour le sponsor -->
                     <span id="error-sponsor_name" class="text-red-500 text-sm hidden"></span>
@@ -339,7 +359,7 @@
                     <input
                         type="file"
                         name="image_sponsor"
-                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-150 file:px-4 file:py-2 hover:file:bg-orange-200"
                         accept="image/*">
                     <!-- Message d'erreur pour l'image du sponsor -->
                     <span id="error-image_sponsor" class="text-red-500 text-sm hidden"></span>
@@ -352,7 +372,7 @@
                         <input
                             type="datetime-local"
                             name="startEventAt"
-                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             required>
                         <!-- Message d'erreur pour la date de début -->
                         <span id="error-startEventAt" class="text-red-500 text-sm hidden"></span>
@@ -362,7 +382,7 @@
                         <input
                             type="datetime-local"
                             name="endEventAt"
-                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             required>
                         <!-- Message d'erreur pour la date de fin -->
                         <span id="error-endEventAt" class="text-red-500 text-sm hidden"></span>
@@ -376,7 +396,7 @@
                 <div class="text-center mt-6">
                     <button
                         type="submit"
-                        class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full transition duration-300">
+                        class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-700 w-full transition duration-300">
                         Créer l'Événement
                     </button>
                 </div>
@@ -391,7 +411,7 @@
 				<div class="md:w-[316px]">
 					<p class="text-[18px] font-medium text-white">
 					<h1 class="text-white font-extrabold">
-						<span class="text-rose-600">EVENTBRO
+						<span class="text-orange-500">EVENTBRO
 					</h1>
 					</p>
 					</p>
