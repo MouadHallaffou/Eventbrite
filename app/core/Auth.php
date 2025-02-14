@@ -26,7 +26,7 @@ class Auth extends User {
 
                 if (password_verify($password, $row['password'])) {
                     if ($_SESSION["role"] == 2) {
-                        header("Location: /home");
+                        header("Location: /addEvent");
                         exit();
                     } else if ($_SESSION["role"] == 1) {
                         header("Location: /dashboard");
@@ -46,7 +46,7 @@ class Auth extends User {
                 header("Location: /login");
                 exit();
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $_SESSION["error"] = "Something went wrong: " . $e->getMessage();
             header("Location: login");
             exit();

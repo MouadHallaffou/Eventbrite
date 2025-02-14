@@ -24,8 +24,8 @@
 				class="max-w-screen-xl flex flex-wrap items-center justify-evenly mx-auto">
 				<!-- Logo -->
 				<div class="flex items-center justify-center ml-2">
-					<a href="https://flowbite.com/" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
-						<span class="self-center text-xl font-semibold whitespace-nowrap text-[#fb8c00] dark:text-white">
+					<a href="/home" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
+						<span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-[#fb8c00]">
 							EventsBro
 						</span>
 					</a>
@@ -123,7 +123,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+							<a href="/addEvent" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
 								Create Events
 							</a>
 						</li>
@@ -245,8 +245,9 @@
 						<h2 class="mb-2 text-center text-2xl font-bold text-gray-800 lg:mb-0 lg:text-3xl">Categories</h2>
 
 						{# <p class="max-w-md text-center text-gray-400 lg:text-right">
-															Filler text is dummy text which has no meaning however looks very similar to real text.
-														</p> #}
+						Filler text is dummy text which has no meaning however looks very similar to real text.
+						</p> #}
+						
 					</div>
 
 					<div
@@ -392,31 +393,26 @@
 					</div>
 
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-						{% for event in eventsAccepted %}
-						<!-- Event Item -->
+
+					{% for event in eventsAccepted %}
+						<!-- Event Item 3 -->
 						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<!-- Event Image -->
 							<div class="relative h-72">
 								<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}" alt="Event Image" />
-								<!-- Category Badge -->
 								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
 									{{ event.category_name }}
 								</span>
 							</div>
 
-							<!-- Event Details -->
 							<div class="p-6">
-								<!-- Event Title -->
 								<h2 class="text-xl font-bold mb-2">
 									{{ event.title }}
 								</h2>
 
-								<!-- Event Description -->
 								<p class="text-gray-600">
-									{{ event.description }}
+									{{ event.description | slice(0, 200) ~ '...' }}
 								</p>
 
-								<!-- Event Dates -->
 								<p class="text-gray-500 text-sm mt-2">
 									📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
 								</p>
@@ -424,12 +420,10 @@
 									📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
 								</p>
 
-								<!-- Event Location -->
 								<p class="text-gray-500 text-sm mt-2">
 									📍 {{ event.adresse ?? 'En ligne' }}
 								</p>
 
-								<!-- Rating Stars -->
 								<div class="flex items-center mt-4 justify-between">
 									<div>
 									{% for i in 1..5 %}
@@ -439,7 +433,7 @@
 											<span class="text-gray-300">★</span>
 										{% endif %}
 									{% endfor %}
-									<span class="ml-2 text-gray-500 text-sm">({{ event.rating }}/5)</span>
+									<span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
 									</div>
 									<div>
 									<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
@@ -448,11 +442,11 @@
 									</div>
 								</div>
 							</div>
-						</div>
-						{% else %}
-						<!-- No Events Message -->
-						<p class="text-gray-600">Aucun événement disponible.</p>
-						{% endfor %}
+
+					</div>
+					{% else %}
+					<p>Aucun événement disponible.</p>
+					{% endfor %}
 					</div>
 
 					<!-- Load More Button -->
@@ -514,7 +508,7 @@
 				<div class="md:w-[316px]">
 					<p class="text-[18px] font-medium text-white">
 					<h1 class="text-white font-extrabold">
-						<span class="text-rose-600">EVENTBRO
+						<span class="text-orange-500">EVENTBRO
 					</h1>
 					</p>
 					</p>
@@ -665,8 +659,8 @@
 			// Update indicators
 			indicators.forEach((indicator, index) => {
 				indicator.className = `w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors ${
-																										 index === currentSlide ? 'bg-white/40' : 'bg-white/20'
-																										 } hover:bg-white/60`;
+				index === currentSlide ? 'bg-white/40' : 'bg-white/20'
+				} hover:bg-white/60`;
 			});
 
 			// Update progress bar

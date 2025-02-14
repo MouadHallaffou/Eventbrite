@@ -106,6 +106,7 @@ class EventController
             $regionId = (int)$_GET['region_id'];
             $eventModel = new Event($this->pdo);
             $villes = $eventModel->fetchVillesByRegion($regionId);
+            $villes = $eventModel->fetchVillesByRegion($regionId);
             echo json_encode($villes);
         }
     }
@@ -120,6 +121,7 @@ class EventController
         $events = $eventModel->fetchAll();
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
+        $regions = $eventModel->fetchRegions();
         $regions = $eventModel->fetchRegions();
 
         View::render('back/organisateur/addEvent.twig', [
