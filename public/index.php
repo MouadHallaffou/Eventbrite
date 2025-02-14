@@ -8,6 +8,8 @@ use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
 use App\controllers\frontOffice\ContactController;
+use App\controllers\frontOffice\ProfileController;
+
 
 use App\core\Session;
 
@@ -19,10 +21,11 @@ Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
-
 $router->get('/help/contact', ContactController::class, 'index');
-
 $router->get('/help', ContactController::class, 'helpcenter');
+
+$router->get('/profile', ProfileController::class, 'index');
+
 
 
 // $router->get('/', EventController::class, 'displayEventsAcceptedHome');

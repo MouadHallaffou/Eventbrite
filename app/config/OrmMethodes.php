@@ -115,14 +115,4 @@ public static function getData($table,$condetion = ''){
      return $stmt->fetch(PDO::FETCH_ASSOC);
    }
 
-       
-
-
-   
-     
-
-
-
-
-
 }
