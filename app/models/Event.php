@@ -195,11 +195,9 @@ class Event
     }
 
 
-
     // Insert an event
     public function insert(array $tags, array $sponsors): int
     {
-        // Insérer l'événement
         $sql = "INSERT INTO events (title, description, image, adresse, eventMode, price, createdAt, 
                 situation, capacite, lienEvent, startEventAt, endEventAt, category_id, user_id, ville_id) 
                 VALUES (:title, :description, :image, :adresse, :eventMode, :price, NOW(), :situation, 
@@ -295,9 +293,10 @@ class Event
     // Fetch all events
     public function fetchAll(): array
     {
-        $sql = "SELECT *, c.name as category_name, c.img AS image_category FROM events e
+        $sql = "SELECT e.*, c.name as category_name, c.img AS image_category FROM events e
                 LEFT JOIN events_tag et ON et.event_id = e.event_id
-                LEFT JOIN categories c ON c.category_id = e.category_id";
+                LEFT JOIN categories c ON c.category_id = e.category_id
+                group by e.event_id";
 
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -318,9 +317,6 @@ class Event
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
 
     public function fetchVillesByRegion(int $regionId): array
     {
@@ -354,10 +350,10 @@ class Event
     // Récupérer les tags associés à un événement
     public function getTagsByEventId(int $eventId): array
     {
-        $sql = "SELECT t.tag_id, t.name 
-                    FROM tags t
-                    JOIN events_tag et ON et.tag_id = t.tag_id
-                    WHERE et.event_id = :event_id";
+        $sql = "SELECT t.tag_id, t.name FROM tags t
+                JOIN events_tag et ON et.tag_id = t.tag_id
+                WHERE et.event_id = :event_id";
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':event_id' => $eventId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -366,7 +362,10 @@ class Event
     // Fetch all tags
     public function fetchAllSponsors(): array
     {
-        $sql = "SELECT sponsor_id,s.img As sponsor_image, s.name As name_sponsor FROM sponsors s";
+        $sql = "SELECT sponsor_id,s.img As sponsor_image,
+         s.name As name_sponsor FROM sponsors s
+         group by s.sponsor_id";
+
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -415,7 +414,16 @@ class Event
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
+    // Supprimer un sponsor d'un événement
+    public function removeSponsorFromEvent(int $eventId, int $sponsorId): bool
+    {
+        $sql = "DELETE FROM event_sponsor WHERE event_id = :event_id AND sponsor_id = :sponsor_id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':event_id' => $eventId,
+            ':sponsor_id' => $sponsorId,
+        ]);
+    }
 
     // Récupérer tous les sponsors d'un événement
     public function getSponsorsByEventId(int $eventId): array
@@ -429,6 +437,21 @@ class Event
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Mettre à jour les sponsors de l'événement
+    public function updateEventSponsors(int $eventId, array $sponsors): bool
+    {
+        // Supprimer les sponsors existants
+        $sql = "DELETE FROM event_sponsor WHERE event_id = :event_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':event_id' => $eventId]);
+
+        // Ajouter les nouveaux sponsors
+        foreach ($sponsors as $sponsor) {
+            $this->addSponsorToEvent($eventId, $sponsor['sponsor_id']);
+        }
+
+        return true;
+    }
 
     public function findById(int $eventId): ?array
     {
@@ -451,7 +474,6 @@ class Event
         // Récupérer les sponsors associés
         $event['sponsors'] = $this->getSponsorsByEventId($eventId);
 
-        // Structurer les données de la ville et de la région
         $event['ville'] = [
             'id' => $event['ville_id'],
             'ville' => $event['ville_name'],
@@ -464,24 +486,22 @@ class Event
         return $event;
     }
 
-
     public function update(int $eventId, array $data): bool
-{
-    // Mettre à jour l'événement
-    $sql = "UPDATE events SET
-        title = :title,
-        description = :description,
-        image = :image,
-        adresse = :adresse,
-        eventMode = :eventMode,
-        price = :price,
-        capacite = :capacite,
-        lienEvent = :lienEvent,
-        startEventAt = :startEventAt,
-        endEventAt = :endEventAt,
-        category_id = :category_id,
-        ville_id = :ville_id
-    WHERE event_id = :event_id";
+    {
+        $sql = "UPDATE events SET
+            title = :title,
+            description = :description,
+            image = :image,
+            adresse = :adresse,
+            eventMode = :eventMode,
+            price = :price,
+            capacite = :capacite,
+            lienEvent = :lienEvent,
+            startEventAt = :startEventAt,
+            endEventAt = :endEventAt,
+            category_id = :category_id,
+            ville_id = :ville_id
+        WHERE event_id = :event_id";
 
     $stmt = $this->pdo->prepare($sql);
     $success = $stmt->execute([
@@ -500,47 +520,17 @@ class Event
         ':event_id' => $eventId,
     ]);
 
-    if (!$success) {
-        return false;
-    }
-
-    // Mettre à jour les tags
-    $this->updateEventTags($eventId, $data['tags']);
-
-    // Mettre à jour les sponsors
-    if (isset($data['sponsors'])) {
-        $this->updateEventSponsors($eventId, $data['sponsors']);
-    }
-
-    return true;
-}
-
-// Mettre à jour les sponsors de l'événement
-public function updateEventSponsors(int $eventId, array $sponsors): bool
-{
-    // Supprimer les sponsors existants
-    $sql = "DELETE FROM event_sponsor WHERE event_id = :event_id";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([':event_id' => $eventId]);
-
-    // Ajouter les nouveaux sponsors
-    foreach ($sponsors as $sponsor) {
-        $sponsorId = $this->handleSponsor($sponsor['name'], $sponsor['image']);
-        if ($sponsorId) {
-            $this->addSponsorToEvent($eventId, $sponsorId);
+        if (!$success) {
+            return false;
         }
+        // Mettre à jour les tags
+        $this->updateEventTags($eventId, $data['tags']);
+        // Mettre à jour les sponsors
+        if (isset($data['sponsors'])) {
+            $this->updateEventSponsors($eventId, $data['sponsors']);
+        }
+        return true;
     }
 
-    return true;
-}
-public function removeSponsorFromEvent(int $eventId, int $sponsorId): bool
-{
-    $sql = "DELETE FROM event_sponsor WHERE event_id = :event_id AND sponsor_id = :sponsor_id";
-    $stmt = $this->pdo->prepare($sql);
-    return $stmt->execute([
-        ':event_id' => $eventId,
-        ':sponsor_id' => $sponsorId,
-    ]);
-}
 
 }

@@ -392,61 +392,68 @@
 
 					</div>
 
+
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+						{% for event in eventsAccepted %}
+							<!-- Event Item -->
+							<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+								<div class="relative h-72">
+									<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}" alt="Event Image" />
+									<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
+										{{ event.category_name }}
+									</span>
+								</div>
 
-					{% for event in eventsAccepted %}
-						<!-- Event Item 3 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-72">
-								<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									{{ event.category_name }}
-								</span>
-							</div>
+								<div class="p-6">
+									<h2 class="text-xl font-bold mb-2">
+										{{ event.title }}
+									</h2>
 
-							<div class="p-6">
-								<h2 class="text-xl font-bold mb-2">
-									{{ event.title }}
-								</h2>
+									<p class="text-gray-600">
+										{{ event.description | slice(0, 200) ~ '...' }}
+									</p>
 
-								<p class="text-gray-600">
-									{{ event.description | slice(0, 200) ~ '...' }}
-								</p>
-
-								<p class="text-gray-500 text-sm mt-2">
-									📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
-								</p>
-								<p class="text-gray-500 text-sm mt-2">
-									📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
-								</p>
-
-								<p class="text-gray-500 text-sm mt-2">
-									📍 {{ event.adresse ?? 'En ligne' }}
-								</p>
-
-								<div class="flex items-center mt-4 justify-between">
-									<div>
-									{% for i in 1..5 %}
-										{% if i <= event.rating %}
-											<span class="text-yellow-400">★</span>
-										{% else %}
-											<span class="text-gray-300">★</span>
-										{% endif %}
-									{% endfor %}
-									<span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
+									<div class="mt-2">
+										<span class="text-sm text-gray-500">Prix :</span>
+										<span class="text-sm {{ event.price > 0 ? 'text-green-600' : 'text-gray-600' }}">
+											{{ event.price > 0 ? event.price ~ ' €' : 'Gratuit' }}
+										</span>
 									</div>
-									<div>
-									<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
-										Réserver
-									</a>
+
+									<p class="text-gray-500 text-sm mt-2">
+										📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
+									</p>
+									<p class="text-gray-500 text-sm mt-2">
+										📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
+									</p>
+
+									<p class="text-gray-500 text-sm mt-2">
+										📍 {{ event.adresse ?? 'En ligne' }}
+									</p>
+
+									<div class="flex items-center mt-4 justify-between">
+										<div>
+											{% for i in 1..5 %}
+												{% if i <= event.rating %}
+													<span class="text-yellow-400">★</span>
+												{% else %}
+													<span class="text-gray-300">★</span>
+												{% endif %}
+											{% endfor %}
+											<span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
+										</div>
+										<!-- Bouton de réservation -->
+										<div>
+											<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
+												Réserver
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>
-
-					</div>
-					{% else %}
-					<p>Aucun événement disponible.</p>
-					{% endfor %}
+						{% else %}
+							<p class="text-gray-600">Aucun événement disponible.</p>
+						{% endfor %}
 					</div>
 
 					<!-- Load More Button -->
@@ -478,8 +485,8 @@
 							<!-- All your sponsor SVG elements here (6 items) -->
 							{% for sponsor in SponsorsHomePage %}
 							<a href="#" class="flex justify-center items-center px-8">
-								<img src="{{'/assets/images/' ~ sponsor.sponsor_image}}" class="h-9 hover:text-gray-900 dark:hover:text-white">
-								<p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p>
+								<img src="{{'/assets/images/' ~ sponsor.sponsor_image}}" class="h-12 hover:text-gray-900 dark:hover:text-white">
+								{# <p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p> #}
 							</a>
 							{% endfor %}
 						</div>
