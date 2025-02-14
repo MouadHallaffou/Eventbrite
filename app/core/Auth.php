@@ -46,7 +46,7 @@ class Auth extends User {
                 header("Location: /login");
                 exit();
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $_SESSION["error"] = "Something went wrong: " . $e->getMessage();
             header("Location: login");
             exit();
