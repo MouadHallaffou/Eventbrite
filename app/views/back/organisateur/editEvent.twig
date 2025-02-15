@@ -9,11 +9,11 @@
 </head>
 <body class="bg-gray-300">
     
-     <header class="bg-white shadow-md p-4 flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-            <img src="{{ user.profile_image }}" alt="Photo de {{ user.username }}" class="w-12 h-12 rounded-full">
-            <span class="text-lg font-semibold">{{ user.username }}</span>
-        </div>
+     <header class="bg-black text-white shadow-md p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="{{ '/assets/images/' ~ user.image ?? 'login.JPG' }}" alt="Photo de {{ user.username }}" class="w-8 h-8 rounded-full">
+                <span class="text-sm text-white">{{ user.username ?? 'organisateur'}}</span>
+            </div>
         <div class="space-x-4">
             <a href="/events" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
                 Retour

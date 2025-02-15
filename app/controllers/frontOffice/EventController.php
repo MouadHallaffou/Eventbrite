@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
 use App\core\Validator;
+use App\core\Session;
+
 use PDO;
 
 class EventController
@@ -19,7 +21,12 @@ class EventController
 
     public function createEvent()
     {
+
+        Session::checkSession();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
+            
+            // $errors = Validator::validateEvent($_POST);
             $event = new Event($this->pdo);
 
             $event->setTitle($_POST['title']);
@@ -30,7 +37,7 @@ class EventController
             $event->setEndEventAt(new \DateTime($_POST['endEventAt']));
             $event->setPrice($_POST['isPaid'] === "payant" ? (float)$_POST['price'] : null);
             $event->setCategoryId((int)$_POST['category_id']);
-            $event->setUserId((int)$_POST['user_id']);
+            $event->setUserId((int)$_SESSION['userId']);
             $event->setVilleId((int)$_POST['ville_id']);
 
             // Gérer l'adresse et le lien
@@ -112,14 +119,24 @@ class EventController
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
 
-        $events = $eventModel->fetchAll();
+        $events = $eventModel->fetchAll($userId);
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
         $regions = $eventModel->fetchRegions();
+        // var_dump($username);
+        // die();
 
         View::render('back/organisateur/addEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'events' => $events,
             'categories' => $categories,
             'tags' => $tags,
@@ -166,12 +183,21 @@ class EventController
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
 
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
+
         $villes = [];
         if (isset($event['ville']) && $event['ville']['region']) {
             $villes = $eventModel->fetchVillesByRegion($event['ville']['region']);
         }
 
         View::render('back/organisateur/editEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'event' => $event,
             'categories' => $categories,
             'tags' => $tags,

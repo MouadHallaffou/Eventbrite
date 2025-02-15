@@ -3,6 +3,7 @@ namespace App\core;
 
 use App\models\User;
 use App\config\OrmMethodes;
+use App\core\Session;
 
 use PDOException;
 
@@ -70,6 +71,10 @@ class Auth extends User {
         exit();
     }
      
+   }
+
+   public function logout(){
+    return session::checkSession();
    }
 
 

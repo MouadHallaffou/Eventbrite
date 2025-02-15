@@ -7,8 +7,7 @@ use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
-
-
+use App\core\Validator;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -30,6 +29,7 @@ $router->get('/dashboard', AdminController::class, 'index');
 $router->post('/addEvent', EventController::class, 'createEvent');
 $router->get('/addEvent', EventController::class, 'displayEventForm');
 $router->get('/addEvent', EventController::class, 'afficheEvents');
+$router->get('/addEvent', Validator::class, 'validateEvent');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
 
