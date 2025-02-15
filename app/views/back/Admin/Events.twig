@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="shortcut icon" href="./img/fav.png" type="image/x-icon">
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
+		<link
+		rel="stylesheet" type="text/css" href="/assets/styles/dashboard.css">
+		 <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
+		<title>Welcome To Cleopatra</title>
+	</head>
+	<body
+		class="bg-gray-100">
+		<!-- start navbar -->
+		<div
+			class="md:fixed md:w-full md:top-0 md:z-20 flex flex-row flex-wrap items-center bg-white p-6 border-b border-gray-300">
+			<!-- logo -->
+			<div class="flex-none w-56 flex flex-row items-center">
+				<img src="img/logo.png" class="w-10 flex-none">
+				<strong class="capitalize ml-1 flex-1">EventsBro</strong>
+				<button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
+					<i class="fad fa-list-ul"></i>
+				</button>
+			</div>
+			<!-- end logo -->
+			<!-- navbar content toggle -->
+			<button id="navbarToggle" class="hidden md:block md:fixed right-0 mr-6">
+				<i class="fad fa-chevron-double-down"></i>
+			</button>
+			<!-- end navbar content toggle -->
+		</div>
+		<!-- end navbar -->
+
+		<!-- start sidebar -->
+        <div
+        id="sideBar" class="relative flex flex-col flex-wrap bg-white border-r border-gray-300 p-6 flex-none w-64 md:-ml-64 md:fixed md:top-0 md:z-30 md:h-screen md:shadow-xl animated faster">
+        <!-- sidebar content -->
+        <div
+            class="flex flex-col">
+            <!-- sidebar toggle -->
+            <div class="text-right hidden md:block mb-4">
+                <button id="sideBarHideBtn">
+                    <i class="fad fa-times-circle"></i>
+                </button>
+            </div>
+            <!-- end sidebar toggle -->
+            <p class="uppercase text-xs text-gray-600 mb-4 tracking-wider">homes</p>
+            <a href="dashbaord" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-chart-pie text-xs mr-2"></i>
+                Analytics dashboard
+            </a>
+            <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">apps</p>
+            <a href="role.twig" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-shield-check text-xs mr-2"></i>
+                roles
+            </a>
+            <a href="Event.twig" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-shield-check text-xs mr-2"></i>
+                Events
+            </a>
+            <a href="categories.twig" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-calendar-edit text-xs mr-2"></i>
+                categories
+            </a>
+            <a href="users.twig" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-file-invoice-dollar text-xs mr-2"></i>
+                users
+            </a>
+            <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">UI Elements</p>
+            <a href="./typography.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-text text-xs mr-2"></i>
+                typography
+            </a>
+            <a href="./alert.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-whistle text-xs mr-2"></i>
+                alerts
+            </a>
+            <a href="./buttons.html" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                <i class="fad fa-cricket text-xs mr-2"></i>
+                buttons
+            </a>
+        </div>
+        <!-- end sidebar content -->
+    </div>
+    <!-- end sidbar -->
+
+
+		 <script>
+						            
+						
+									
+						    // function deleteUser(userId, button) {
+						    //     fetch('/dashboard/user/delete', {
+						    //       method: 'POST',
+						    //       headers: { 'Content-Type': 'application/json' },
+						    //       body: JSON.stringify({ userId: userId })
+						    //     })
+						    //     .then(response => response.json())
+						    //     .then(data => {
+						    //      if (data.success) {
+						    //         button.closest('tr').remove();
+						    //         alert('User deleted successfully');
+						    //      } else {
+						    //         alert('Error: ' + data.message);
+						    //      }
+						    //     })
+						    //     .catch(error => console.error('Error:', error));
+						    // }
+						     
+				             
+							function updateStatus(userId, status, button) {
+		    fetch('/dashboard/user/userStatus', {
+		        method: 'POST',
+		        headers: { 'Content-Type': 'application/json' },
+		        body: JSON.stringify({ userId: userId, status: status })
+		    })
+		    .then(response => response.json())
+		    .then(data => {
+		        if (data.success) {
+		            alert('User status updated successfully');
+		
+		            // Update the status dropdown dynamically
+		            const statusCell = button.closest('tr').querySelector('td:nth-child(4)'); // Adjust index if necessary
+		            const statusDropdown = statusCell.querySelector('select');
+		            statusDropdown.value = status; // Set the selected status in the dropdown
+		        } else {
+		            alert('Error: ' + data.message);
+		        }
+		    })
+		    .catch(error => {
+		        console.error('Error:', error);
+		        alert('Something went wrong!');
+		    });
+		}
+				</script>
+	</body>
+
+</html>

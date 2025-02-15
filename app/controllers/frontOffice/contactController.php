@@ -15,7 +15,4 @@ class ContactController{
         View::render('front/pages/help.twig');
      }
 
-
-
-
 }

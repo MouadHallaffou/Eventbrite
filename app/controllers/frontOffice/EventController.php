@@ -128,9 +128,9 @@ class EventController
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
-        $regions = $eventModel->fetchRegions();
         // var_dump($username);
         // die();
+
 
         View::render('back/organisateur/addEvent.twig', [
             'user' => [
@@ -139,6 +139,7 @@ class EventController
             ],
             'events' => $events,
             'categories' => $categories,
+
             'tags' => $tags,
             'regions' => $regions,
         ]);
@@ -304,8 +305,6 @@ class EventController
         ]);
     }
 
-
-
     public function displayEvents()
     {
         $eventsHomePage = new Event($this->pdo);
@@ -364,3 +363,6 @@ class EventController
     }
 
 }
+
+
+
