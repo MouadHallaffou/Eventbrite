@@ -25,7 +25,7 @@ class EventController
         Session::checkSession();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
-            
+
             // $errors = Validator::validateEvent($_POST);
             $event = new Event($this->pdo);
 
@@ -304,5 +304,63 @@ class EventController
         ]);
     }
 
+
+
+    public function displayEvents()
+    {
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        $categoryHomePage = $eventsHomePage->fetchCategories();
+        $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+        // var_dump($eventsAccepted);
+        View::render('front/FindEvents.twig', [
+            'eventsAccepted' => $eventsAccepted,
+            'categoryHomePage' => $categoryHomePage,
+            'SponsorsHomePage' => $SponsorsHomePage,
+        ]);
+    }
+
+
+    public function searchEvents() {
+        // header('Content-Type: application/json');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $input = file_get_contents('php://input');
+            $data = json_decode($input, true);
+
+            if (isset($data['q'])) {
+                $q = $data['q'];
+                $event = new Event($this->pdo);
+                $dataEvents = $event->searchForEvents($q);
+    
+                if (is_array($dataEvents)) {
+                    if (!empty($dataEvents)) {
+                        echo json_encode([
+                            'success' => true,
+                            'data' => $dataEvents
+                        ]);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Aucun événement trouvé.']);
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Database error.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Search query is missing.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid action.']);
+        }
+    }
+
+    public function eventDataille($id){
+       
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->eventDetaill($id);
+        View::render('front/pages/EventDataille.twig', [
+            'eventsAccepted' => $eventsAccepted,
+        ]);
+        
+    }
 
 }

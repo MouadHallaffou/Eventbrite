@@ -74,9 +74,10 @@ class Auth extends User {
    }
 
    public function logout(){
-    return session::checkSession();
+        return session::checkSession();
+        header('Location: /login');
+        exit;
    }
-
 
 
 }
