@@ -83,14 +83,21 @@ CREATE TABLE events (
     lienEvent VARCHAR(255) DEFAULT NULL,
     startEventAt DATETIME NOT NULL, 
     endEventAt DATETIME NOT NULL,
-    sponsor_id BIGINT DEFAULT NULL,
     category_id BIGINT DEFAULT NULL,
     user_id BIGINT NOT NULL,
     ville_id INT DEFAULT NULL,
     FOREIGN KEY (ville_id) REFERENCES ville(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    FOREIGN KEY (sponsor_id) REFERENCES sponsors(sponsor_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- TABLE EVENT_SPONSOR
+CREATE TABLE event_sponsor (
+    event_id BIGINT NOT NULL,
+    sponsor_id BIGINT NOT NULL,
+    PRIMARY KEY (event_id, sponsor_id),
+    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (sponsor_id) REFERENCES sponsors(sponsor_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- TABLE EVENTS_TAGS
@@ -166,7 +173,6 @@ CREATE TABLE orderdetails (
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
 -- INDEXATION POUR OPTIMISATION
 CREATE INDEX idx_username ON users(username);

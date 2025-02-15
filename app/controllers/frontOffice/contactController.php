@@ -12,17 +12,7 @@ class ContactController{
      }
 
     public function helpcenter(){
-        // View::render('front/pages/Contact.twig');
         View::render('front/pages/help.twig');
      }
 
-
-     
-
 }
-
-
-
-
-
-

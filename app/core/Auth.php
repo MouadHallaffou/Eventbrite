@@ -3,6 +3,7 @@ namespace App\core;
 
 use App\models\User;
 use App\config\OrmMethodes;
+use App\core\Session;
 
 use PDOException;
 
@@ -46,7 +47,7 @@ class Auth extends User {
                 header("Location: /login");
                 exit();
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $_SESSION["error"] = "Something went wrong: " . $e->getMessage();
             header("Location: login");
             exit();
@@ -72,6 +73,11 @@ class Auth extends User {
      
    }
 
+   public function logout(){
+        return session::checkSession();
+        header('Location: /login');
+        exit;
+   }
 
 
 }

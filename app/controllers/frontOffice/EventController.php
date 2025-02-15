@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
 use App\core\Validator;
+use App\core\Session;
+
 use PDO;
 
 class EventController
@@ -19,10 +21,13 @@ class EventController
 
     public function createEvent()
     {
+
+        Session::checkSession();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
-            $event = new Event($this->pdo);
 
             // $errors = Validator::validateEvent($_POST);
+            $event = new Event($this->pdo);
 
             $event->setTitle($_POST['title']);
             $event->setDescription($_POST['description']);
@@ -32,10 +37,10 @@ class EventController
             $event->setEndEventAt(new \DateTime($_POST['endEventAt']));
             $event->setPrice($_POST['isPaid'] === "payant" ? (float)$_POST['price'] : null);
             $event->setCategoryId((int)$_POST['category_id']);
-            $event->setUserId((int)$_POST['user_id']);
-            $event->setVilleId((int)$_POST['ville_id']); // Ajout de ville_id
+            $event->setUserId((int)$_SESSION['userId']);
+            $event->setVilleId((int)$_POST['ville_id']);
 
-            // Handle address and link
+            // Gérer l'adresse et le lien
             if ($_POST['eventMode'] === "presentiel") {
                 $event->setAdresse($_POST['adresse']);
                 $event->setLienEvent(null);
@@ -44,7 +49,7 @@ class EventController
                 $event->setAdresse(null);
             }
 
-            // Handle image upload
+            // Gérer l'upload de l'image de l'événement
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $target_dir = __DIR__ . "/../../../public/assets/images/";
                 $target_file = $target_dir . basename($_FILES["image"]["name"]);
@@ -55,59 +60,92 @@ class EventController
                 }
             }
 
-            // Handle sponsor
-            $sponsorName = $_POST['sponsor_name'] ?? null;
-            $sponsorImage = null;
-            if (isset($_FILES['image_sponsor']) && $_FILES['image_sponsor']['error'] === UPLOAD_ERR_OK) {
-                $target_dir = __DIR__ . "/../../../public/assets/images/";
-                $target_file = $target_dir . basename($_FILES["image_sponsor"]["name"]);
-                if (move_uploaded_file($_FILES["image_sponsor"]["tmp_name"], $target_file)) {
-                    $sponsorImage = basename($_FILES["image_sponsor"]["name"]);
-                } else {
-                    throw new \Exception("Erreur lors du téléchargement de l'image du sponsor.");
+            // Gérer les sponsors dynamiques
+            $sponsors = [];
+            if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
+                foreach ($_POST['sponsors'] as $index => $sponsorData) {
+                    $sponsorName = $sponsorData['name'] ?? null;
+                    $sponsorImage = null;
+
+                    // Gérer l'upload de l'image du sponsor
+                    if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
+                        $target_dir = __DIR__ . "/../../../public/assets/images/";
+                        $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        if (move_uploaded_file($_FILES["sponsors"]["tmp_name"][$index]["image"], $target_file)) {
+                            $sponsorImage = basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        } else {
+                            throw new \Exception("Erreur lors du téléchargement de l'image du sponsor.");
+                        }
+                    }
+
+                    // Ajouter le sponsor à la liste
+                    if ($sponsorName) {
+                        $sponsors[] = [
+                            'name' => $sponsorName,
+                            'image' => $sponsorImage,
+                        ];
+                    }
                 }
             }
 
-            // Insert event
+            // Insérer l'événement et les sponsors
             $tags = $_POST['tags'] ?? [];
-            $eventId = $event->insert($tags, $sponsorName, $sponsorImage);
+            $eventId = $event->insert($tags, $sponsors);
 
-            // Return success response
+            // Retourner une réponse JSON
+            header('Content-Type: application/json');
             echo json_encode([
                 "success" => true,
                 "event_id" => $eventId,
-                "redirect_url" => "/events"
+                "redirect_url" => "/addEvent"
             ]);
+            exit;
         }
     }
 
+    // Récupère les villes par région.
     public function getVillesByRegion()
     {
         if (isset($_GET['region_id'])) {
             $regionId = (int)$_GET['region_id'];
             $eventModel = new Event($this->pdo);
-            $villes = $eventModel->fetchVillesByRegion($regionId); // Utiliser la méthode du modèle
+            $villes = $eventModel->fetchVillesByRegion($regionId);
+            $villes = $eventModel->fetchVillesByRegion($regionId);
             echo json_encode($villes);
         }
     }
 
+    // Affiche tous les événements.
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
 
-        $events = $eventModel->fetchAll();
+        $events = $eventModel->fetchAll($userId);
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
-        // $regions = $eventModel->fetchRegions(); // Utiliser la méthode du modèle
+        $regions = $eventModel->fetchRegions();
+        // var_dump($username);
+        // die();
+
 
         View::render('back/organisateur/addEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'events' => $events,
             'categories' => $categories,
-            'tags' => $tags
-            // 'regions' => $regions, // Passer les régions au template
+
+            'tags' => $tags,
+            'regions' => $regions,
         ]);
     }
 
+    // Supprime un événement.
     public function deleteEvent()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['event_id'])) {
@@ -115,7 +153,6 @@ class EventController
             $eventModel = new Event($this->pdo);
 
             try {
-                // Supprimer l'événement
                 $success = $eventModel->delete($eventId);
 
                 if ($success) {
@@ -131,7 +168,7 @@ class EventController
         }
     }
 
-    // Afficher le formulaire d'édition
+    // Affiche le formulaire edit
     public function editEvent($eventId)
     {
         $eventModel = new Event($this->pdo);
@@ -147,12 +184,21 @@ class EventController
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
 
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
+
         $villes = [];
         if (isset($event['ville']) && $event['ville']['region']) {
             $villes = $eventModel->fetchVillesByRegion($event['ville']['region']);
         }
 
         View::render('back/organisateur/editEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'event' => $event,
             'categories' => $categories,
             'tags' => $tags,
@@ -161,16 +207,45 @@ class EventController
         ]);
     }
 
-    // Mettre à jour un événement
+    // Met à jour un événement.
     public function updateEvent($eventId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eventModel = new Event($this->pdo);
 
-            $currentEvent = $eventModel->findById($eventId);
+            // Récupérer les sponsors
+            $sponsors = [];
+            if (isset($_POST['sponsors']) && is_array($_POST['sponsors'])) {
+                foreach ($_POST['sponsors'] as $index => $sponsorData) {
+                    if (isset($sponsorData['delete']) && $sponsorData['delete'] === "1") {
+                        if (isset($sponsorData['sponsor_id']) && is_numeric($sponsorData['sponsor_id'])) {
+                            $eventModel->removeSponsorFromEvent($eventId, (int)$sponsorData['sponsor_id']);
+                        }
+                        continue;
+                    }
 
-            // $errors = Validator::validateEvent($_POST);
+                    $sponsorName = $sponsorData['name'] ?? null;
+                    $sponsorImage = null;
 
+                    // Gérer l'upload de l'image du sponsor
+                    if (isset($_FILES['sponsors']['tmp_name'][$index]['image'])) {
+                        $target_dir = __DIR__ . "/../../../public/assets/images/";
+                        $target_file = $target_dir . basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        if (move_uploaded_file($_FILES["sponsors"]["tmp_name"][$index]["image"], $target_file)) {
+                            $sponsorImage = basename($_FILES["sponsors"]["name"][$index]["image"]);
+                        }
+                    }
+
+                    if ($sponsorName) {
+                        $sponsors[] = [
+                            'name' => $sponsorName,
+                            'image' => $sponsorImage,
+                        ];
+                    }
+                }
+            }
+
+            // Données à mettre à jour
             $data = [
                 'title' => $_POST['title'],
                 'description' => $_POST['description'],
@@ -181,24 +256,17 @@ class EventController
                 'capacite' => (int)$_POST['capacite'],
                 'category_id' => (int)$_POST['category_id'],
                 'tags' => $_POST['tags'] ?? [],
-                'sponsor_name' => $_POST['sponsor_name'] ?? null,
-                'sponsor_image_path' => $currentEvent['sponsor_image'] ?? null,
+                'sponsors' => $sponsors, 
                 'startEventAt' => $_POST['startEventAt'],
                 'endEventAt' => $_POST['endEventAt'],
-                'image' => $currentEvent['image'] ?? null,
+                'image' => $_FILES['event_image']['name'] ?? null,
                 'ville_id' => (int)$_POST['ville_id'],
             ];
 
+            // Gérer l'upload de l'image de l'événement
             if (isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = __DIR__ . "/../../../public/assets/images/";
                 $uploadFile = $uploadDir . basename($_FILES['event_image']['name']);
-
-                if (!empty($currentEvent['image'])) {
-                    $oldImagePath = $uploadDir . $currentEvent['image'];
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
-                    }
-                }
 
                 if (move_uploaded_file($_FILES['event_image']['tmp_name'], $uploadFile)) {
                     $data['image'] = basename($_FILES['event_image']['name']);
@@ -222,13 +290,14 @@ class EventController
         }
     }
 
+    // Affiche les événements acceptés
     public function displayEventsAcceptedHome()
     {
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
         $categoryHomePage = $eventsHomePage->fetchCategories();
         $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
-        // var_dump($eventsAccepted);
+
         View::render('front/home.twig', [
             'eventsAccepted' => $eventsAccepted,
             'categoryHomePage' => $categoryHomePage,
@@ -282,8 +351,6 @@ class EventController
             echo json_encode(['success' => false, 'message' => 'Invalid action.']);
         }
     }
-    
-
 
     public function eventDataille($id){
        
@@ -294,6 +361,7 @@ class EventController
         ]);
         
     }
+
 }
 
 
