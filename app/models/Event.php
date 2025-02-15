@@ -571,8 +571,4 @@ class Event
 
     }
 
-
-
-
-
 }

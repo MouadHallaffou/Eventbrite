@@ -11,6 +11,7 @@ use App\controllers\backsOffice\CategoryController;
 use App\controllers\backsOffice\RoleController;
 use App\controllers\frontOffice\ContactController;
 use App\core\Validator;
+use App\core\Auth;
 
 
 use Twig\Environment;
@@ -50,6 +51,8 @@ $router->get('/login', AuthController::class, 'loginView');
 
 $router->post('/register', AuthController::class, 'register');
 $router->post('/login', AuthController::class, 'login');
+$router->get('/logout', AuthController::class, 'logout');
+
 
 $router->get('/FindEvents', HomeController::class, 'findevents');
 
@@ -65,7 +68,6 @@ $router->get('/help', ContactController::class, 'helpcenter');
 
 // /------------------ Admin
 
-
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
 $router->get('/', EventController::class, 'displayEventsAcceptedHome');
 
@@ -75,18 +77,18 @@ $router->get('/dashboard/user/delete', AdminController::class, 'deleteUser');
 $router->post('/dashboard/user/delete', AdminController::class, 'deleteUser'); 
 $router->post('/dashboard/user/userStatus', AdminController::class, 'updateStatus');
 
-// /------------------ categories
-// $router->get('/dashboard/categories', CategoryController::class, 'index');
-// $router->post('/dashboard/categories/delete', CategoryController::class, 'deleteCategories');
-// $router->post('/dashboard/categories/add', CategoryController::class, 'addCategories');
-// $router->get('/dashboard/categories/update/{id}', CategoryController::class, 'editCategories');
+//------------------ categories
+$router->get('/dashboard/categories', CategoryController::class, 'index');
+$router->post('/dashboard/categories/delete', CategoryController::class, 'deleteCategories');
+$router->post('/dashboard/categories/add', CategoryController::class, 'addCategories');
+$router->get('/dashboard/categories/update/{id}', CategoryController::class, 'editCategories');
 
-// // /------------------Management role
+// /------------------Management role
 
-// $router->get('/dashboard/role', RoleController::class, 'index');
-// $router->post('/dashboard/role/delete', RoleController::class, 'deleteRole');
-// $router->post('/dashboard/role', RoleController::class, 'addRoles');
-// $router->get('/dashboard/roles/update/{id}', roleController::class, 'editRoles');
+$router->get('/dashboard/role', RoleController::class, 'index');
+$router->post('/dashboard/role/delete', RoleController::class, 'deleteRole');
+$router->post('/dashboard/role', RoleController::class, 'addRoles');
+$router->get('/dashboard/roles/update/{id}', roleController::class, 'editRoles');
 
 
 $router->get('/dashboard/users', AdminController::class, 'updateStatus');
