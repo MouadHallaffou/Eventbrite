@@ -514,126 +514,122 @@
 	</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
     
-     let sponsorIndex = 1; // Index pour les nouveaux sponsors
-
-    // Fonction pour ajouter un nouveau champ sponsor
-    document.getElementById('addSponsorButton').addEventListener('click', function() {
-        const sponsorsContainer = document.getElementById('sponsorsContainer');
-
-        // Créer un nouveau champ sponsor
-        const newSponsorEntry = document.createElement('div');
-        newSponsorEntry.classList.add('sponsor-entry', 'mb-4');
-        newSponsorEntry.innerHTML = `
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Nom du sponsor -->
-                <div>
-                    <input
-                        type="text"
-                        name="sponsors[${sponsorIndex}][name]"
-                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
-                        placeholder="Nom du sponsor">
+    <script>
+        let sponsorIndex = 1; // Index pour les nouveaux sponsors
+        // Fonction pour ajouter un nouveau champ sponsor
+        document.getElementById('addSponsorButton').addEventListener('click', function() {
+            const sponsorsContainer = document.getElementById('sponsorsContainer');
+            // Créer un nouveau champ sponsor
+            const newSponsorEntry = document.createElement('div');
+            newSponsorEntry.classList.add('sponsor-entry', 'mb-4');
+            newSponsorEntry.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Nom du sponsor -->
+                    <div>
+                        <input
+                            type="text"
+                            name="sponsors[${sponsorIndex}][name]"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="Nom du sponsor">
+                    </div>
+                    <!-- Image du sponsor -->
+                    <div>
+                        <input
+                            type="file"
+                            name="sponsors[${sponsorIndex}][image]"
+                            class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                            accept="image/*">
+                    </div>
                 </div>
-                <!-- Image du sponsor -->
-                <div>
-                    <input
-                        type="file"
-                        name="sponsors[${sponsorIndex}][image]"
-                        class="w-full p-0 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-50 file:px-4 file:py-2 hover:file:bg-orange-100"
-                        accept="image/*">
-                </div>
-            </div>
-        `;
-
-        // Ajouter le nouveau champ au conteneur
-        sponsorsContainer.appendChild(newSponsorEntry);
-
-        // Incrémenter l'index pour le prochain sponsor
-        sponsorIndex++;
-    });
+            `;
+            // Ajouter le nouveau champ au conteneur
+            sponsorsContainer.appendChild(newSponsorEntry);
+            // Incrémenter l'index pour le prochain sponsor
+            sponsorIndex++;
+        });
 
 
-        // fonction deleteEvent 
-        function deleteEvent(eventId) {
-            Swal.fire({
-                title: 'vous etes sûr ?',
-                text: "Vous ne pourrez pas revenir en arrière !",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Oui, supprimer !',
-                cancelButtonText: 'Annuler'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '/delete-event',
-                        type: 'POST',
-                        data: { event_id: eventId },
-                        success: function(response) {
-                            console.log("Réponse du serveur :", response);
-                            const result = JSON.parse(response);
-                            if (result.success) {
-                                Swal.fire({
-                                    title: 'Supprimé !',
-                                    text: result.message,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    window.location.reload();
-                                });
-                            } else {
+            // fonction deleteEvent 
+            function deleteEvent(eventId) {
+                Swal.fire({
+                    title: 'vous etes sûr ?',
+                    text: "Vous ne pourrez pas revenir en arrière !",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, supprimer !',
+                    cancelButtonText: 'Annuler'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/delete-event',
+                            type: 'POST',
+                            data: { event_id: eventId },
+                            success: function(response) {
+                                console.log("Réponse du serveur :", response);
+                                const result = JSON.parse(response);
+                                if (result.success) {
+                                    Swal.fire({
+                                        title: 'Supprimé !',
+                                        text: result.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Erreur !',
+                                        text: result.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Erreur lors de la suppression :", error);
+                                console.error("Statut de la requête :", status);
+                                console.error("Réponse du serveur :", xhr.responseText);
+
                                 Swal.fire({
                                     title: 'Erreur !',
-                                    text: result.message,
+                                    text: 'Une erreur lors de la suppression.',
                                     icon: 'error',
                                     confirmButtonText: 'OK'
                                 });
                             }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Erreur lors de la suppression :", error);
-                            console.error("Statut de la requête :", status);
-                            console.error("Réponse du serveur :", xhr.responseText);
+                        });
+                    }
+                });
+            }
 
-                            Swal.fire({
-                                title: 'Erreur !',
-                                text: 'Une erreur lors de la suppression.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    });
-                }
-            });
-        }
+            $(document).ready(function() {
+                // Gestion du mode d'événement (présentiel / en ligne)
+                $(".event-mode").change(function() {
+                    let selectedMode = $("input[name='eventMode']:checked").val();
+                    if (selectedMode === "presentiel") {
+                        $("#adresseField").removeClass("hidden");
+                        $("#lienEventField").addClass("hidden");
+                    } else {
+                        $("#adresseField").addClass("hidden");
+                        $("#lienEventField").removeClass("hidden");
+                    }
+                });
 
-        $(document).ready(function() {
-            // Gestion du mode d'événement (présentiel / en ligne)
-            $(".event-mode").change(function() {
-                let selectedMode = $("input[name='eventMode']:checked").val();
-                if (selectedMode === "presentiel") {
-                    $("#adresseField").removeClass("hidden");
-                    $("#lienEventField").addClass("hidden");
-                } else {
-                    $("#adresseField").addClass("hidden");
-                    $("#lienEventField").removeClass("hidden");
-                }
-            });
+                // Gestion du type de paiement (gratuit / payant)
+                $(".payment-type").change(function() {
+                    let selectedPayment = $("input[name='isPaid']:checked").val();
+                    if (selectedPayment === "payant") {
+                        $("#priceField").removeClass("hidden");
+                    } else {
+                        $("#priceField").addClass("hidden");
+                    }
+                });
 
-            // Gestion du type de paiement (gratuit / payant)
-            $(".payment-type").change(function() {
-                let selectedPayment = $("input[name='isPaid']:checked").val();
-                if (selectedPayment === "payant") {
-                    $("#priceField").removeClass("hidden");
-                } else {
-                    $("#priceField").addClass("hidden");
-                }
-            });
-
-            // Soumission du formulaire via AJAX
-            $("#eventForm").submit(function(e) {
+                // Soumission du formulaire via AJAX
+                $("#eventForm").submit(function(e) {
                 e.preventDefault();
                 var formData = new FormData(this);
                 formData.append("action", "insert");
@@ -645,12 +641,11 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            window.location.href = result.redirect_url;
+                        if (response.success) {
+                            window.location.href = response.redirect_url;
                         } else {
-                            $(".error-message").addClass("hidden"); 
-                            for (const [field, message] of Object.entries(result.errors)) {
+                            $(".error-message").addClass("hidden");
+                            for (const [field, message] of Object.entries(response.errors)) {
                                 $(`#error-${field}`).text(message).removeClass("hidden");
                             }
                         }
@@ -661,85 +656,84 @@
                 });
             });
 
-            $('#region').change(function() {
-            const regionId = $(this).val();
-            const villeSelect = $('#ville');
+                $('#region').change(function() {
+                const regionId = $(this).val();
+                const villeSelect = $('#ville');
 
-            if (regionId) {
-                $.ajax({
-                    url: '/get-villes-by-region',
-                    type: 'GET',
-                    data: { region_id: regionId },
-                    dataType: 'json', 
-                    success: function(data) {
-                        // console.log(data); 
-                        villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
-                        $.each(data, function(index, ville) {
-                            villeSelect.append(`<option value="${ville.id}">${ville.ville}</option>`);
-                        });
-                        villeSelect.prop('disabled', false);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors de la récupération des villes :", error);
-                    }
-                });
-            } else {
-                villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
-                villeSelect.prop('disabled', true);
+                if (regionId) {
+                    $.ajax({
+                        url: '/get-villes-by-region',
+                        type: 'GET',
+                        data: { region_id: regionId },
+                        dataType: 'json', 
+                        success: function(data) {
+                            // console.log(data); 
+                            villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                            $.each(data, function(index, ville) {
+                                villeSelect.append(`<option value="${ville.id}">${ville.ville}</option>`);
+                            });
+                            villeSelect.prop('disabled', false);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur lors de la récupération des villes :", error);
+                        }
+                    });
+                } else {
+                    villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                    villeSelect.prop('disabled', true);
+                }
+            });
+
+            });
+
+            function toggleEventMode() {
+                const presentielFields = document.getElementById('adresseField');
+                const onlineFields = document.getElementById('lienEventField');
+                const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+                
+                if (presentielRadio.checked) {
+                    presentielFields.classList.remove('hidden');
+                    onlineFields.classList.add('hidden');
+                } else {
+                    presentielFields.classList.add('hidden');
+                    onlineFields.classList.remove('hidden');
+                }
             }
-        });
 
-        });
-
-        function toggleEventMode() {
-            const presentielFields = document.getElementById('adresseField');
-            const onlineFields = document.getElementById('lienEventField');
-            const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
-            
-            if (presentielRadio.checked) {
-                presentielFields.classList.remove('hidden');
-                onlineFields.classList.add('hidden');
-            } else {
-                presentielFields.classList.add('hidden');
-                onlineFields.classList.remove('hidden');
+            function togglePaymentType() {
+                const priceField = document.getElementById('priceField');
+                const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+                
+                if (payantRadio.checked) {
+                    priceField.classList.remove('hidden');
+                } else {
+                    priceField.classList.add('hidden');
+                }
             }
-        }
 
-        function togglePaymentType() {
-            const priceField = document.getElementById('priceField');
-            const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
-            
-            if (payantRadio.checked) {
-                priceField.classList.remove('hidden');
-            } else {
-                priceField.classList.add('hidden');
+            function openModal() {
+                document.getElementById('eventModal').classList.remove('hidden');
+                document.getElementById('eventModal').classList.add('flex');
             }
-        }
 
-        function openModal() {
-            document.getElementById('eventModal').classList.remove('hidden');
-            document.getElementById('eventModal').classList.add('flex');
-        }
-
-        function closeModal() {
-            document.getElementById('eventModal').classList.add('hidden');
-            document.getElementById('eventModal').classList.remove('flex');
-        }
-
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.classList.toggle('hidden');
-        }
-
-        document.addEventListener('click', function(event) {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            const profileDropdown = document.getElementById('profileDropdown');
-
-            if (!profileDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                dropdownMenu.classList.add('hidden');
+            function closeModal() {
+                document.getElementById('eventModal').classList.add('hidden');
+                document.getElementById('eventModal').classList.remove('flex');
             }
-        });
 
+            function toggleDropdown() {
+                const dropdownMenu = document.getElementById('dropdownMenu');
+                dropdownMenu.classList.toggle('hidden');
+            }
+
+            document.addEventListener('click', function(event) {
+                const dropdownMenu = document.getElementById('dropdownMenu');
+                const profileDropdown = document.getElementById('profileDropdown');
+
+                if (!profileDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add('hidden');
+                }
+            });
     </script>
 
 </body>
