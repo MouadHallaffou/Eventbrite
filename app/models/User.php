@@ -159,21 +159,19 @@ abstract class User
     }
 
 
-
-
-
     public function findById($id)
     {
-
         $conn = Database::getInstanse()->getConnection();
 
-        $query = "SELECT * FROM users u 
-              JOIN user_roles ur ON u.user_id = ur.user_id 
-              JOIN roles r ON r.role_id = ur.role_id 
+        $query = "SELECT u.*, r.name_role AS role FROM users u
+              JOIN user_roles ur ON u.user_id = ur.user_id
+              JOIN roles r ON r.role_id = ur.role_id
               WHERE u.user_id = :id";
+
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

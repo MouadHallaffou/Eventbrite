@@ -14,42 +14,38 @@ class Auth extends User
 
 
 
+
     public function loginUser($email, $password)
     {
         Session::checkSession();
 
         try {
-            $row = User::findByEmail($email);
-
-            if ($row) {
-                if (!password_verify($password, $row['password'])) {
-                    $_SESSION["error"] = "Incorrect password";
-                    header("Location: /login");
-                    exit();
-                }
-
+            // $userModel = new User();
+            $row = $this->findByEmail($email);
+            
+            if ($row && password_verify($password, $row['password'])) {
                 $_SESSION["role"] = $row['roleId'] ?? null;
-                $_SESSION["userId"] = $row['user_id'] ?? null;
+                $_SESSION["userId"] = $row['userId'] ?? null;
                 $_SESSION["username"] = $row['userName'] ?? null;
                 $_SESSION["email"] = $row['userEmail'] ?? null;
-
-                if ($_SESSION["userId"] === null) {
-                    $_SESSION["error"] = "Error: User ID is missing.";
-                    header("Location: /login");
-                    exit();
-                }
-
-                // Redirect based on role
-                if ($_SESSION["role"] == 2) {
-                    header("Location: /home");
-                } else if ($_SESSION["role"] == 1) {
-                    header("Location: /dashboard");
-                } else {
-                    header("Location: /home");
+                
+                switch ($_SESSION["role"]) {
+                    case 1:
+                        header("Location: /dashboard");
+                        break;
+                        case 2:
+                            header("Location: /addEvent");
+                            break;
+                        case 3:
+                            header("Location: /profile");
+                        break;
+                    default:
+                        $_SESSION["error"] = "Invalid role!";
+                        header("Location: /login");
                 }
                 exit();
             } else {
-                $_SESSION["error"] = "Email does not exist";
+                $_SESSION["error"] = "Invalid email or password.";
                 header("Location: /login");
                 exit();
             }
@@ -70,11 +66,13 @@ class Auth extends User
         $values = [$userName, $email, $hashedPassword, $gender];
 
         $result = User::AddUser($columns, $values, $roleId);
+
         if ($result) {
-            // return $result;
             header("Location: /login");
+            exit();
         } else {
-            $_SESSION["error"] = "Email does not exist";
+            $_SESSION["error"] = "Registration failed!";
+            header("Location: /register");
             exit();
         }
     }

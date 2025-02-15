@@ -70,9 +70,12 @@
 }
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 0964d711f8a199b6cfe45c19ec50b4d9226ee549
 @keyframes scroll {
 	0% {
 	  transform: translateX(0);
@@ -86,4 +89,8 @@
   }
   .hover:animation-paused:hover {
 	animation-play-state: paused;
+<<<<<<< HEAD
   }
+=======
+  }
+>>>>>>> 0964d711f8a199b6cfe45c19ec50b4d9226ee549

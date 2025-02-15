@@ -18,16 +18,26 @@ class Router extends Controller {
         $this->addRoute($route, $controller, $action, "POST");
     }
 
-    public function dispatch() {
-        $uri = strtok($_SERVER['REQUEST_URI'], '?');
-        $method = $_SERVER['REQUEST_METHOD'];
+    public function dispatch()
+    {
+    $uri = strtok($_SERVER['REQUEST_URI'], '?');
+    $method = $_SERVER['REQUEST_METHOD'];
 
-        if (isset($this->routes[$method][$uri])) {
-            $controller = $this->routes[$method][$uri]['controller'];
-            $action = $this->routes[$method][$uri]['action'];
-            (new $controller())->$action();
-        } else {
-            echo "Page non trouvée";
+    foreach ($this->routes[$method] as $route => $handler) {
+        $pattern = preg_replace('/\{(\w+)\}/', '(?P<$1>\d+)', $route);
+        $pattern = "@^" . $pattern . "$@";
+
+        if (preg_match($pattern, $uri, $matches)) {
+            $controller = $handler['controller'];
+            $action = $handler['action'];
+
+            $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+
+            (new $controller())->$action(...array_values($params));
+            return;
         }
     }
+    echo "Page non trouvée";
+    }
+    
 }

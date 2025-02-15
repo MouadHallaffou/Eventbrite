@@ -1,127 +1,682 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer un Événement</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Gestion des Événements</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <h2 class="text-2xl font-bold mb-4 text-center">Créer un Nouvel Événement</h2>
-        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
-            <!-- Titre -->
-            <div>
-                <label class="block font-semibold">Titre de l'événement</label>
-                <input type="text" name="title" class="w-full p-2 border rounded-lg" placeholder="Entrez le titre" required>
+
+<body class="bg-gray-200">
+
+    <header class="bg-black text-white border-b border-gray-200 shadow-md">
+        <div class="max-w-screen-xl mx-auto flex flex-wrap items-center justify-between p-4">
+            <div class="flex items-center">
+                <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <span class="self-center text-xl font-bold whitespace-nowrap text-[#fb8c00]">
+                        EventsBro
+                    </span>
+                </a>
             </div>
-            <!-- Description -->
-            <div>
-                <label class="block font-semibold">Description</label>
-                <textarea name="description" class="w-full p-2 border rounded-lg" placeholder="Décrivez l'événement" required></textarea>
-            </div>
-            <!-- Image -->
-            <div>
-                <label class="block font-semibold">Image de l'événement</label>
-                <input type="file" name="image" class="w-full p-2 border rounded-lg" accept="image/*" required>
-            </div>
-            <!-- Mode de l'événement -->
-            <div>
-                <label class="block font-semibold">Mode de l'événement</label>
-                <div class="flex space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="presentiel" class="event-mode" required>
-                        <span>Présentiel</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="en ligne" class="event-mode">
-                        <span>En ligne</span>
-                    </label>
+
+            <!-- Search Bar and Filter -->
+            <div class="flex items-center flex-grow mx-4">
+                <div class="relative flex w-full max-w-md">
+                    <select class="bg-black h-10 px-4 rounded-l-lg border border-gray-300 focus:outline-none cursor-pointer">
+                        <option value="filter">Filter</option>
+                        <option value="accepted">Acceptés</option>
+                        <option value="pending">En attente</option>
+                        <option value="rejected">Rejetés</option>
+                    </select>
+                    <input
+                        type="search"
+                        placeholder="Rechercher un événement..."
+                        class="text-gray-900 w-full h-10 px-4 border-t border-b border-gray-300 focus:outline-none"
+                    />
+                    <button class="bg-[#fb8c00] text-white h-10 px-4 rounded-r-lg hover:bg-[#e68900] transition-colors duration-300">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </div>
-            <!-- Adresse -->
-            <div id="adresseField" class="hidden">
-                <label class="block font-semibold">Adresse</label>
-                <input type="text" name="adresse" class="w-full p-2 border rounded-lg" placeholder="123 Rue 10 casa maroc">
-            </div>
-            <!-- Lien URL -->
-            <div id="lienEventField" class="hidden">
-                <label class="block font-semibold">Lien de l'événement</label>
-                <input type="url" name="lienEvent" class="w-full p-2 border rounded-lg" placeholder="Ex: https://zoom.com/event">
-            </div>
-            <!-- Type d'événement -->
-            <div>
-                <label class="block font-semibold">Type d'événement</label>
-                <div class="flex space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="gratuit" class="payment-type" required>
-                        <span>Gratuit</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="payant" class="payment-type">
-                        <span>Payant</span>
-                    </label>
-                </div>
-            </div>
-            <!-- Prix -->
-            <div id="priceField" class="hidden">
-                <label class="block font-semibold">Prix (en €)</label>
-                <input type="number" name="price" class="w-full p-2 border rounded-lg" min="0" step="0.01" placeholder="Entrez le prix">
-            </div>
-            <!-- Capacité -->
-            <div>
-                <label class="block font-semibold">Capacité</label>
-                <input type="number" name="capacite" class="w-full p-2 border rounded-lg" min="1" placeholder="Nombre maximum de participants" required>
-            </div>
-            <!-- Catégorie -->
-            <div>
-                <label class="block font-semibold">Catégorie</label>
-                <select name="category_id" class="w-full p-2 border rounded-lg" required>
-                    <option value="" disabled selected>Choisir une catégorie</option>
-                    {% for category in categories %}
-                    <option value="{{ category.category_id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Tags -->
-            <div>
-                <label class="block font-semibold">Tags</label>
-                <select name="tags[]" class="w-full p-2 border rounded-lg" multiple>
-                    {% for tag in tags %}
-                    <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Sponsor (Optionnel) -->
-            <div>
-                <label class="block font-semibold">Sponsor (Optionnel)</label>
-                <select name="sponsor_id" class="w-full p-2 border rounded-lg">
-                    <option value="" selected>Aucun sponsor</option>
-                    {% for sponsor in sponsors %}
-                    <option value="{{ sponsor.sponsor_id }}">{{ sponsor.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Dates -->
-            <div>
-                <label class="block font-semibold">Date de début</label>
-                <input type="date" name="startEventAt" class="w-full p-2 border rounded-lg" required>
-            </div>
-            <div>
-                <label class="block font-semibold">Date de fin</label>
-                <input type="date" name="endEventAt" class="w-full p-2 border rounded-lg" required>
-            </div>
-            <!-- User ID (Organisateur) -->
-            <input type="hidden" name="user_id" value="1">
-            <!-- Bouton Soumettre -->
-            <div class="text-center">
-                <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    Créer l'Événement
+
+            <div class="flex items-center space-x-4">
+                <a href="/statistics" class="bg-[#fb8c00] text-white px-4 py-2 rounded-lg hover:bg-[#e68900] transition-colors duration-300 flex items-center">
+                    <i class="fas fa-chart-bar mr-2"></i> Statistiques
+                </a>
+
+                <button onclick="openModal()" class="bg-[#fb8c00] text-white px-4 py-2 rounded-lg hover:bg-[#e68900] transition-colors duration-300 flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Créer
                 </button>
+
+                <div class="relative">
+                    <div id="profileDropdown" class="cursor-pointer" onclick="toggleDropdown()">
+                        <div class="flex items-center space-x-2">
+                            <img src="{{ '/assets/images/' ~ user.image }}" alt="Photo de {{ user.username }}" class="w-8 h-8 rounded-full">
+                            <span class="text-sm text-gray-600">{{ user.username }}</span>
+                        </div>
+                    </div>
+
+                    <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+                        <a href="/edit-profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fas fa-edit mr-2"></i> Modifier
+                        </a>
+                        <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                        </a>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
+    </header>
+
+    <!-- Section affichant tous les événements -->
+    <main class="p-8">
+        <h1 class="text-3xl font-bold mb-6">Tous les Evenements</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {% for event in events %}
+            <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                <div class="relative h-64">
+                    <img class="h-64 w-full object-cover" src="{{ '/assets/images/' ~ event.image }}" alt="Event Image" />
+                    <span class="absolute bottom-1 right-1 bg-orange-500 text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-900">
+                        {{ event.category_name ?? 'Musique'}}
+                    </span>
+                </div>
+
+                <div class="p-6">
+                    <h2 class="text-xl font-bold mb-2 text-gray-900">
+                        {{ event.title }}
+                    </h2>
+                    <p class="text-gray-600">
+                        {{ event.description | slice(0, 200) ~ '...'}}
+                    </p>
+
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                        {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
+                    </p>
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                        {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
+                    </p>
+                    <p class="text-gray-500 text-sm mt-2 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-orange-600"></i>
+                        {{ event.adresse ?? 'En ligne' }}
+                    </p>
+
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-600">Réservations : {{ event.reservations_count ?? '0'}} / {{ event.capacite }}</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div class="bg-orange-200 h-3 rounded-full" style="width: {{ (event.reservations_count / event.capacite) * 100 }}%;"></div>
+                        </div>
+                    </div>
+
+                        <div class="flex items-center mt-2 justify-between">
+									<div class="mt-2 flex gap-6">
+                                        <a href="/edit-event/{{ event.event_id }}" class="bg-gray-400 text-white p-2 rounded-full hover:bg-gray-600 transition-colors duration-300">
+                                            ✏️
+                                        </a>
+                                        <button
+                                            onclick="deleteEvent({{ event.event_id }})"
+                                            class="bg-orange-500 text-white p-2 rounded-full hover:bg-orange-700 transition-colors duration-300">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                    <div class="mt-4 flex gap-2">
+                                        <span class="text-lg text-semibold {{ event.status == 'accepted' ? 'text-green-500' : event.status == 'pending' ? 'text-yellow-500' : 'text-red-500' }}">
+                                                {{ event.status | capitalize }}
+                                        </span>
+                                    </div>
+								</div>
+							</div>
+						</div>
+            {% else %}
+            <p class="text-gray-600">Aucun événement disponible.</p>
+            {% endfor %}
+        </div>
+
+    </main>
+
+    <!-- Modal pour créer un événement -->
+    <div id="eventModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-6 text-center">Créer un Nouvel Événement</h2>
+            
+            <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <!-- Titre -->
+                <div>
+                    <label class="block font-semibold mb-2">Titre :</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        placeholder="Entrez le titre"
+                        required>
+                    <!-- Message d'erreur pour le titre -->
+                    <span id="error-title" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Description -->
+                <div>
+                    <label class="block font-semibold mb-2">Description</label>
+                    <textarea
+                        name="description"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        placeholder="Décrivez l'événement"
+                        required></textarea>
+                    <!-- Message d'erreur pour la description -->
+                    <span id="error-description" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Image -->
+                <div>
+                    <label class="block font-semibold mb-2">Image de l'événement</label>
+                    <input
+                        type="file"
+                        name="image"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-150 file:px-4 file:py-2 hover:file:bg-orange-300"
+                        accept="image/*"
+                        required>
+                    <!-- Message d'erreur pour l'image -->
+                    <span id="error-image" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Mode de l'événement -->
+                <div>
+                    <label class="block font-semibold mb-2">Mode de l'événement</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="eventMode"
+                                value="presentiel"
+                                class="event-mode"
+                                onclick="toggleEventMode()"
+                                required>
+                            <span>Présentiel</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="eventMode"
+                                value="enligne"
+                                class="event-mode"
+                                onclick="toggleEventMode()">
+                            <span>En ligne</span>
+                        </label>
+                    </div>
+                    <!-- Message d'erreur pour le mode de l'événement -->
+                    <span id="error-eventMode" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Région -->
+                <div>
+                    <label class="block font-semibold mb-2">Région :</label>
+                    <select id="region" name="region_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" required>
+                        <option value="">Sélectionnez une région</option>
+                        {% for region in regions %}
+                            <option value="{{ region.id }}">{{ region.region }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Ville -->
+                <div>
+                    <label class="block font-semibold mb-2">Ville :</label>
+                    <select id="ville" name="ville_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" disabled required>
+                        <option value="">Sélectionnez une ville</option>
+                    </select>
+                </div>
+
+                <!-- Adresse (conditionnelle) -->
+                <div id="adresseField" class="hidden">
+                    <label class="block font-semibold mb-2">Adresse</label>
+                    <input
+                        type="text"
+                        name="adresse"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        placeholder="123 Rue 10 casa maroc">
+                    <!-- Message d'erreur pour l'adresse -->
+                    <span id="error-adresse" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Lien URL (conditionnelle) -->
+                <div id="lienEventField" class="hidden">
+                    <label class="block font-semibold mb-2">Lien de l'événement</label>
+                    <input
+                        type="url"
+                        name="lienEvent"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        placeholder="Ex: https://zoom.com/event">
+                    <!-- Message d'erreur pour le lien de l'événement -->
+                    <span id="error-lienEvent" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Type d'événement -->
+                <div>
+                    <label class="block font-semibold mb-2">Type d'événement</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="isPaid"
+                                value="gratuit"
+                                class="payment-type"
+                                onclick="togglePaymentType()"
+                                required>
+                            <span>Gratuit</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="isPaid"
+                                value="payant"
+                                class="payment-type"
+                                onclick="togglePaymentType()">
+                            <span>Payant</span>
+                        </label>
+                    </div>
+                    <!-- Message d'erreur pour le type d'événement -->
+                    <span id="error-isPaid" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Prix (conditionnelle) -->
+                <div id="priceField" class="hidden">
+                    <label class="block font-semibold mb-2">Prix (en €)</label>
+                    <input
+                        type="number"
+                        name="price"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        min="0"
+                        step="0.01"
+                        placeholder="Entrez le prix">
+                    <!-- Message d'erreur pour le prix -->
+                    <span id="error-price" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Capacité -->
+                <div>
+                    <label class="block font-semibold mb-2">Capacité</label>
+                    <input
+                        type="number"
+                        name="capacite"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        min="1"
+                        placeholder="Nombre maximum de participants"
+                        required>
+                    <!-- Message d'erreur pour la capacité -->
+                    <span id="error-capacite" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Catégorie -->
+                <div>
+                    <label class="block font-semibold mb-2">Catégorie</label>
+                    <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" required>
+                        <option value="" disabled selected>Choisir une catégorie</option>
+                        {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <!-- Message d'erreur pour la catégorie -->
+                    <span id="error-category_id" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Tags -->
+                <div>
+                    <label class="block font-semibold mb-2">Tags</label>
+                    <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none" multiple>
+                        {% for tag in tags %}
+                        <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <!-- Message d'erreur pour les tags -->
+                    <span id="error-tags" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Sponsor -->
+                <div>
+                    <label class="block font-semibold mb-2">Nom du Sponsor</label>
+                    <input
+                        type="text"
+                        name="sponsor_name"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                        placeholder="Entrez le nom du sponsor">
+                    <!-- Message d'erreur pour le sponsor -->
+                    <span id="error-sponsor_name" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Image du Sponsor -->
+                <div>
+                    <label class="block font-semibold mb-2">Image du Sponsor</label>
+                    <input
+                        type="file"
+                        name="image_sponsor"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-150 file:px-4 file:py-2 hover:file:bg-orange-200"
+                        accept="image/*">
+                    <!-- Message d'erreur pour l'image du sponsor -->
+                    <span id="error-image_sponsor" class="text-red-500 text-sm hidden"></span>
+                </div>
+
+                <!-- Dates -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold mb-2">Date de début</label>
+                        <input
+                            type="datetime-local"
+                            name="startEventAt"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                            required>
+                        <!-- Message d'erreur pour la date de début -->
+                        <span id="error-startEventAt" class="text-red-500 text-sm hidden"></span>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Date de fin</label>
+                        <input
+                            type="datetime-local"
+                            name="endEventAt"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                            required>
+                        <!-- Message d'erreur pour la date de fin -->
+                        <span id="error-endEventAt" class="text-red-500 text-sm hidden"></span>
+                    </div>
+                </div>
+
+                <!-- User ID (hidden) -->
+                <input type="hidden" name="user_id" value="1">
+
+                <!-- Bouton Soumettre -->
+                <div class="text-center mt-6">
+                    <button
+                        type="submit"
+                        class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-700 w-full transition duration-300">
+                        Créer l'Événement
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <script src="../../../../public/assets/js/script.js"></script> 
+
+
+	<footer class="mt-8 dark:bg-gray-900 pt-9">
+		<div class="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
+			<div class="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
+				<div class="md:w-[316px]">
+					<p class="text-[18px] font-medium text-white">
+					<h1 class="text-white font-extrabold">
+						<span class="text-orange-500">EVENTBRO
+					</h1>
+					</p>
+					</p>
+					<p class="mt-[18px] text-[15px] font-normal text-white/[80%]">Lorem ipsum dolor sit amet consectetur adipisicing
+						elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis enim animi
+						placeat eaque nesciunt alias beatae id, at dicta.</p>
+					<div class="mt-[18px] flex gap-4">
+						<a class="hover:scale-110" target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/facebook.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="/"><img alt="linkdin icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/linkdin.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="/"><img alt="instagram icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/instagram1.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href=""><img alt="twitter icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/twitter.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="https://www.youtube.com/"><img alt="youtube icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/youtube.svg" /></a>
+					</div>
+				</div>
+				<div class="md:w-[316px]">
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M20.8472 14.8554L16.4306 12.8764L16.4184 12.8707C16.1892 12.7727 15.939 12.7333 15.6907 12.7562C15.4424 12.7792 15.2037 12.8636 14.9963 13.002C14.9718 13.0181 14.9484 13.0357 14.9259 13.0545L12.6441 14.9998C11.1984 14.2976 9.70595 12.8164 9.00376 11.3895L10.9519 9.07294C10.9706 9.0495 10.9884 9.02606 11.0053 9.00075C11.1407 8.79384 11.2229 8.55667 11.2445 8.31035C11.2661 8.06402 11.2264 7.81618 11.1291 7.58887V7.57762L9.14438 3.15356C9.0157 2.85662 8.79444 2.60926 8.51362 2.44841C8.2328 2.28756 7.9075 2.22184 7.58626 2.26106C6.31592 2.42822 5.14986 3.05209 4.30588 4.01615C3.4619 4.98021 2.99771 6.21852 3.00001 7.49981C3.00001 14.9436 9.05626 20.9998 16.5 20.9998C17.7813 21.0021 19.0196 20.5379 19.9837 19.6939C20.9477 18.85 21.5716 17.6839 21.7388 16.4136C21.7781 16.0924 21.7125 15.7672 21.5518 15.4864C21.3911 15.2056 21.144 14.9843 20.8472 14.8554ZM16.5 19.4998C13.3185 19.4963 10.2682 18.2309 8.01856 15.9813C5.76888 13.7316 4.50348 10.6813 4.50001 7.49981C4.49648 6.58433 4.82631 5.69887 5.42789 5.00879C6.02947 4.3187 6.86167 3.87118 7.76907 3.74981C7.7687 3.75355 7.7687 3.75732 7.76907 3.76106L9.73782 8.16731L7.80001 10.4867C7.78034 10.5093 7.76247 10.5335 7.74657 10.5589C7.60549 10.7754 7.52273 11.0246 7.5063 11.2825C7.48988 11.5404 7.54035 11.7981 7.65282 12.0307C8.5022 13.7679 10.2525 15.5051 12.0084 16.3536C12.2428 16.465 12.502 16.5137 12.7608 16.495C13.0196 16.4762 13.2692 16.3907 13.485 16.2467C13.5091 16.2305 13.5322 16.2129 13.5544 16.1942L15.8334 14.2498L20.2397 16.2232C20.2397 16.2232 20.2472 16.2232 20.25 16.2232C20.1301 17.1319 19.6833 17.9658 18.9931 18.5689C18.3028 19.172 17.4166 19.5029 16.5 19.4998Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="tel:+911800123444" class="font-Inter text-[14px] font-medium text-white">+91 1800123444</a>
+							<p class="font-Inter text-[12px] font-medium text-white">Support Number</p>
+						</div>
+					</div>
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="20" height="15" viewbox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M19 0H1C0.801088 0 0.610322 0.0790178 0.46967 0.21967C0.329018 0.360322 0.25 0.551088 0.25 0.75V13.5C0.25 13.8978 0.408035 14.2794 0.68934 14.5607C0.970644 14.842 1.35218 15 1.75 15H18.25C18.6478 15 19.0294 14.842 19.3107 14.5607C19.592 14.2794 19.75 13.8978 19.75 13.5V0.75C19.75 0.551088 19.671 0.360322 19.5303 0.21967C19.3897 0.0790178 19.1989 0 19 0ZM10 7.98281L2.92844 1.5H17.0716L10 7.98281ZM7.25406 7.5L1.75 12.5447V2.45531L7.25406 7.5ZM8.36406 8.51719L9.48906 9.55312C9.62743 9.68014 9.80842 9.75062 9.99625 9.75062C10.1841 9.75062 10.3651 9.68014 10.5034 9.55312L11.6284 8.51719L17.0659 13.5H2.92844L8.36406 8.51719ZM12.7459 7.5L18.25 2.45438V12.5456L12.7459 7.5Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">help@lorem.com</a>
+							<p class="font-Inter text-[12px] font-medium text-[#fff]">Support Email</p>
+						</div>
+					</div>
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="18" height="21" viewbox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M9 4.5C8.25832 4.5 7.5333 4.71993 6.91661 5.13199C6.29993 5.54404 5.81928 6.12971 5.53545 6.81494C5.25162 7.50016 5.17736 8.25416 5.32205 8.98159C5.46675 9.70902 5.8239 10.3772 6.34835 10.9017C6.8728 11.4261 7.54098 11.7833 8.26841 11.9279C8.99584 12.0726 9.74984 11.9984 10.4351 11.7145C11.1203 11.4307 11.706 10.9501 12.118 10.3334C12.5301 9.7167 12.75 8.99168 12.75 8.25C12.75 7.25544 12.3549 6.30161 11.6517 5.59835C10.9484 4.89509 9.99456 4.5 9 4.5ZM9 10.5C8.55499 10.5 8.11998 10.368 7.74997 10.1208C7.37996 9.87357 7.09157 9.52217 6.92127 9.11104C6.75097 8.6999 6.70642 8.2475 6.79323 7.81105C6.88005 7.37459 7.09434 6.97368 7.40901 6.65901C7.72368 6.34434 8.12459 6.13005 8.56105 6.04323C8.9975 5.95642 9.4499 6.00097 9.86104 6.17127C10.2722 6.34157 10.6236 6.62996 10.8708 6.99997C11.118 7.36998 11.25 7.80499 11.25 8.25C11.25 8.84674 11.0129 9.41903 10.591 9.84099C10.169 10.2629 9.59674 10.5 9 10.5ZM9 0C6.81273 0.00248131 4.71575 0.872472 3.16911 2.41911C1.62247 3.96575 0.752481 6.06273 0.75 8.25C0.75 11.1938 2.11031 14.3138 4.6875 17.2734C5.84552 18.6108 7.14886 19.8151 8.57344 20.8641C8.69954 20.9524 8.84978 20.9998 9.00375 20.9998C9.15772 20.9998 9.30796 20.9524 9.43406 20.8641C10.856 19.8147 12.1568 18.6104 13.3125 17.2734C15.8859 14.3138 17.25 11.1938 17.25 8.25C17.2475 6.06273 16.3775 3.96575 14.8309 2.41911C13.2843 0.872472 11.1873 0.00248131 9 0ZM9 19.3125C7.45031 18.0938 2.25 13.6172 2.25 8.25C2.25 6.45979 2.96116 4.7429 4.22703 3.47703C5.4929 2.21116 7.20979 1.5 9 1.5C10.7902 1.5 12.5071 2.21116 13.773 3.47703C15.0388 4.7429 15.75 6.45979 15.75 8.25C15.75 13.6153 10.5497 18.0938 9 19.3125Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">Sub Nerul, Mumbia,
+								India, 123456</a>
+							<p class="font-Inter text-[12px] font-medium text-white">Address</p>
+						</div>
+					</div>
+				</div>
+				<div class="mt-6 flex w-full flex-col justify-between text-white sm:flex-row md:mt-0 md:max-w-[341px]">
+					<div class="">
+						<p class="text-deutziawhite font-inter text-[18px] font-medium leading-normal">Pages</p>
+						<ul>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/">Home</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/our-tutors">News</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/become-a-tutor">Contact</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/plans-and-pricing">Plans and pricing</a>
+							</li>
+						</ul>
+					</div>
+					<div class="mt-6 flex flex-col gap-4 sm:mt-0">
+						<p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
+						<div class="flex gap-4 sm:flex-col">
+							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/google-store.svg" /></a>
+							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/apple-store.svg" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr class="mt-[30px] text-white" />
+			<div class="flex items-center justify-center pb-8 pt-[9px] md:py-8">
+				<p class="text-[10px] font-normal text-white md:text-[12px]">
+					© Copyright
+					<!-- -->
+					2024
+					<!-- -->
+					, All Rights Reserved by YOUR WEBSITES. PVT. LTD
+				</p>
+			</div>
+		</div>
+	</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // fonction deleteEvent 
+        function deleteEvent(eventId) {
+            Swal.fire({
+                title: 'vous etes sûr ?',
+                text: "Vous ne pourrez pas revenir en arrière !",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimer !',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/delete-event',
+                        type: 'POST',
+                        data: { event_id: eventId },
+                        success: function(response) {
+                            console.log("Réponse du serveur :", response);
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                Swal.fire({
+                                    title: 'Supprimé !',
+                                    text: result.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Erreur !',
+                                    text: result.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur lors de la suppression :", error);
+                            console.error("Statut de la requête :", status);
+                            console.error("Réponse du serveur :", xhr.responseText);
+
+                            Swal.fire({
+                                title: 'Erreur !',
+                                text: 'Une erreur lors de la suppression.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            // Gestion du mode d'événement (présentiel / en ligne)
+            $(".event-mode").change(function() {
+                let selectedMode = $("input[name='eventMode']:checked").val();
+                if (selectedMode === "presentiel") {
+                    $("#adresseField").removeClass("hidden");
+                    $("#lienEventField").addClass("hidden");
+                } else {
+                    $("#adresseField").addClass("hidden");
+                    $("#lienEventField").removeClass("hidden");
+                }
+            });
+
+            // Gestion du type de paiement (gratuit / payant)
+            $(".payment-type").change(function() {
+                let selectedPayment = $("input[name='isPaid']:checked").val();
+                if (selectedPayment === "payant") {
+                    $("#priceField").removeClass("hidden");
+                } else {
+                    $("#priceField").addClass("hidden");
+                }
+            });
+
+            // Soumission du formulaire via AJAX
+            $("#eventForm").submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                formData.append("action", "insert");
+
+                $.ajax({
+                    url: "/create-event",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        const result = JSON.parse(response);
+                        if (result.success) {
+                            window.location.href = result.redirect_url;
+                        } else {
+                            $(".error-message").addClass("hidden"); 
+                            for (const [field, message] of Object.entries(result.errors)) {
+                                $(`#error-${field}`).text(message).removeClass("hidden");
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur lors de l'envoi du formulaire :", error);
+                    }
+                });
+            });
+
+            $('#region').change(function() {
+            const regionId = $(this).val();
+            const villeSelect = $('#ville');
+
+            if (regionId) {
+                $.ajax({
+                    url: '/get-villes-by-region',
+                    type: 'GET',
+                    data: { region_id: regionId },
+                    dataType: 'json', 
+                    success: function(data) {
+                        // console.log(data); 
+                        villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                        $.each(data, function(index, ville) {
+                            villeSelect.append(`<option value="${ville.id}">${ville.ville}</option>`);
+                        });
+                        villeSelect.prop('disabled', false);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur lors de la récupération des villes :", error);
+                    }
+                });
+            } else {
+                villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                villeSelect.prop('disabled', true);
+            }
+        });
+
+        });
+
+        function toggleEventMode() {
+            const presentielFields = document.getElementById('adresseField');
+            const onlineFields = document.getElementById('lienEventField');
+            const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+            
+            if (presentielRadio.checked) {
+                presentielFields.classList.remove('hidden');
+                onlineFields.classList.add('hidden');
+            } else {
+                presentielFields.classList.add('hidden');
+                onlineFields.classList.remove('hidden');
+            }
+        }
+
+        function togglePaymentType() {
+            const priceField = document.getElementById('priceField');
+            const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+            
+            if (payantRadio.checked) {
+                priceField.classList.remove('hidden');
+            } else {
+                priceField.classList.add('hidden');
+            }
+        }
+
+        function openModal() {
+            document.getElementById('eventModal').classList.remove('hidden');
+            document.getElementById('eventModal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('eventModal').classList.add('hidden');
+            document.getElementById('eventModal').classList.remove('flex');
+        }
+
+    </script>
+
 </body>
 </html

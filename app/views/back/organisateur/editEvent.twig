@@ -4,249 +4,555 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modifier un Événement</title>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
-        <h2 class="text-2xl font-bold mb-4 text-center">Modifier un Événement</h2>
-        <form id="eventForm" method="POST" enctype="multipart/form-data" class="space-y-4">
-            <input type="hidden" name="event_id" value="" />
-            <!-- Titre -->
-            <div>
-                <label class="block font-semibold">Titre de l'événement</label>
-                <input type="text" name="title" class="w-full p-2 border rounded-lg" required />
-            </div>
-            <!-- Description -->
-            <div>
-                <label class="block font-semibold">Description</label>
-                <textarea name="description" class="w-full p-2 border rounded-lg" required></textarea>
-            </div>
-            <!-- Image -->
-            <div>
-                <label class="block font-semibold">Image de l'événement</label>
-                <input type="file" name="image" class="w-full p-2 border rounded-lg" accept="image/*" />
-                <img id="eventImagePreview" src="" alt="Image de l'événement" class="mt-2 w-full h-40 object-cover rounded-lg hidden" />
-            </div>
-            <!-- Mode de l'événement -->
-            <div>
-                <label class="block font-semibold">Mode de l'événement</label>
-                <div class="flex space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="presentiel" class="event-mode" required />
-                        <span>Présentiel</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="eventMode" value="en ligne" class="event-mode" />
-                        <span>En ligne</span>
-                    </label>
+<body class="bg-gray-300">
+
+    	<header class="border-b border-gray-200 shadow-md">
+		<nav class="bg-white border-gray-200 dark:bg-gray-900">
+			<div
+				class="max-w-screen-xl flex flex-wrap items-center justify-evenly mx-auto">
+				<!-- Logo -->
+				<div class="flex items-center justify-center ml-2">
+					<a href="https://flowbite.com/" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
+						<span class="self-center text-xl font-semibold whitespace-nowrap text-[#fb8c00] dark:text-white">
+							EventsBro
+						</span>
+					</a>
+					<div class="p-4 text-gray-600 dark:text-gray-300 outline-none focus:outline-none">
+						<div class="relative flex">
+							<select class="bg-white dark:bg-gray-800 h-10 px-5 rounded-l-full text-sm focus:outline-none outline-none border-2 border-gray-500 dark:border-gray-600 border-r-1 cursor-pointer max-h-10 overflow-y-hidden">
+								<option class="font-medium cursor-pointer" value="filter">
+									filter
+								</option>
+							</select>
+							<input type="search" name="search" placeholder="Search" class="bg-white dark:bg-gray-800 h-10 flex px-5 w-full rounded-r-full text-sm focus:outline-none border-2 border-l-0 border-gray-500 dark:border-gray-600" autocomplete="off" spellcheck="false" required step="any" autocapitalize="none" autofocus />
+							<button type="submit" class="absolute inset-y-0 right-0 mr-2 flex items-center px-2">
+								<svg class="h-4 w-4 fill-current dark:text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewbox="0 0 56.966 56.966" xml:space="preserve" width="512px" height="512px">
+									<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+								</svg>
+							</button>
+						</div>
+					</div>
+				</div>
+				<!-- Right Navigation -->
+
+				<div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+					<div class="flex items-center gap-4">
+						{% if session.role is defined %}
+						{% if session.role in ['Admin', 'Participant', 'Organizer'] %}
+						<button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+							<span class="sr-only">
+								Open user menu
+							</span>
+							<img class="w-8 h-8 rounded-full" src="https://tailwindcss.com/img/jonathan.jpg" alt="user photo">
+						</button>
+						{% endif %}
+						{% else %}
+						<div class="sm:flex sm:gap-4">
+							<a class="rounded-md bg-[#fb8c00] hover:bg-[#fb8c00] px-5 py-2.5 text-sm font-medium text-white shadow inline-block" href="/login">
+								Login
+							</a>
+							<div class="hidden sm:flex">
+								<a class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-[#fb8c00] hover:text-white" href="/register">
+									Register
+								</a>
+							</div>
+						</div>
+						{% endif %}
+					</div>
+					<!-- Dropdown menu -->
+					<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+						<div class="px-4 py-3">
+							<span class="block text-sm text-gray-900 dark:text-white inline-block">
+								{{ session.username }}
+							</span>
+							<span class="block text-sm text-gray-500 truncate dark:text-gray-400 inline-block">
+								name@flowbite.com
+							</span>
+						</div>
+						<ul class="py-2" aria-labelledby="user-menu-button">
+							{% if session.role is defined %}
+							{% if session.role == 'Admin' %}
+							<li>
+								<a href="/dashboard" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+									Dashboard
+								</a>
+							</li>
+							{% elseif session.role == 'Teacher' %}
+							<li>
+								<a href="/organisateur" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+									Dashboard
+								</a>
+							</li>
+							{% endif %}
+							<li>
+								<a href="#" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+									Sign out
+								</a>
+							</li>
+							{% endif %}
+						</ul>
+					</div>
+					<button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
+						<span class="sr-only">
+							Open main menu
+						</span>
+						<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 17 14">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+						</svg>
+					</button>
+				</div>
+				<!-- Middle Navigation -->
+				<div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+
+					<ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+						<li>
+							<a href="home" class="block py-2 px-3 text-white bg-[#fb8c00] rounded md:bg-transparent md:text-[#fb8c00] md:p-0 md:dark:text-[#fb8c00]" aria-current="page">
+								Home
+							</a>
+						</li>
+						<li>
+							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+								Create Events
+							</a>
+						</li>
+						<li>
+							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+								Find my tickets
+							</a>
+						</li>
+						<li>
+							<a href="Events.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+								Find Events
+							</a>
+						</li>
+						<li>
+							<a href="/pages/help.twig" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+								Help Center
+							</a>
+						</li>
+					</ul>
+
+				</div>
+			</div>
+		</nav>
+	</header>
+
+    <main class="p-6 flex justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl">
+            <h1 class="text-3xl font-bold mb-6 text-center">Modifier</h1>
+
+            <form id="editEventForm" method="POST" action="/update-event/{{ event.event_id }}" enctype="multipart/form-data" class="space-y-4">
+                <!-- Titre -->
+                <div>
+                    <label class="block font-semibold mb-2">Titre de l'événement</label>
+                    <input
+                        type="text"
+                        name="title"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="Entrez le titre"
+                        value="{{ event.title }}"
+                        required>
                 </div>
-            </div>
-            <!-- Adresse -->
-            <div id="adresseField" class="hidden">
-                <label class="block font-semibold">Adresse</label>
-                <input type="text" name="adresse" class="w-full p-2 border rounded-lg" />
-            </div>
-            <!-- Lien URL -->
-            <div id="lienEventField" class="hidden">
-                <label class="block font-semibold">Lien de l'événement</label>
-                <input type="url" name="lienEvent" class="w-full p-2 border rounded-lg" />
-            </div>
-            <!-- Type d'événement -->
-            <div>
-                <label class="block font-semibold">Type d'événement</label>
-                <div class="flex space-x-4">
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="gratuit" class="payment-type" required />
-                        <span>Gratuit</span>
-                    </label>
-                    <label class="flex items-center space-x-2">
-                        <input type="radio" name="isPaid" value="payant" class="payment-type" />
-                        <span>Payant</span>
-                    </label>
+
+                <!-- Description -->
+                <div>
+                    <label class="block font-semibold mb-2">Description</label>
+                    <textarea
+                        name="description"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="Décrivez l'événement"
+                        required>{{ event.description }}</textarea>
                 </div>
-            </div>
-            <!-- Prix -->
-            <div id="priceField" class="hidden">
-                <label class="block font-semibold">Prix (en €)</label>
-                <input type="number" name="price" class="w-full p-2 border rounded-lg" min="0" step="0.01" />
-            </div>
-            <!-- Capacité -->
-            <div>
-                <label class="block font-semibold">Capacité</label>
-                <input type="number" name="capacite" class="w-full p-2 border rounded-lg" min="1" required />
-            </div>
-            <!-- Catégorie -->
-            <div>
-                <label class="block font-semibold">Catégorie</label>
-                <select name="category_id" class="w-full p-2 border rounded-lg" required>
-                    <option value="" disabled>Choisir une catégorie</option>
-                    {% for category in categories %}
-                    <option value="{{ category.category_id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Sponsor (Optionnel) -->
-            <div>
-                <label class="block font-semibold">Sponsor (Optionnel)</label>
-                <select name="sponsor_id" class="w-full p-2 border rounded-lg">
-                    <option value="">Aucun sponsor</option>
-                    {% for sponsor in sponsors %}
-                    <option value="{{ sponsor.sponsor_id }}">{{ sponsor.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <!-- Dates -->
-            <div>
-                <label class="block font-semibold">Date de début</label>
-                <input type="date" name="startEventAt" class="w-full p-2 border rounded-lg" required />
-            </div>
-            <div>
-                <label class="block font-semibold">Date de fin</label>
-                <input type="date" name="endEventAt" class="w-full p-2 border rounded-lg" required />
-            </div>
-            <!-- User ID (Organisateur) -->
-            <input type="hidden" name="user_id" value="1" />
-            <!-- Bouton Soumettre -->
-            <div class="text-center">
-                <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                    Modifier
-                </button>
-            </div>
-        </form>
-    </div>
+
+                 <!-- Image de l'événement -->
+                <div class="mb-6">
+                    <label class="block font-semibold mb-2">Image de l'événement</label>
+                    <input
+                        type="file"
+                        name="event_image"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                        accept="image/*">
+                    {% if event.image %}
+                        <p class="text-sm text-gray-500 mt-2">
+                            Image actuelle : 
+                            <a href="/assets/images/{{ event.image }}" target="_blank" class="text-blue-500 hover:underline">
+                                {{ event.image }}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Mode de l'événement -->
+                <div>
+                    <label class="block font-semibold mb-2">Mode de l'événement</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="eventMode"
+                                value="presentiel"
+                                class="event-mode"
+                                onclick="toggleEventMode()"
+                                {{ event.eventMode == 'presentiel' ? 'checked' : '' }}
+                                required>
+                            <span>Présentiel</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="eventMode"
+                                value="enligne"
+                                class="event-mode"
+                                onclick="toggleEventMode()"
+                                {{ event.eventMode == 'enligne' ? 'checked' : '' }}>
+                            <span>En ligne</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Adresse (conditionnelle) -->
+                <div id="adresseField" class="{{ event.eventMode == 'presentiel' ? '' : 'hidden' }}">
+                    <label class="block font-semibold mb-2">Adresse</label>
+                    <input
+                        type="text"
+                        name="adresse"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="123 Rue 10 casa maroc"
+                        value="{{ event.adresse }}">
+                </div>
+
+                <!-- Région -->
+                <div>
+                    <label class="block font-semibold mb-2">Région :</label>
+                    <select id="region" name="region_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                        <option value="">Sélectionnez une région</option>
+                        {% for region in regions %}
+                            <option value="{{ region.id }}" {{ event.ville.region == region.id ? 'selected' : '' }}>{{ region.region }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Ville -->
+                <div>
+                    <label class="block font-semibold mb-2">Ville :</label>
+                    <select id="ville" name="ville_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                        <option value="">Sélectionnez une ville</option>
+                        {% for ville in villes %}
+                            <option value="{{ ville.id }}" {{ event.ville_id == ville.id ? 'selected' : '' }}>{{ ville.ville }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Lien URL (conditionnelle) -->
+                <div id="lienEventField" class="{{ event.eventMode == 'enligne' ? '' : 'hidden' }}">
+                    <label class="block font-semibold mb-2">Lien de l'événement</label>
+                    <input
+                        type="url"
+                        name="lienEvent"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="Ex: https://zoom.com/event"
+                        value="{{ event.lienEvent }}">
+                </div>
+
+                <!-- Type d'événement -->
+                <div>
+                    <label class="block font-semibold mb-2">Type d'événement</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="isPaid"
+                                value="gratuit"
+                                class="payment-type"
+                                onclick="togglePaymentType()"
+                                {{ event.price == null ? 'checked' : '' }}
+                                required>
+                            <span>Gratuit</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="isPaid"
+                                value="payant"
+                                class="payment-type"
+                                onclick="togglePaymentType()"
+                                {{ event.price != null ? 'checked' : '' }}>
+                            <span>Payant</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Prix (conditionnelle) -->
+                <div id="priceField" class="{{ event.price != null ? '' : 'hidden' }}">
+                    <label class="block font-semibold mb-2">Prix (en €)</label>
+                    <input
+                        type="number"
+                        name="price"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        min="0"
+                        step="0.01"
+                        placeholder="Entrez le prix"
+                        value="{{ event.price }}">
+                </div>
+
+                <!-- Capacité -->
+                <div>
+                    <label class="block font-semibold mb-2">Capacité</label>
+                    <input
+                        type="number"
+                        name="capacite"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        min="1"
+                        placeholder="Nombre maximum de participants"
+                        value="{{ event.capacite }}"
+                        required>
+                </div>
+
+                <!-- Catégorie -->
+                <div>
+                    <label class="block font-semibold mb-2">Catégorie</label>
+                    <select name="category_id" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+                        <option value="" disabled>Choisir une catégorie</option>
+                        {% for category in categories %}
+                        <option value="{{ category.category_id }}" {{ event.category_id == category.category_id ? 'selected' : '' }}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Tags -->
+                <div>
+                    <label class="block font-semibold mb-2">Tags</label>
+                    <select name="tags[]" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" multiple>
+                        {% for tag in tags %}
+                        <option value="{{ tag.tag_id }}" {{ tag.tag_id in event.tags|map(t => t.tag_id) ? 'selected' : '' }}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Sponsor -->
+                <div>
+                    <label class="block font-semibold mb-2">Nom du Sponsor</label>
+                    <input
+                        type="text"
+                        name="sponsor_name"
+                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        placeholder="Entrez le nom du sponsor"
+                        value="{{ event.sponsor_name ?? '' }}">
+                </div>
+
+                <!-- Image du Sponsor -->
+                <div>
+                    <label class="block font-semibold mb-2">Image du Sponsor</label>
+                    <input
+                        type="file"
+                        name="image_sponsor"
+                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                        accept="image/*">
+                    {% if event.sponsor_image %}
+                        <p class="text-sm text-gray-500 mt-2">
+                            Image actuelle : 
+                            <a href="/assets/images/{{ event.sponsor_image }}" target="_blank" class="text-blue-500 hover:underline">
+                                {{ event.sponsor_image }}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Dates -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold mb-2">Date de début</label>
+                        <input
+                            type="date"
+                            name="startEventAt"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            value="{{ event.startEventAt|date('Y-m-d') }}"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block font-semibold mb-2">Date de fin</label>
+                        <input
+                            type="date"
+                            name="endEventAt"
+                            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            value="{{ event.endEventAt|date('Y-m-d') }}"
+                            required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6 flex justify-left gap-4">
+                    <button
+                        type="submit"
+                        class="bg-gradient-to-r from-blue-400 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-800 shadow-lg transform hover:scale-105 transition duration-300 w-lg">
+                        Modifier
+                    </button>
+                    <a href="/events" 
+                        class="bg-gradient-to-r from-orange-300 to-orange-600 text-white px-4 py-2 rounded-lg hover:from-orange-500 hover:to-orange-700 shadow-md transform hover:scale-105 transition duration-300">
+                        Retour
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <footer class="mt-8 dark:bg-gray-900 pt-9">
+		<div class="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
+			<div class="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
+				<div class="md:w-[316px]">
+					<p class="text-[18px] font-medium text-white">
+					<h1 class="text-white font-extrabold">
+						<span class="text-rose-600">EVENTBRO
+					</h1>
+					</p>
+					</p>
+					<p class="mt-[18px] text-[15px] font-normal text-white/[80%]">Lorem ipsum dolor sit amet consectetur adipisicing
+						elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis enim animi
+						placeat eaque nesciunt alias beatae id, at dicta.</p>
+					<div class="mt-[18px] flex gap-4">
+						<a class="hover:scale-110" target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/facebook.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="/"><img alt="linkdin icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/linkdin.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="/"><img alt="instagram icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/instagram1.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href=""><img alt="twitter icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/twitter.svg" /></a>
+						<a class="hover:scale-110" target="_blank" href="https://www.youtube.com/"><img alt="youtube icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/youtube.svg" /></a>
+					</div>
+				</div>
+				<div class="md:w-[316px]">
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M20.8472 14.8554L16.4306 12.8764L16.4184 12.8707C16.1892 12.7727 15.939 12.7333 15.6907 12.7562C15.4424 12.7792 15.2037 12.8636 14.9963 13.002C14.9718 13.0181 14.9484 13.0357 14.9259 13.0545L12.6441 14.9998C11.1984 14.2976 9.70595 12.8164 9.00376 11.3895L10.9519 9.07294C10.9706 9.0495 10.9884 9.02606 11.0053 9.00075C11.1407 8.79384 11.2229 8.55667 11.2445 8.31035C11.2661 8.06402 11.2264 7.81618 11.1291 7.58887V7.57762L9.14438 3.15356C9.0157 2.85662 8.79444 2.60926 8.51362 2.44841C8.2328 2.28756 7.9075 2.22184 7.58626 2.26106C6.31592 2.42822 5.14986 3.05209 4.30588 4.01615C3.4619 4.98021 2.99771 6.21852 3.00001 7.49981C3.00001 14.9436 9.05626 20.9998 16.5 20.9998C17.7813 21.0021 19.0196 20.5379 19.9837 19.6939C20.9477 18.85 21.5716 17.6839 21.7388 16.4136C21.7781 16.0924 21.7125 15.7672 21.5518 15.4864C21.3911 15.2056 21.144 14.9843 20.8472 14.8554ZM16.5 19.4998C13.3185 19.4963 10.2682 18.2309 8.01856 15.9813C5.76888 13.7316 4.50348 10.6813 4.50001 7.49981C4.49648 6.58433 4.82631 5.69887 5.42789 5.00879C6.02947 4.3187 6.86167 3.87118 7.76907 3.74981C7.7687 3.75355 7.7687 3.75732 7.76907 3.76106L9.73782 8.16731L7.80001 10.4867C7.78034 10.5093 7.76247 10.5335 7.74657 10.5589C7.60549 10.7754 7.52273 11.0246 7.5063 11.2825C7.48988 11.5404 7.54035 11.7981 7.65282 12.0307C8.5022 13.7679 10.2525 15.5051 12.0084 16.3536C12.2428 16.465 12.502 16.5137 12.7608 16.495C13.0196 16.4762 13.2692 16.3907 13.485 16.2467C13.5091 16.2305 13.5322 16.2129 13.5544 16.1942L15.8334 14.2498L20.2397 16.2232C20.2397 16.2232 20.2472 16.2232 20.25 16.2232C20.1301 17.1319 19.6833 17.9658 18.9931 18.5689C18.3028 19.172 17.4166 19.5029 16.5 19.4998Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="tel:+911800123444" class="font-Inter text-[14px] font-medium text-white">+91 1800123444</a>
+							<p class="font-Inter text-[12px] font-medium text-white">Support Number</p>
+						</div>
+					</div>
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="20" height="15" viewbox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M19 0H1C0.801088 0 0.610322 0.0790178 0.46967 0.21967C0.329018 0.360322 0.25 0.551088 0.25 0.75V13.5C0.25 13.8978 0.408035 14.2794 0.68934 14.5607C0.970644 14.842 1.35218 15 1.75 15H18.25C18.6478 15 19.0294 14.842 19.3107 14.5607C19.592 14.2794 19.75 13.8978 19.75 13.5V0.75C19.75 0.551088 19.671 0.360322 19.5303 0.21967C19.3897 0.0790178 19.1989 0 19 0ZM10 7.98281L2.92844 1.5H17.0716L10 7.98281ZM7.25406 7.5L1.75 12.5447V2.45531L7.25406 7.5ZM8.36406 8.51719L9.48906 9.55312C9.62743 9.68014 9.80842 9.75062 9.99625 9.75062C10.1841 9.75062 10.3651 9.68014 10.5034 9.55312L11.6284 8.51719L17.0659 13.5H2.92844L8.36406 8.51719ZM12.7459 7.5L18.25 2.45438V12.5456L12.7459 7.5Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">help@lorem.com</a>
+							<p class="font-Inter text-[12px] font-medium text-[#fff]">Support Email</p>
+						</div>
+					</div>
+					<div class="mt-[23px] flex">
+						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+							<svg width="18" height="21" viewbox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M9 4.5C8.25832 4.5 7.5333 4.71993 6.91661 5.13199C6.29993 5.54404 5.81928 6.12971 5.53545 6.81494C5.25162 7.50016 5.17736 8.25416 5.32205 8.98159C5.46675 9.70902 5.8239 10.3772 6.34835 10.9017C6.8728 11.4261 7.54098 11.7833 8.26841 11.9279C8.99584 12.0726 9.74984 11.9984 10.4351 11.7145C11.1203 11.4307 11.706 10.9501 12.118 10.3334C12.5301 9.7167 12.75 8.99168 12.75 8.25C12.75 7.25544 12.3549 6.30161 11.6517 5.59835C10.9484 4.89509 9.99456 4.5 9 4.5ZM9 10.5C8.55499 10.5 8.11998 10.368 7.74997 10.1208C7.37996 9.87357 7.09157 9.52217 6.92127 9.11104C6.75097 8.6999 6.70642 8.2475 6.79323 7.81105C6.88005 7.37459 7.09434 6.97368 7.40901 6.65901C7.72368 6.34434 8.12459 6.13005 8.56105 6.04323C8.9975 5.95642 9.4499 6.00097 9.86104 6.17127C10.2722 6.34157 10.6236 6.62996 10.8708 6.99997C11.118 7.36998 11.25 7.80499 11.25 8.25C11.25 8.84674 11.0129 9.41903 10.591 9.84099C10.169 10.2629 9.59674 10.5 9 10.5ZM9 0C6.81273 0.00248131 4.71575 0.872472 3.16911 2.41911C1.62247 3.96575 0.752481 6.06273 0.75 8.25C0.75 11.1938 2.11031 14.3138 4.6875 17.2734C5.84552 18.6108 7.14886 19.8151 8.57344 20.8641C8.69954 20.9524 8.84978 20.9998 9.00375 20.9998C9.15772 20.9998 9.30796 20.9524 9.43406 20.8641C10.856 19.8147 12.1568 18.6104 13.3125 17.2734C15.8859 14.3138 17.25 11.1938 17.25 8.25C17.2475 6.06273 16.3775 3.96575 14.8309 2.41911C13.2843 0.872472 11.1873 0.00248131 9 0ZM9 19.3125C7.45031 18.0938 2.25 13.6172 2.25 8.25C2.25 6.45979 2.96116 4.7429 4.22703 3.47703C5.4929 2.21116 7.20979 1.5 9 1.5C10.7902 1.5 12.5071 2.21116 13.773 3.47703C15.0388 4.7429 15.75 6.45979 15.75 8.25C15.75 13.6153 10.5497 18.0938 9 19.3125Z" fill="white"></path>
+							</svg>
+						</div>
+						<div class="ml-[18px]">
+							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">Sub Nerul, Mumbia,
+								India, 123456</a>
+							<p class="font-Inter text-[12px] font-medium text-white">Address</p>
+						</div>
+					</div>
+				</div>
+				<div class="mt-6 flex w-full flex-col justify-between text-white sm:flex-row md:mt-0 md:max-w-[341px]">
+					<div class="">
+						<p class="text-deutziawhite font-inter text-[18px] font-medium leading-normal">Pages</p>
+						<ul>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/">Home</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/our-tutors">News</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/become-a-tutor">Contact</a>
+							</li>
+							<li class="mt-[15px]">
+								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/plans-and-pricing">Plans and pricing</a>
+							</li>
+						</ul>
+					</div>
+					<div class="mt-6 flex flex-col gap-4 sm:mt-0">
+						<p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
+						<div class="flex gap-4 sm:flex-col">
+							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/google-store.svg" /></a>
+							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/apple-store.svg" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr class="mt-[30px] text-white" />
+			<div class="flex items-center justify-center pb-8 pt-[9px] md:py-8">
+				<p class="text-[10px] font-normal text-white md:text-[12px]">
+					© Copyright
+					<!-- -->
+					2024
+					<!-- -->
+					, All Rights Reserved by YOUR WEBSITES. PVT. LTD
+				</p>
+			</div>
+		</div>
+	</footer>
 
     <script>
         $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const eventId = urlParams.get('id');
+            $('#region').change(function() {
+                const regionId = $(this).val();
+                const villeSelect = $('#ville');
 
-            if (eventId) {
-                loadEventData(eventId);
-            } else {
-                console.error("ID de l'événement manquant dans l'URL.");
-            }
+                if (regionId) {
+                    $.ajax({
+                        url: '/get-villes-by-region',
+                        type: 'GET',
+                        data: { region_id: regionId },
+                        dataType: 'json', 
+                        success: function(data) {
+                            
+                            // console.log(data);
 
-            $(".event-mode").change(function() {
-                let selectedMode = $("input[name='eventMode']:checked").val();
-                $("#adresseField").toggle(selectedMode === "presentiel");
-                $("#lienEventField").toggle(selectedMode === "en ligne");
-            });
-
-            $(".payment-type").change(function() {
-                let selectedPayment = $("input[name='isPaid']:checked").val();
-                $("#priceField").toggle(selectedPayment === "payant");
-            });
-
-            $("#eventForm").submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                formData.append("action", "update");
-
-                $.ajax({
-                    url: '/../../../app/controllers/frontOffice/EventController.php',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        const result = JSON.parse(response);
-                        if (result.success) {
-                            alert("Événement mis à jour avec succès.");
-                            window.location.href = "/Event.twig"; 
-                        } else {
-                            alert("Erreur lors de la mise à jour : " + result.error);
+                            villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                            $.each(data, function(index, ville) {
+                                villeSelect.append(`<option value="${ville.id}">${ville.ville}</option>`);
+                            });
+                            villeSelect.prop('disabled', false);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur lors de la récupération des villes :", error);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Erreur lors de la mise à jour :", error);
-                    }
-                });
+                    });
+                } else {
+                    villeSelect.empty().append('<option value="">Sélectionnez une ville</option>');
+                    villeSelect.prop('disabled', true);
+                }
             });
         });
 
-
-        function loadEventData(eventId) {
-            $.ajax({
-                url: '/../../../app/controllers/frontOffice/EventController.php',
-                type: 'POST',
-                data: { action: 'fetchEvent', id: eventId },
-                success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.success) {
-                        populateForm(result.data);
-                    } else {
-                        console.error(result.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erreur lors du chargement des données :", error);
-                }
-            });
-
-
-            // Charger les catégories et sponsors via AJAX
-            $.ajax({
-                url: "/../../../app/controllers/frontOffice/EventController.php",
-                type: "POST",
-                data: { action: "fetchFormData" },
-                success: function(response) {
-                    const result = JSON.parse(response);
-                    if (result.categories && result.sponsors) {
-                        // Remplir les options des catégories
-                        let categoryOptions = '<option value="" disabled selected>Choisir une catégorie</option>';
-                        result.categories.forEach(category => {
-                            categoryOptions += `<option value="${category.category_id}">${category.name}</option>`;
-                        });
-                        $("select[name='category_id']").html(categoryOptions);
-
-                        // Remplir les options des sponsors
-                        let sponsorOptions = '<option value="" selected>Aucun sponsor</option>';
-                        result.sponsors.forEach(sponsor => {
-                            sponsorOptions += `<option value="${sponsor.sponsor_id}">${sponsor.name}</option>`;
-                        });
-                        $("select[name='sponsor_id']").html(sponsorOptions);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Erreur lors du chargement des données :", error);
-                }
-            });
-
-            function populateForm(event) {
-            $("#event_id'").val(event.event_id);
-            $("input[name='title']").val(event.title);
-            $("textarea[name='description']").val(event.description);
-            $("input[name='eventMode'][value='" + event.eventMode + "']").prop("checked", true);
-            $("input[name='capacite']").val(event.capacite);
-            $("input[name='startEventAt']").val(event.startEventAt.split(' ')[0]);
-            $("input[name='endEventAt']").val(event.endEventAt.split(' ')[0]);
-            $("input[name='adresse']").val(event.adresse || '');
-            $("input[name='lienEvent']").val(event.lienEvent || '');
-            $("input[name='price']").val(event.price || '');
-            $("select[name='category_id']").val(event.category_id);
-            $("select[name='sponsor_id']").val(event.sponsor_id || '');
-
-            if (event.image) {
-                $("#eventImagePreview").attr("src", "/assets/images/" + event.image).removeClass("hidden");
-            }
-
-            if (event.eventMode === "presentiel") {
-                $("#adresseField").removeClass("hidden");
-                $("#lienEventField").addClass("hidden");
+        function toggleEventMode() {
+            const presentielFields = document.getElementById('adresseField');
+            const onlineFields = document.getElementById('lienEventField');
+            const presentielRadio = document.querySelector('input[name="eventMode"][value="presentiel"]');
+            
+            if (presentielRadio.checked) {
+                presentielFields.classList.remove('hidden');
+                onlineFields.classList.add('hidden');
             } else {
-                $("#adresseField").addClass("hidden");
-                $("#lienEventField").removeClass("hidden");
-            }
-
-            if (event.price !== null) {
-                $("#priceField").removeClass("hidden");
+                presentielFields.classList.add('hidden');
+                onlineFields.classList.remove('hidden');
             }
         }
-
-
-    }
-
+        function togglePaymentType() {
+            const priceField = document.getElementById('priceField');
+            const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
+            
+            if (payantRadio.checked) {
+                priceField.classList.remove('hidden');
+            } else {
+                priceField.classList.add('hidden');
+            }
+        }
     </script>
+
 </body>
 </html>

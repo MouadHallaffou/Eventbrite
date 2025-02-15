@@ -1,43 +1,45 @@
 <?php
-
 require_once __DIR__ . '/../vendor/autoload.php';
+// require_once __DIR__ . '/../app/core/Router.php';
+
 
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
-use App\controllers\frontOffice\ContactController;
 use App\controllers\frontOffice\ProfileController;
-
 
 use App\core\Session;
 
+
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+
+
 
 $router = new Router();
 Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
-$router->get('/help/contact', ContactController::class, 'index');
-$router->get('/help', ContactController::class, 'helpcenter');
 
 $router->get('/profile', ProfileController::class, 'index');
 
 
-
-// $router->get('/', EventController::class, 'displayEventsAcceptedHome');
-
+$router->get('/home', EventController::class, 'displayEventsAcceptedHome');
+$router->get('/', EventController::class, 'displayEventsAcceptedHome');
 
 
 $router->get('/dashboard', AdminController::class, 'index');
 
 $router->post('/addEvent', EventController::class, 'createEvent');
 $router->get('/addEvent', EventController::class, 'displayEventForm');
+$router->get('/addEvent', EventController::class, 'afficheEvents');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
+
+$router->get('/get-villes-by-region', EventController::class, 'getVillesByRegion');
 
 // Route pour créer un événement
 $router->post('/create-event', EventController::class, 'createEvent');
