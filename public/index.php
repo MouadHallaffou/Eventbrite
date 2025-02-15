@@ -1,16 +1,14 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\core\Session;
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
-use App\controllers\backsOffice\CategoryController;
-use App\controllers\backsOffice\RoleController;
-use App\controllers\backsOffice\ContactController;
 
-use App\core\Session;
+
 use Twig\Environment;
 use App\core\Controller;
 use Twig\Loader\FilesystemLoader;
@@ -50,18 +48,18 @@ $router->get('/dashboard/user/delete', AdminController::class, 'deleteUser');
 $router->post('/dashboard/user/delete', AdminController::class, 'deleteUser'); // Add this route
 $router->post('/dashboard/user/userStatus', AdminController::class, 'updateStatus');
 
-// /------------------ categories
-$router->get('/dashboard/categories', CategoryController::class, 'index');
-$router->post('/dashboard/categories/delete', CategoryController::class, 'deleteCategories');
-$router->post('/dashboard/categories/add', CategoryController::class, 'addCategories');
-$router->get('/dashboard/categories/update/{id}', CategoryController::class, 'editCategories');
+// // /------------------ categories
+// $router->get('/dashboard/categories', CategoryController::class, 'index');
+// $router->post('/dashboard/categories/delete', CategoryController::class, 'deleteCategories');
+// $router->post('/dashboard/categories/add', CategoryController::class, 'addCategories');
+// $router->get('/dashboard/categories/update/{id}', CategoryController::class, 'editCategories');
 
-// /------------------Management role
+// // /------------------Management role
 
-$router->get('/dashboard/role', RoleController::class, 'index');
-$router->post('/dashboard/role/delete', RoleController::class, 'deleteRole');
-$router->post('/dashboard/role', RoleController::class, 'addRoles');
-// $router->get('/dashboard/roles/update/{id}', roleController::class, 'editRoles');
+// $router->get('/dashboard/role', RoleController::class, 'index');
+// $router->post('/dashboard/role/delete', RoleController::class, 'deleteRole');
+// $router->post('/dashboard/role', RoleController::class, 'addRoles');
+// // $router->get('/dashboard/roles/update/{id}', roleController::class, 'editRoles');
 
 
 
