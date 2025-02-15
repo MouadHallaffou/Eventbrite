@@ -128,7 +128,7 @@ class EventController
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
-        $regions = $eventModel->fetchRegions();
+
         // var_dump($username);
         // die();
 
