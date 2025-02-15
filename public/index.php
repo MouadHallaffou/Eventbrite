@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\core\Session;
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
-use App\core\Session;
 
 
 use Twig\Environment;
