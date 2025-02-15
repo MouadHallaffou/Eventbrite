@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\core\Session;
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
 use App\controllers\frontOffice\HomeController;
 use App\controllers\backsOffice\AdminController;
-use App\core\Session;
 
 
 use Twig\Environment;
@@ -42,6 +42,7 @@ $router->post('/delete-event', EventController::class, 'deleteEvent');
 // Route pour modifier un événement
 $router->get('/edit-event/{event_id}', EventController::class, 'editEvent');
 $router->post('/update-event/{event_id}', EventController::class, 'updateEvent');
+
 
 $router->get('/register', AuthController::class, 'registerView');
 $router->get('/login', AuthController::class, 'loginView');
