@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
 use App\core\Validator;
+use App\core\Session;
+
 use PDO;
 
 class EventController
@@ -19,7 +21,12 @@ class EventController
 
     public function createEvent()
     {
+
+        Session::checkSession();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
+
+            // $errors = Validator::validateEvent($_POST);
             $event = new Event($this->pdo);
 
             $event->setTitle($_POST['title']);
@@ -30,7 +37,7 @@ class EventController
             $event->setEndEventAt(new \DateTime($_POST['endEventAt']));
             $event->setPrice($_POST['isPaid'] === "payant" ? (float)$_POST['price'] : null);
             $event->setCategoryId((int)$_POST['category_id']);
-            $event->setUserId((int)$_POST['user_id']);
+            $event->setUserId((int)$_SESSION['userId']);
             $event->setVilleId((int)$_POST['ville_id']);
 
             // Gérer l'adresse et le lien
@@ -112,14 +119,24 @@ class EventController
     public function afficherTousLesEvenements()
     {
         $eventModel = new Event($this->pdo);
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
 
-        $events = $eventModel->fetchAll();
+        $events = $eventModel->fetchAll($userId);
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
         $regions = $eventModel->fetchRegions();
+        // var_dump($username);
+        // die();
 
         View::render('back/organisateur/addEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'events' => $events,
             'categories' => $categories,
             'tags' => $tags,
@@ -166,12 +183,21 @@ class EventController
         $tags = $eventModel->fetchTags();
         $regions = $eventModel->fetchRegions();
 
+        Session::checkSession();
+        $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+        // $userImage = $_SESSION['userImage'];
+
         $villes = [];
         if (isset($event['ville']) && $event['ville']['region']) {
             $villes = $eventModel->fetchVillesByRegion($event['ville']['region']);
         }
 
         View::render('back/organisateur/editEvent.twig', [
+            'user' => [
+            'username' => $username,
+            // 'image' => $userImage,
+            ],
             'event' => $event,
             'categories' => $categories,
             'tags' => $tags,
@@ -278,5 +304,63 @@ class EventController
         ]);
     }
 
+
+
+    public function displayEvents()
+    {
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+        $categoryHomePage = $eventsHomePage->fetchCategories();
+        $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+        // var_dump($eventsAccepted);
+        View::render('front/FindEvents.twig', [
+            'eventsAccepted' => $eventsAccepted,
+            'categoryHomePage' => $categoryHomePage,
+            'SponsorsHomePage' => $SponsorsHomePage,
+        ]);
+    }
+
+
+    public function searchEvents() {
+        // header('Content-Type: application/json');
+    
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $input = file_get_contents('php://input');
+            $data = json_decode($input, true);
+
+            if (isset($data['q'])) {
+                $q = $data['q'];
+                $event = new Event($this->pdo);
+                $dataEvents = $event->searchForEvents($q);
+    
+                if (is_array($dataEvents)) {
+                    if (!empty($dataEvents)) {
+                        echo json_encode([
+                            'success' => true,
+                            'data' => $dataEvents
+                        ]);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'Aucun événement trouvé.']);
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Database error.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Search query is missing.']);
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Invalid action.']);
+        }
+    }
+
+    public function eventDataille($id){
+       
+        $eventsHomePage = new Event($this->pdo);
+        $eventsAccepted = $eventsHomePage->eventDetaill($id);
+        View::render('front/pages/EventDataille.twig', [
+            'eventsAccepted' => $eventsAccepted,
+        ]);
+        
+    }
 
 }
