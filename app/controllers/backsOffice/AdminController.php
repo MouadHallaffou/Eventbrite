@@ -15,13 +15,6 @@ class AdminController extends User{
         View::render('back/Admin/dashboard.twig',['users' => $users]);
     }
 
-    // public function accepteOrganizer(){
-
-    //     $result = $this->getUsersData();
-    //     return $result;
-
-    // }
-
     public function deleteUser() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $input = file_get_contents('php://input');

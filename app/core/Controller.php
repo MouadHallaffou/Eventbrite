@@ -8,7 +8,4 @@ class Controller {
         extract($data);
         include __DIR__ ."/../views/back/$view";
     }
-}                         
-
-
-
+}
