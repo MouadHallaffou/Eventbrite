@@ -33,9 +33,13 @@
                     </select>
                     <input
                         type="search"
+                        id="searchInput" 
                         placeholder="Rechercher un événement..."
                         class="text-gray-900 w-full h-10 px-4 border-t border-b border-gray-300 focus:outline-none" />
-                    <button class="bg-[#fb8c00] text-white h-10 px-4 rounded-r-lg hover:bg-[#e68900] transition-colors duration-300">
+                    <button 
+                        type="button" 
+                        id="searchButton" 
+                        class="bg-[#fb8c00] text-white h-10 px-4 rounded-r-lg hover:bg-[#e68900] transition-colors duration-300">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
@@ -75,7 +79,7 @@
     <main class="p-8">
         <h1 class="text-3xl font-bold mb-6">Tous les Evenements</h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div id="searchResults" class="grid grid-cols-1 md:grid-cols-4 gap-8">
             {% for event in events %}
             <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300" data-event-id="{{ event.event_id }}">
                 <div class="relative h-64">
@@ -103,7 +107,7 @@
                     </p>
                     <p class="text-gray-500 text-sm mt-2 flex items-center">
                         <i class="fas fa-map-marker-alt mr-2 text-orange-600"></i>
-                        {{ event.adresse ?? 'En ligne' }}
+                        {{ event.adresse ?? 'En ligne' }} - {{ event.ville}}
                     </p>
 
                     <div class="mt-4">
@@ -158,12 +162,14 @@
                         name="title"
                         class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Entrez le titre"
-                        value="{{ post.title }}" {# Conserver la valeur saisie #}
+                        value="{{ post.title }}" 
                         required>
                     <!-- Message d'erreur pour le titre -->
                     {% if errors.title is defined %}
                         <span id="error-title" class="text-red-500 text-sm">{{ errors.title }}</span>
                     {% endif %}
+                    <span id="error-title" class="text-red-500 text-sm hidden"></span>
+
                 </div>
 
                 <!-- Description -->
@@ -178,6 +184,7 @@
                     {% if errors.description is defined %}
                         <span id="error-description" class="text-red-500 text-sm">{{ errors.description }}</span>
                     {% endif %}
+                    <span id="error-description" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Image -->
@@ -193,6 +200,7 @@
                     {% if errors.image is defined %}
                         <span id="error-image" class="text-red-500 text-sm">{{ errors.image }}</span>
                     {% endif %}
+                    <span id="error-image" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Mode de l'événement -->
@@ -420,6 +428,7 @@
 
                 <!-- Dates -->
                 <div class="grid grid-cols-2 gap-4">
+                    <!-- Date de début -->
                     <div>
                         <label class="block font-semibold mb-2">Date de début</label>
                         <input
@@ -428,11 +437,10 @@
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ post.startEventAt }}"
                             required>
-                        <!-- Message d'erreur pour la date de début -->
-                        {% if errors.startEventAt is defined %}
-                            <span id="error-startEventAt" class="text-red-500 text-sm">{{ errors.startEventAt }}</span>
-                        {% endif %}
+                        <span id="error-startEventAt" class="text-red-500 text-sm hidden"></span>
                     </div>
+
+                    <!-- Date de fin -->
                     <div>
                         <label class="block font-semibold mb-2">Date de fin</label>
                         <input
@@ -441,10 +449,7 @@
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ post.endEventAt }}"
                             required>
-                        <!-- Message d'erreur pour la date de fin -->
-                        {% if errors.endEventAt is defined %}
-                            <span id="error-endEventAt" class="text-red-500 text-sm">{{ errors.endEventAt }}</span>
-                        {% endif %}
+                        <span id="error-endEventAt" class="text-red-500 text-sm hidden"></span>
                     </div>
                 </div>
 
@@ -464,7 +469,7 @@
         </div>
     </div>
 
-
+    {# {{ include('/public/component/footer.twig') }} #}
     <footer class="mt-8 dark:bg-gray-900 pt-4">
         <div class="mx-auto max-w-screen-2xl xl:px-4">
             <div class="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
@@ -565,11 +570,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        let sponsorIndex = 1; // Index pour les nouveaux sponsors
+        let sponsorIndex = 1; 
         // Fonction pour ajouter un nouveau champ sponsor
         document.getElementById('addSponsorButton').addEventListener('click', function() {
             const sponsorsContainer = document.getElementById('sponsorsContainer');
-            // Créer un nouveau champ sponsor
+            
             const newSponsorEntry = document.createElement('div');
             newSponsorEntry.classList.add('sponsor-entry', 'mb-4');
             newSponsorEntry.innerHTML = `
@@ -592,16 +597,14 @@
                     </div>
                 </div>
             `;
-            // Ajouter le nouveau champ au conteneur
             sponsorsContainer.appendChild(newSponsorEntry);
-            // Incrémenter l'index pour le prochain sponsor
             sponsorIndex++;
         });
 
 
         // fonction deleteEvent 
         function deleteEvent(event, eventId) {
-            event.preventDefault(); // Empêcher la navigation
+            event.preventDefault();
 
             Swal.fire({
                 title: "Êtes-vous sûr ?",
@@ -632,7 +635,6 @@
                                     showConfirmButton: false
                                 });
 
-                                // Supprimer l'élément du DOM après un court délai
                                 setTimeout(() => {
                                     const eventElement = document.querySelector(`[data-event-id="${eventId}"]`);
                                     if (eventElement) {
@@ -685,35 +687,43 @@
             // Soumission du formulaire via AJAX
             $("#eventForm").submit(function(e) {
                 e.preventDefault();
-                var formData = new FormData(this);
-                formData.append("action", "insert");
+
+                var formData = new FormData(this); 
+                formData.append("action", "insert"); 
 
                 $.ajax({
                     url: "/create-event",
                     type: "POST",
                     data: formData,
-                    processData: false,
-                    contentType: false,
+                    processData: false, 
+                    contentType: false, 
                     success: function(response) {
-                        console.log("Réponse du serveur :", response); // Pour déboguer
+                        console.log(response);
+
                         if (response.success) {
+                            
                             window.location.href = response.redirect_url;
                         } else {
-                            // Cache tous les messages d'erreur précédents
-                            $(".error-message").addClass("hidden");
                             if (response.errors && typeof response.errors === 'object') {
-                                for (const [field, message] of Object.entries(response.errors)) {
-                                    $(`#error-${field}`).text(message).removeClass("hidden");
+                                $(".error-message").text("").addClass("hidden");
+
+                                for (var field in response.errors) {
+                                    var errorMessage = response.errors[field];
+                                    $("#error-" + field).text(errorMessage).removeClass("hidden");
                                 }
                             } else {
                                 console.error("Erreur : 'response.errors' n'est pas un objet valide.", response.errors);
-                                // Affichez un message d'erreur général si nécessaire
                                 $("#error-general").text("Une erreur s'est produite.").removeClass("hidden");
                             }
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Erreur AJAX :", error);
+                        $("#error-general").text("Une erreur s'est produite lors de la soumission du formulaire.").removeClass("hidden");
                     }
                 });
             });
+
 
             $('#region').change(function() {
                 const regionId = $(this).val();
@@ -744,8 +754,8 @@
                     villeSelect.prop('disabled', true);
                 }
             });
-
         });
+
 
         function toggleEventMode() {
             const presentielFields = document.getElementById('adresseField');
@@ -761,6 +771,7 @@
             }
         }
 
+
         function togglePaymentType() {
             const priceField = document.getElementById('priceField');
             const payantRadio = document.querySelector('input[name="isPaid"][value="payant"]');
@@ -771,6 +782,7 @@
                 priceField.classList.add('hidden');
             }
         }
+
 
         function openModal() {
             document.getElementById('eventModal').classList.remove('hidden');
@@ -795,6 +807,96 @@
                 dropdownMenu.classList.add('hidden');
             }
         });
+
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value;
+            const searchResultsContainer = document.getElementById('searchResults');
+            searchResultsContainer.innerHTML = '<p class="text-gray-600">Recherche en cours...</p>';
+
+            fetch('/searchEvents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ q: searchTerm })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur réseau');
+                }
+                return response.json(); // Convertir la réponse en JSON
+            })
+            .then(data => {
+                if (data.success && data.data && data.data.length > 0) {
+                    // Afficher les événements trouvés
+                    searchResultsContainer.innerHTML = data.data.map(event => `
+                        <div class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300" data-event-id="${event.event_id}">
+                            <div class="relative h-64">
+                                <img class="h-64 w-full object-cover" src="/assets/images/${event.event_image}" alt="Event Image" />
+                                <span class="absolute bottom-1 right-1 bg-orange-500 text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-900">
+                                    ${event.category_name ?? 'Musique'}
+                                </span>
+                            </div>
+
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-2 text-gray-900">
+                                    ${event.title}
+                                </h2>
+                                <p class="text-gray-600">
+                                    ${event.description.slice(0, 200)}...
+                                </p>
+
+                                <p class="text-gray-500 text-sm mt-2 flex items-center">
+                                    <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                                    ${new Date(event.startEventAt).toLocaleString()}
+                                </p>
+                                <p class="text-gray-500 text-sm mt-2 flex items-center">
+                                    <i class="fas fa-calendar-alt mr-2 text-orange-600"></i>
+                                    ${new Date(event.endEventAt).toLocaleString()}
+                                </p>
+                                <p class="text-gray-500 text-sm mt-2 flex items-center">
+                                    <i class="fas fa-map-marker-alt mr-2 text-orange-600"></i>
+                                    ${event.adresse ?? 'En ligne'}
+                                </p>
+
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-600">Réservations : ${event.reservations_count ?? '0'} / ${event.capacite}</p>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                        <div class="bg-orange-200 h-3 rounded-full" style="width: ${(event.reservations_count / event.capacite) * 100}%;"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center mt-2 justify-between">
+                                    <div class="mt-2 flex gap-6">
+                                        <a href="/edit-event/${event.event_id}" class="bg-gray-400 text-white p-2 rounded-full hover:bg-gray-600 transition-colors duration-300">
+                                            ✏️
+                                        </a>
+                                        <button
+                                            onclick="deleteEvent(event, ${event.event_id})"
+                                            class="bg-orange-500 text-white p-2 rounded-full hover:bg-orange-700 transition-colors duration-300">
+                                            🗑️
+                                        </button>
+                                    </div>
+                                    <div class="mt-4 flex gap-2">
+                                        <span class="text-lg text-semibold ${event.status == 'accepted' ? 'text-green-500' : event.status == 'pending' ? 'text-yellow-500' : 'text-red-500'}">
+                                            ${event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    searchResultsContainer.innerHTML = '<p class="text-gray-600">Aucun </p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                searchResultsContainer.innerHTML = '<p class="text-gray-600">Une erreur est produite lors de la recherche.</p>';
+            });
+        });
+
     </script>
 
 </body>

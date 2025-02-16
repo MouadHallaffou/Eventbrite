@@ -36,6 +36,7 @@
                         placeholder="Entrez le titre"
                         value="{{ event.title }}"
                         required>
+                    <span id="error-title" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Description -->
@@ -46,6 +47,7 @@
                         class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                         placeholder="Décrivez l'événement"
                         required>{{ event.description }}</textarea>
+                    <span id="error-description" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Image de l'événement -->
@@ -54,7 +56,7 @@
                     <input
                         type="file"
                         name="event_image"
-                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-50 file:px-4 file:py-2 hover:file:bg-orange-100"
+                        class="w-full p-0 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-50 file:px-4 file:py-2 hover:file:bg-orange-100"
                         accept="image/*">
                     {% if event.image %}
                         <p class="text-sm text-gray-500 mt-2">
@@ -64,6 +66,7 @@
                             </a>
                         </p>
                     {% endif %}
+                    <span id="error-image" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Mode de l'événement -->
@@ -190,6 +193,7 @@
                         placeholder="Nombre maximum de participants"
                         value="{{ event.capacite }}"
                         required>
+                    <span id="error-capacite" class="text-red-500 text-sm hidden"></span>
                 </div>
 
                 <!-- Catégorie -->
@@ -220,19 +224,19 @@
                     <div id="sponsorsContainer">
                         {% for sponsor in event.sponsors %}
                         <div class="sponsor-entry mb-4 relative">
-                            <!-- Bouton de suppression -->
+
                             <button
                                 type="button"
-                                class="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 rounded-full hover:bg-red-700 transition duration-300"
+                                class="absolute top-0 right-0 text-red-600 font-bold px-2 rounded-full hover:bg-orange-200 transition duration-300"
                                 onclick="removeSponsor(this)">
                                 &times;
                             </button>
-                            <!-- Champ caché pour marquer la suppression -->
+
                             <input
                                 type="hidden"
                                 name="sponsors[{{ loop.index0 }}][delete]"
                                 value="0">
-                            <!-- Champ caché pour l'ID du sponsor -->
+
                             <input
                                 type="hidden"
                                 name="sponsors[{{ loop.index0 }}][sponsor_id]"
@@ -243,7 +247,7 @@
                                     <input
                                         type="text"
                                         name="sponsors[{{ loop.index0 }}][name]"
-                                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                        class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                                         placeholder="Nom du sponsor"
                                         value="{{ sponsor.name }}">
                                 </div>
@@ -252,12 +256,12 @@
                                     <input
                                         type="file"
                                         name="sponsors[{{ loop.index0 }}][image]"
-                                        class="w-full p-2 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-blue-50 file:px-4 file:py-2 hover:file:bg-blue-100"
+                                        class="w-full p-0 border rounded-lg file:mr-4 file:rounded-lg file:border-0 file:bg-orange-50 file:px-4 file:py-2 hover:file:bg-orange-100"
                                         accept="image/*">
                                     {% if sponsor.img %}
                                         <p class="text-sm text-gray-500 mt-2">
                                             Image actuelle : 
-                                            <a href="/assets/images/{{ sponsor.img }}" target="_blank" class="text-blue-500 hover:underline">
+                                            <a href="/assets/images/{{ sponsor.img }}" target="_blank" class="text-blue-600 hover:underline">
                                                 {{ sponsor.img }}
                                             </a>
                                         </p>
@@ -271,7 +275,7 @@
                     <button
                         type="button"
                         id="addSponsorButton"
-                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+                        class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition duration-300">
                         Ajouter un sponsor
                     </button>
                 </div>
@@ -286,6 +290,7 @@
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ event.startEventAt|date('Y-m-d\\TH:i') }}"
                             required>
+                        <span id="error-startEventAt" class="text-red-500 text-sm hidden"></span>
                     </div>
                     <div>
                         <label class="block font-semibold mb-2">Date de fin</label>
@@ -295,6 +300,7 @@
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ event.endEventAt|date('Y-m-d\\TH:i') }}"
                             required>
+                        <span id="error-endEventAt" class="text-red-500 text-sm hidden"></span>
                     </div>
                 </div>
 
@@ -392,10 +398,16 @@
 					</div>
 					<div class="mt-6 flex flex-col gap-4 sm:mt-0">
 						<p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
-						<div class="flex gap-4 sm:flex-col">
-							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/google-store.svg" /></a>
-							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/apple-store.svg" /></a>
-						</div>
+                            <div class="flex items-center gap-1 px-2">
+                                <a href="#" class="w-full min-w-xl">
+                                    <img src="https://mcqmate.com/public/images/icons/playstore.svg" alt="Playstore Button"
+                                        class="h-10">
+                                </a>
+                                <a class="w-full min-w-xl" href="https://www.youtube.com/channel/UCo8tEi6SrGFP8XG9O0ljFgA">
+                                    <img src="https://mcqmate.com/public/images/icons/youtube.svg" alt="Youtube Button"
+                                        class="h-28">
+                                </a>
+                            </div>
 					</div>
 				</div>
 			</div>

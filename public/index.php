@@ -10,6 +10,7 @@ use App\controllers\backsOffice\AdminController;
 use App\controllers\backsOffice\CategoryController;
 use App\controllers\backsOffice\RoleController;
 use App\controllers\frontOffice\ContactController;
+use App\Controllers\PaymentController;
 use App\core\Validator;
 use App\core\Auth;
 
@@ -35,6 +36,9 @@ $router->get('/addEvent', EventController::class, 'afficheEvents');
 $router->get('/addEvent', Validator::class, 'validateEvent');
 $router->get('/addEvent', EventController::class, 'afficherTousLesEvenements');
 $router->get('/events', EventController::class, 'afficherTousLesEvenements');
+$router->get('/statistics', EventController::class, 'statisticsOrganisateur');
+$router->post('/searchEvents', EventController::class, 'searchEvents');
+
 
 $router->get('/get-villes-by-region', EventController::class, 'getVillesByRegion');
 
