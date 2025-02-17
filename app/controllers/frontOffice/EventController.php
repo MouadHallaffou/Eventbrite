@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers\FrontOffice;
-
+require_once __DIR__ . '/../../core/Vaildator.php';
 use App\Models\Event;
 use App\Config\Database;
 use App\core\View;
@@ -26,7 +26,16 @@ class EventController
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === "insert") {
 
-            // $errors = Validator::validateEvent($_POST);
+            $errors = Validator::validateEvent($_POST);
+            if (!empty($errors)) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    "success" => false,
+                    "errors" => $errors
+                ]);
+                exit;
+            }
+
             $event = new Event($this->pdo);
 
             $event->setTitle($_POST['title']);
@@ -66,7 +75,7 @@ class EventController
                 foreach ($_POST['sponsors'] as $index => $sponsorData) {
                     $sponsorName = $sponsorData['name'] ?? null;
                     $sponsorImage = null;
-
+                    
                     // Gérer l'upload de l'image du sponsor
                     if (isset($_FILES['sponsors']['tmp_name'][$index]['image']) && $_FILES['sponsors']['error'][$index]['image'] === UPLOAD_ERR_OK) {
                         $target_dir = __DIR__ . "/../../../public/assets/images/";
@@ -110,7 +119,6 @@ class EventController
             $regionId = (int)$_GET['region_id'];
             $eventModel = new Event($this->pdo);
             $villes = $eventModel->fetchVillesByRegion($regionId);
-            $villes = $eventModel->fetchVillesByRegion($regionId);
             echo json_encode($villes);
         }
     }
@@ -139,7 +147,6 @@ class EventController
             ],
             'events' => $events,
             'categories' => $categories,
-
             'tags' => $tags,
             'regions' => $regions,
         ]);
@@ -211,6 +218,16 @@ class EventController
     public function updateEvent($eventId)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $errors = Validator::validateEvent($_POST);
+            if (!empty($errors)) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    "success" => false,
+                    "errors" => $errors
+                ]);
+                exit;
+            }
             $eventModel = new Event($this->pdo);
 
             // Récupérer les sponsors
@@ -304,6 +321,22 @@ class EventController
             'SponsorsHomePage' => $SponsorsHomePage,
         ]);
     }
+
+
+     // Affiche les événements acceptés
+     public function statisticsOrganisateur()
+     {
+         $eventsHomePage = new Event($this->pdo);
+         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+         $categoryHomePage = $eventsHomePage->fetchCategories();
+         $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+ 
+         View::render('back/organisateur/statistics.twig', [
+             'eventsAccepted' => $eventsAccepted,
+             'categoryHomePage' => $categoryHomePage,
+             'SponsorsHomePage' => $SponsorsHomePage,
+         ]);
+     }
 
 
     public function displayEvents()

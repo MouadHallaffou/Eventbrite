@@ -119,15 +119,6 @@ CREATE TABLE notifications (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE event_sponsor (
-    event_id BIGINT NOT NULL,
-    sponsor_id BIGINT NOT NULL,
-    PRIMARY KEY (event_id, sponsor_id),
-    FOREIGN KEY (event_id) REFERENCES events(event_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (sponsor_id) REFERENCES sponsors(sponsor_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-
 -- TABLE TICKETS
 CREATE TABLE tickets (
     ticket_id BIGINT AUTO_INCREMENT PRIMARY KEY,

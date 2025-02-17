@@ -21,6 +21,8 @@
     ],
     "require": {
         "vlucas/phpdotenv": "^5.6",
-        "twig/twig": "^3.19"
+        "twig/twig": "^3.19",
+        "paypal/rest-api-sdk-php": "^1.14",
+        "paypal/paypal-payouts-sdk": "^1.0"
     }
 }
