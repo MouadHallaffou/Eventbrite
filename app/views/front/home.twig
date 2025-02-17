@@ -605,7 +605,7 @@
 		let currentSlide = 0;
 		const slides = document.querySelectorAll('.carousel-item');
 		const indicators = document.querySelectorAll('.bottom-2 button, .bottom-4 button');
-		const progressBar = document.querySelector('.progress-bar');
+		// const progressBar = document.querySelector('.progress-bar');
 		let autoAdvanceTimer;
 		let touchStartX = 0;
 		let touchEndX = 0;
@@ -660,7 +660,7 @@
 			});
 
 			// Update progress bar
-			progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+			// progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
 		}
 
 		function resetAutoAdvance() {

@@ -73,6 +73,29 @@ public static function getData($table,$condetion = ''){
         $res = $stmt->fetch(PDO::FETCH_ASSOC);
        return $res;
    }
+   public static function findByRoleId($table,$id){
+
+    $conn = Database::getInstanse()->getConnection();
+
+    $query = "SELECT * FROM $table WHERE role_id = :id";
+    $stmt=$conn->prepare($query);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+     $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $res;
+
+   }
+   public static function findByCategorieId($table,$id){
+
+    $conn = Database::getInstanse()->getConnection();
+
+    $query = "SELECT * FROM $table WHERE category_id = :id";
+    $stmt=$conn->prepare($query);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+     $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $res;
+}
 
    // ---------------------- update -----------------
 

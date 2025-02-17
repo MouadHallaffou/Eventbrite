@@ -236,6 +236,7 @@ class EventController
         ]);
     }
 
+
     public function displayEvents()
     {
         $eventsHomePage = new Event($this->pdo);
@@ -282,8 +283,6 @@ class EventController
             echo json_encode(['success' => false, 'message' => 'Invalid action.']);
         }
     }
-    
-
 
     public function eventDataille($id){
        

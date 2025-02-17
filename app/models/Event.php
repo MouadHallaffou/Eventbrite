@@ -295,7 +295,7 @@ class Event
     // Fetch all events
     public function fetchAll(): array
     {
-        $sql = "SELECT *, c.name as category_name, c.img AS image_category FROM events e
+        $sql = "SELECT e.*, c.name as category_name, c.img AS image_category FROM events e
                 LEFT JOIN events_tag et ON et.event_id = e.event_id
                 LEFT JOIN categories c ON c.category_id = e.category_id";
 
@@ -572,6 +572,13 @@ class Event
     
     }
 
+
+
+
+
+
+
+    
 }
 
 
