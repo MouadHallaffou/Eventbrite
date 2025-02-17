@@ -559,17 +559,36 @@ class Event
     public function eventDetaill($id) {
 
         $query = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
-            e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
-            c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
-            u.user_id,u.email, u.is_verified,u.avatar, u.username, e.adresse FROM events e LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
-        LEFT JOIN events_tag et ON et.event_id = e.event_id LEFT JOIN tags t ON t.tag_id = et.tag_id
-        LEFT JOIN users u ON u.user_id = e.user_id LEFT JOIN categories c ON c.category_id = e.category_id
-        WHERE e.status = 'accepted' AND e.event_id = :id";
+                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
+                c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
+                u.user_id,u.email, u.is_verified,u.avatar, u.username, e.adresse FROM events e 
+            LEFT join event_sponsor es on es.event_id = e.event_id
+            LEFT JOIN sponsors s ON s.sponsor_id  = es.sponsor_id
+            LEFT JOIN events_tag et ON et.event_id = e.event_id LEFT JOIN tags t ON t.tag_id = et.tag_id
+            LEFT JOIN users u ON u.user_id = e.user_id LEFT JOIN categories c ON c.category_id = e.category_id
+            WHERE e.status = 'accepted' AND e.event_id = :id
+            group by e.event_id";
+
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id,); 
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
+    }
+
+    public function fetchAllEvents()
+    {
+        $sql = "SELECT e.*,u.username,v.ville, c.name as category_name, c.img AS image_category 
+                FROM events e
+                LEFT JOIN events_tag et ON et.event_id = e.event_id
+                LEFT JOIN categories c ON c.category_id = e.category_id
+                LEFT JOIN users u ON u.user_id = e.user_id
+                LEFT JOIN ville v on v.id = e.ville_id 
+                GROUP BY e.event_id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }
