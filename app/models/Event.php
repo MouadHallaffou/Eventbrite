@@ -293,11 +293,12 @@ class Event
     // Fetch all events
     public function fetchAll(int $userId): array
     {
-        $sql = "SELECT e.*,u.username, c.name as category_name, c.img AS image_category 
+        $sql = "SELECT e.*,u.username,v.ville, c.name as category_name, c.img AS image_category 
                 FROM events e
                 LEFT JOIN events_tag et ON et.event_id = e.event_id
                 LEFT JOIN categories c ON c.category_id = e.category_id
                 LEFT JOIN users u ON u.user_id = e.user_id
+                LEFT JOIN ville v on v.id = e.ville_id
                 WHERE e.user_id = :user_id
                 GROUP BY e.event_id";
 
