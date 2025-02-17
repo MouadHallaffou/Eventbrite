@@ -305,6 +305,7 @@ class EventController
         ]);
     }
 
+
     public function displayEvents()
     {
         $eventsHomePage = new Event($this->pdo);
