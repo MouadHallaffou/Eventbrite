@@ -4,15 +4,7 @@ namespace App\models;
 
 
 
-
-
-
 class Sponsor{
-
-
-
     
-
-
 
 }

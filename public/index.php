@@ -25,6 +25,8 @@ $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
 
 $router->get('/profile', ProfileController::class, 'index');
+$router->get('/profile', ProfileController::class, 'index');
+
 
 
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');

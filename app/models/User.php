@@ -159,10 +159,10 @@ abstract class User
     }
 
 
+
     public function findById($id)
     {
         $conn = Database::getInstanse()->getConnection();
-
         $query = "SELECT u.*, r.name_role AS role FROM users u
               JOIN user_roles ur ON u.user_id = ur.user_id
               JOIN roles r ON r.role_id = ur.role_id
@@ -174,4 +174,16 @@ abstract class User
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function updateUser($userId, $username, $email, $gender, $avatar)
+{
+    $conn = Database::getInstanse()->getConnection();
+
+    $query = "UPDATE users SET username = ?, email = ?, gender = ?, avatar = ? WHERE user_id = ?";
+    $stmt = $conn->prepare($query);
+
+    return $stmt->execute([$username, $email, $gender, $avatar, $userId]);
+}
+
+
 }
