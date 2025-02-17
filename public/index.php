@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\core\Session;
 use App\core\Router;
 use App\controllers\frontOffice\EventController;
 use App\controllers\Authentication\AuthController;
@@ -11,18 +12,14 @@ use App\controllers\backsOffice\RoleController;
 use App\controllers\backsOffice\UserController;
 use App\controllers\frontOffice\ContactController;
 use App\core\Validator;
-use App\core\Session;
 
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 
-
 $router = new Router();
 Session::checkSession();
-
-// /------------------ home 
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
@@ -57,7 +54,7 @@ $router->post('/dashboard/categories/add', CategoryController::class, 'addCatego
 $router->get('/dashboard/categories/update/{id}', CategoryController::class, 'editCategories');
 $router->post('/dashboard/categories/update', CategoryController::class, 'updateCategories');
 
-// /------------------Management role
+// // /------------------Management role
 
 $router->get('/dashboard/role', RoleController::class, 'index');
 $router->post('/dashboard/role/delete', RoleController::class, 'deleteRole');
