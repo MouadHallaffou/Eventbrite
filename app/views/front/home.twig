@@ -319,79 +319,7 @@
 				</div>
 
 				<!-- Event Content -->
-				<div
-					class="max-w-6xl mx-auto">
-					<!-- First Row (2 Columns) -->
-					<div
-						class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-
-						<!-- Event Item 1 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-80">
-								<img class="h-80 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Music
-								</span>
-							</div>
-							<div class="p-6 flex justify-between items-center">
-								<div>
-									<h2 class="text-xl font-bold mb-2">
-										Summer Music Festival 2023
-									</h2>
-									<p class="text-gray-600">
-										Join us for an unforgettable night of live music and performances.
-									</p>
-									<p class="text-gray-500 text-sm mt-2">
-										📅 October 15, 2023 | 🕒 6:00 PM
-									</p>
-									<p class="text-gray-500 text-sm">
-										📍 Central Park, New York
-									</p>
-								</div>
-								<button class="cursor-pointer hover:scale-110 transition-transform duration-300">
-									<svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z" fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
-										<path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M20.625 30H39.3751" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</button>
-							</div>
-						</div>
-						<!-- Event Item 2 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-80">
-								<img class="h-80 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Workshop
-								</span>
-							</div>
-							<div class="p-6 flex justify-between items-center">
-								<div>
-									<h2 class="text-xl font-bold mb-2">
-										Creative Writing Workshop
-									</h2>
-									<p class="text-gray-600">
-										Learn the art of storytelling from award-winning authors.
-									</p>
-									<p class="text-gray-500 text-sm mt-2">
-										📅 November 5, 2023 | 🕒 10:00 AM
-									</p>
-									<p class="text-gray-500 text-sm">
-										📍 Downtown Library, San Francisco
-									</p>
-								</div>
-								<button class="cursor-pointer hover:scale-110 transition-transform duration-300">
-									<svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z" fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
-										<path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M20.625 30H39.3751" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</button>
-							</div>
-						</div>
-
-					</div>
-
+				<div class="max-w-6xl mx-auto">
 
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 						{% for event in eventsAccepted %}
@@ -428,7 +356,7 @@
 									</p>
 
 									<p class="text-gray-500 text-sm mt-2">
-										📍 {{ event.adresse ?? 'En ligne' }}
+										📍 {{ event.adresse ?? 'En ligne' }} - {{ event.ville ?? ' ' }}
 									</p>
 
 									<div class="flex items-center mt-4 justify-between">
@@ -604,7 +532,7 @@
 				<p class="text-[10px] font-normal text-white md:text-[12px]">
 					© Copyright
 					<!-- -->
-					2024
+					2025
 					<!-- -->
 					, All Rights Reserved by YOUR WEBSITES. PVT. LTD
 				</p>

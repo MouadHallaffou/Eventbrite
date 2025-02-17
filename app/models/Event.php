@@ -392,7 +392,7 @@ class Event
     {
         $sql = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
                 e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status, t.tag_id,
-                GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,c.category_id, c.name as category_name, 
+                GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,c.category_id, c.name as category_name, v.ville,
                 c.img AS image_category, 
                 u.user_id, u.username, e.adresse
             FROM events e 
@@ -400,6 +400,7 @@ class Event
             LEFT JOIN tags t ON t.tag_id = et.tag_id
             LEFT JOIN users u ON u.user_id = e.user_id
             LEFT JOIN categories c ON c.category_id = e.category_id
+            LEFT JOIN ville v on v.id = e.ville_id
             WHERE e.status = 'accepted'
             GROUP BY e.event_id;";
 

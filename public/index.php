@@ -13,7 +13,7 @@ use App\controllers\backsOffice\UserController;
 use App\controllers\frontOffice\ContactController;
 use App\Controllers\PaymentController;
 use App\core\Validator;
-
+use App\controllers\frontOffice\ProfileController;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -24,6 +24,8 @@ Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
+
+$router->get('/profile', ProfileController::class, 'index');
 
 
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
