@@ -174,4 +174,19 @@ public function updateUserStatus($userId, $status) {
 }
 
 
+
+public function updateEventStatus($eventId, $status) {
+    $conn = Database::getInstanse()->getConnection();
+    try {
+        $stmt = $conn->prepare("UPDATE events SET status = :status WHERE event_id = :eventId");
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR);
+        $stmt->bindParam(':eventId', $eventId, PDO::PARAM_INT);
+        return $stmt->execute(); // Returns true on success, false on failure
+    } catch (\PDOException $e) {
+        error_log('Database error: ' . $e->getMessage());
+        return false;
+    }
+}
+
+
 }

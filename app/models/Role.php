@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\config\Database;
+use App\config\OrmMethodes;
+
 use PDO;
 
 
@@ -90,5 +92,36 @@ public function updateUserStatus($userId, $status) {
     }
 }
 
+
+public function updateRole($roleId, $roleName) {
+    $conn = Database::getInstanse()->getConnection();
+    try {
+        error_log('Attempting to update role: ' . $roleId . ', ' . $roleName );
+
+            $query = "UPDATE $this->table SET name_role = :name_role WHERE role_id = :role_id";
+            $stmt = $conn->prepare($query);
+            $stmt->bindParam(':name_role', $roleName, \PDO::PARAM_STR);
+            $stmt->bindParam(':role_id', $roleId, \PDO::PARAM_INT);
+
+        $result = $stmt->execute();
+        if ($result) {
+            error_log('role updated successfully in database'); 
+            return true;
+        } else {
+            error_log('Failed to update role in database');
+            return false;
+        }
+    } catch (\PDOException $e) {
+        error_log('Database error: ' . $e->getMessage()); 
+        return false;
+    }
+}
+
+
+
+public function findRoleById($id) {
+    $findRoleById = OrmMethodes::findByRoleId($this->table, $id);
+    return $findRoleById;
+}
 
 }

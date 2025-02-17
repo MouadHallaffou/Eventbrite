@@ -322,6 +322,7 @@ class EventController
         ]);
     }
 
+
      // Affiche les événements acceptés
      public function statisticsOrganisateur()
      {
@@ -336,6 +337,7 @@ class EventController
              'SponsorsHomePage' => $SponsorsHomePage,
          ]);
      }
+
 
     public function displayEvents()
     {
