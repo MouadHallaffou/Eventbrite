@@ -99,6 +99,10 @@ class UserController extends User{
         }
     }
 
+    public function denided(){
+
+        View::render('front/pages/404.twig');
+    }
     
 
     

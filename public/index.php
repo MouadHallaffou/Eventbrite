@@ -42,6 +42,7 @@ $router->get('/help', ContactController::class, 'helpcenter');
 // /------------------ Admin
 
 $router->get('/dashboard', AdminController::class, 'index');
+$router->get('/dashboard', AdminController::class, 'statistics');
 $router->get('/dashboard/Event', AdminController::class, 'showStatusEvents');
 $router->post('/dashboard/Event/updateStatus', AdminController::class, 'updateEventsStatus');
 
@@ -89,7 +90,10 @@ $router->get('/dashboard/users', UserController::class, 'index');
 // /------------------ categories
 $router->get('/register', AuthController::class, 'registerView');
 $router->get('/login', AuthController::class, 'loginView');
+$router->get('/logout', AuthController::class, 'logout');
 $router->post('/register', AuthController::class, 'register');
 $router->post('/login', AuthController::class, 'login');
+$router->get('/404', UserController::class, 'denided');
+
 
 $router->dispatch();

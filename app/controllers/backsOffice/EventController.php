@@ -310,12 +310,19 @@ class EventController
     // Affiche les événements acceptés
     public function displayEventsAcceptedHome()
     {
+        Session::checkSession();
+        // $userId = $_SESSION['userId'];
+        $username = $_SESSION['username'];
+
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->displayEventsAccepted();
         $categoryHomePage = $eventsHomePage->fetchCategories();
         $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
 
         View::render('front/home.twig', [
+            'user' => [
+            'username' => $username,
+            ],
             'eventsAccepted' => $eventsAccepted,
             'categoryHomePage' => $categoryHomePage,
             'SponsorsHomePage' => $SponsorsHomePage,

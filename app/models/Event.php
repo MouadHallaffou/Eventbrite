@@ -4,6 +4,8 @@ namespace App\Models;
 
 use PDO;
 use DateTime;
+use App\Config\OrmMethodes;
+
 
 class Event
 {
@@ -194,6 +196,20 @@ class Event
         $this->ville_id = $ville_id;
     }
 
+
+    public function fetchAllEvents()
+    {
+        $sql = "SELECT *,u.username,v.ville, c.name as category_name, c.img AS image_category 
+                FROM events e
+                LEFT JOIN events_tag et ON et.event_id = e.event_id
+                LEFT JOIN categories c ON c.category_id = e.category_id
+                LEFT JOIN users u ON u.user_id = e.user_id
+                LEFT JOIN ville v on v.id = e.ville_id ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Insert an event
     public function insert(array $tags, array $sponsors): int
@@ -571,4 +587,10 @@ class Event
 
     }
 
+
+    public function EventsTotal(){
+
+        $result = OrmMethodes::countItems('events');
+        return $result;
+    }
 }

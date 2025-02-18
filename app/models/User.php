@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\config\Database;
+use App\config\OrmMethodes;
+
 use PDO;
 
 
@@ -33,12 +35,10 @@ public function setGender($gender){
 
     $this->gender = $gender;
 }
-
 public function setStatus($status){
 
     $this->status = $status;
 }
-
 public function getUsername(){
 
     return $this->username;
@@ -111,7 +111,7 @@ public static function findByEmail($email){
 
   $conn = Database::getInstanse()->getConnection();
 
-  $query ="SELECT u.user_id AS userId, u.username AS userName, u.avatar AS avatar, u.email AS userEmail , u.password , r.role_id AS roleId ,r.name_role AS UserRole
+  $query ="SELECT u.user_id AS userId, u.username AS userName, u.avatar AS avatar, u.email AS userEmail , u.password ,u.status, r.role_id AS roleId ,r.name_role AS UserRole
       FROM users u INNER JOIN user_roles ur ON ur.user_id = u.user_id INNER JOIN roles r on r.role_id = ur.role_id  WHERE email = :email";
   $stmt=$conn->prepare($query);
   $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -130,7 +130,6 @@ public function getUsersData(){
     $users = $stmt->fetchAll();
     return $users;
 }
-
 
 public function deleteUsers($id) {
     $conn = Database::getInstanse()->getConnection();
@@ -152,7 +151,6 @@ public function deleteUsers($id) {
     }
 }
 
-
 public function updateUserStatus($userId, $status) {
     $conn = Database::getInstanse()->getConnection();
     try {
@@ -173,8 +171,6 @@ public function updateUserStatus($userId, $status) {
     }
 }
 
-
-
 public function updateEventStatus($eventId, $status) {
     $conn = Database::getInstanse()->getConnection();
     try {
@@ -188,5 +184,11 @@ public function updateEventStatus($eventId, $status) {
     }
 }
 
+public function countUsers(){
+
+   $result =  OrmMethodes::countItems($this->table);
+   return $result;
+
+}
 
 }

@@ -3,17 +3,32 @@ namespace App\controllers\backsOffice;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\core\view;
+use App\core\Session;
+
 use App\models\Category;
 
 class CategoryController extends Category {
 
     public function index() {
-        $Categorys = $this->showCategory();
-        View::render('back/Admin/categories.twig', ['categories' => $Categorys]);
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+          $Categorys = $this->showCategory();
+          View::render('back/Admin/categories.twig', ['categories' => $Categorys]);
+
+        }else{
+            header("Location: /404");
+
+        }
     }
 
     public function deleteCategories() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+          if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $input = file_get_contents('php://input');
             $data = json_decode($input, true);
 
@@ -39,11 +54,21 @@ class CategoryController extends Category {
             }
 
             exit;
+          }
+
+        }else{
+            header("Location: /404");
+
         }
     }
 
     public function addCategories() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+
+          if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['category_name']) || !isset($_FILES['category_img'])) {
                 http_response_code(400);
                 echo json_encode(['success' => false, 'message' => 'Missing category name or image']);
@@ -83,15 +108,25 @@ class CategoryController extends Category {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => 'Failed to upload image']);
             }
-        } else {
+          } else {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+          }
+          exit;
+
+        }else{
+            header("Location: /404");
+
         }
-        exit;
     }
 
     public function updateCategories() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+
+          if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log('Received POST request for update'); // Log the request
             error_log('POST data: ' . print_r($_POST, true)); // Log POST data
             error_log('FILES data: ' . print_r($_FILES, true)); // Log FILES data
@@ -133,18 +168,35 @@ class CategoryController extends Category {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => 'Failed to update category']);
             }
-        } else {
+          } else {
             http_response_code(405);
             echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+          }
+          exit;
+
+        }else{
+            header("Location: /404");
+
         }
-        exit;
+
     }
 
     public function editCategories($id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+
+         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // $id = $_GET['id'];
             $category = $this->findCategoryById($id);
             View::render('back/Admin/updateCategory.twig', ['category' => $category]);
+         }
+        }else{
+            header("Location: /404");
+
         }
+
     }
 }

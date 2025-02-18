@@ -3,18 +3,32 @@ namespace App\controllers\backsOffice;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\core\view;
+use App\core\Session;
 use App\models\Role;
 
 class RoleController extends Role{
 
     public function index(){
-        $getRolesData = $this->getRolesData();
-        View::render('back/Admin/role.twig',['roles' => $getRolesData]);
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+         $getRolesData = $this->getRolesData();
+         View::render('back/Admin/role.twig',['roles' => $getRolesData]);
+        }else{
+            header("Location: /404");
+
+        }
     }
 
 
         public function addRoles() {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            Session::checkSession();
+
+            if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+    
+             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $input = file_get_contents('php://input');
                 $data = json_decode($input, true);
     
@@ -34,20 +48,27 @@ class RoleController extends Role{
                     http_response_code(500);
                     echo json_encode(['success' => false, 'message' => 'Failed to add role']);
                 }
-            } else {
+             } else {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+             }
+             exit;
+            }else{
+                header("Location: /404");
+
             }
-            exit;
         }
     
         public function deleteRole() {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            Session::checkSession();
+
+            if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+    
+             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $input = file_get_contents('php://input');
                 $data = json_decode($input, true);
     
                 $roleId = $data['role_id'] ?? null;
-                // var_dump($roleId);
     
                 if (!$roleId) {
                     http_response_code(400);
@@ -63,19 +84,25 @@ class RoleController extends Role{
                     http_response_code(500);
                     echo json_encode(['success' => false, 'message' => 'Failed to delete role']);
                 }
-            } else {
+             } else {
                 http_response_code(405);
                 echo json_encode(['success' => false, 'message' => 'Invalid request method']);
-            }
-            exit;
+             }
+             exit;
+            }else{
+                header("Location: /404");
+
+            } 
         }
 
         public function updateRoles() {
+         Session::checkSession();
+
+         if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // error_log('Received POST request for update'); // Log the request
-                // error_log('POST data: ' . print_r($_POST, true)); // Log POST data
-                // error_log('FILES data: ' . print_r($_FILES, true)); // Log FILES data
-    
+                
                 $roleId = $_POST['role_id'] ?? null;
                 $roleName = trim($_POST['name_role'] ?? '');
     
@@ -85,9 +112,7 @@ class RoleController extends Role{
                     exit;
                 }
                 $result = $this->updateRole($roleId, $roleName);
-                // var_dump($result);
-                // die();
-    
+                
                 if ($result) {
                     echo json_encode(['success' => true, 'message' => 'role updated successfully']);
                 } else {
@@ -99,14 +124,25 @@ class RoleController extends Role{
                 echo json_encode(['success' => false, 'message' => 'Invalid request method']);
             }
             exit;
+         }else{
+            header("Location: /404");
+
+         }
+
         }
     
         public function editRole($id) {
+         Session::checkSession();
+
+         if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                // $id = $_GET['id'];
                 $role = $this->findRoleById($id);
-                // var_dump($role);
                 View::render('back/Admin/updateRole.twig', ['role' => $role]);
+            }
+         }else{
+            header("Location: /404");
+
             }
         }
 

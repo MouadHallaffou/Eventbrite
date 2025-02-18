@@ -2,712 +2,842 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Home</title>
-	<link
-		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-	<script src="https://cdn.tailwindcss.com"></script>
-	<script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
-	<link rel="stylesheet" type="text/css" href="/assets/styles/home.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/home.css">
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+
 </head>
 
 
-<body
-	class="bg-white min-h-screen flex-col items-center justify-center">
-	<!-- Header -->
-	<header class="border-b border-gray-200 shadow-md">
-		<nav class="bg-white border-gray-200 dark:bg-gray-900">
-			<div
-				class="max-w-screen-xl flex flex-wrap items-center justify-evenly mx-auto">
-				<!-- Logo -->
-				<div class="flex items-center justify-center ml-2">
-					<a href="/home" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
-						<span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-[#fb8c00]">
-							EventsBro
-						</span>
-					</a>
-					<div class="p-4 text-gray-600 dark:text-gray-300 outline-none focus:outline-none">
-						<div class="relative flex">
-							<select class="bg-white dark:bg-gray-800 h-10 px-5 rounded-l-full text-sm focus:outline-none outline-none border-2 border-gray-500 dark:border-gray-600 border-r-1 cursor-pointer max-h-10 overflow-y-hidden">
-								<option class="font-medium cursor-pointer" value="filter">
-									filter
-								</option>
-							</select>
-							<input type="search" name="search" placeholder="Search" class="bg-white dark:bg-gray-800 h-10 flex px-5 w-full rounded-r-full text-sm focus:outline-none border-2 border-l-0 border-gray-500 dark:border-gray-600" autocomplete="off" spellcheck="false" required step="any" autocapitalize="none" autofocus />
-							<button type="submit" class="absolute inset-y-0 right-0 mr-2 flex items-center px-2">
-								<svg class="h-4 w-4 fill-current dark:text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewbox="0 0 56.966 56.966" xml:space="preserve" width="512px" height="512px">
-									<path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
-								</svg>
-							</button>
-						</div>
-					</div>
-				</div>
-				<!-- Right Navigation -->
+<body class="bg-white min-h-screen flex-col items-center justify-center">
+    <!-- Header -->
+    <!-- Header -->
+    <header class="border-b border-gray-200 shadow-md">
+        <nav class="bg-gray-900 border-gray-200 dark:bg-gray-900">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-evenly mx-auto">
+                <!-- Logo -->
+                <div class="flex items-center justify-center ml-2">
+                    <a href="/home" class="flex-col justify-center items-center space-x-3 rtl:space-x-reverse">
+                        <span
+                            class="self-center text-[#fb8c00] text-2xl font-semibold whitespace-nowrap dark:text-[#fb8c00]">
+                            EventsBro
+                        </span>
+                    </a>
+                    <div class="p-4 text-gray-600 dark:text-gray-300 outline-none focus:outline-none">
+                        <div class="relative flex">
+                            <select
+                                class="bg-white dark:bg-gray-800 h-10 px-5 rounded-l-full text-sm focus:outline-none outline-none border-2 border-gray-500 dark:border-gray-600 border-r-1 cursor-pointer max-h-10 overflow-y-hidden">
+                                <option class="font-medium cursor-pointer" value="filter">
+                                    filter
+                                </option>
+                            </select>
+                            <input type="search" name="search" placeholder="Search"
+                                class="bg-white dark:bg-gray-800 h-10 flex px-5 w-full rounded-r-full text-sm focus:outline-none border-2 border-l-0 border-gray-500 dark:border-gray-600"
+                                autocomplete="off" spellcheck="false" required step="any" autocapitalize="none"
+                                autofocus />
+                            <button type="submit" class="absolute inset-y-0 right-0 mr-2 flex items-center px-2">
+                                <svg class="h-4 w-4 fill-current dark:text-white" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+                                    viewBox="0 0 56.966 56.966" xml:space="preserve" width="512px" height="512px">
+                                    <path
+                                        d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17S14.61,6,23.984,6z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Navigation -->
+                <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                    <div class="flex items-center gap-4">
+                        {% if user.role %}
+                        {% if user.role in ['Admin', 'Participant', 'Organizer'] %}
+                        <button type="button"
+                            class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+                            data-dropdown-placement="bottom">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="w-8 h-8 rounded-full border-2 border-gray-200"
+                                src="" alt="user photo">
+                        </button>
+                        {% else %}
+                        <div class="sm:flex sm:gap-4">
+                            <a class="rounded-md bg-[#fb8c00] hover:bg-[#fb8c00] px-5 py-2.5 text-sm font-medium text-white shadow inline-block"
+                                href="/login">
+                                Login
+                            </a>
+                            <div class="hidden sm:flex">
+                                <a class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-[#fb8c00] hover:text-white"
+                                    href="/register">
+                                    Register
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% else %}
+                        <div class="sm:flex sm:gap-4">
+                            <a class="rounded-md bg-[#fb8c00] hover:bg-[#fb8c00] px-5 py-2.5 text-sm font-medium text-white shadow inline-block"
+                                href="/login">
+                                Login
+                            </a>
+                            <div class="hidden sm:flex">
+                                <a class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-[#fb8c00] hover:text-white"
+                                    href="/register">
+                                    Register
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <!-- Dropdown menu -->
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                        id="user-dropdown">
+                        <div class="px-4 py-3">
+                            <span class="text-sm text-gray-900 dark:text-white inline-block">
+                                {{ user.username }}
+                            </span>
+                        </div>
+                        <ul class="py-2" aria-labelledby="user-menu-button">
+                            {% if user.role %}
+                            {% if user.role in ['Admin'] %}
+                            <li>
+                                <a href="/dashboard"
+                                    class="px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    Dashboard
+                                </a>
+                            </li>
+                            {% elseif user.role in ['Organizer'] %}
+                            <li>
+                                <a href="/addEvent"
+                                    class="px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    organizer
+                                </a>
+                            </li>
+                            {% elseif user.role in ['Participant'] %}
+                            <li>
+                                <a href="/profile"
+                                    class="px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    Profile
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li>
+                                <a href="/logout"
+                                    class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                    Sign out
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <button data-collapse-toggle="navbar-user" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        aria-controls="navbar-user" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 17 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 1h15M1 7h15M1 13h15" />
+                        </svg>
+                    </button>
+                </div>
+                <!-- Middle Navigation -->
+                <div class="items-center bg-gray-900 justify-between hidden w-full md:flex md:w-auto md:order-1"
+                    id="navbar-user">
+                    <ul
+                        class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-900 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-gray-900 dark:bg-gray-900 md:dark:bg-gray-900 dark:border-gray-700">
+                        <li>
+                            <a href="/home"
+                                class="block py-2 px-3 text-white bg-[#fb8c00] rounded md:bg-transparent md:text-[#fb8c00] md:p-0 md:dark:text-[#fb8c00]"
+                                aria-current="page">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/login"
+                                class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:hover:text-white">
+                                Create Events
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/FindEvents/search"
+                                class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:hover:text-white">
+                                Find my tickets
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/FindEvents"
+                                class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:hover:text-white">
+                                Find Events
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/help/contact"
+                                class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:hover:text-white">
+                                Help Center
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Main Content -->
+    
 
-				<div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-					<div class="flex items-center gap-4">
-						{% if session.role is defined %}
-						{% if session.role in ['Admin', 'Participant', 'Organizer'] %}
-						<button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
-							<span class="sr-only">
-								Open user menu
-							</span>
-							<img class="w-8 h-8 rounded-full" src="https://tailwindcss.com/img/jonathan.jpg" alt="user photo">
-						</button>
-						{% endif %}
-						{% else %}
-						<div class="sm:flex sm:gap-4">
-							<a class="rounded-md bg-[#fb8c00] hover:bg-[#fb8c00] px-5 py-2.5 text-sm font-medium text-white shadow inline-block" href="/login">
-								Login
-							</a>
-							<div class="hidden sm:flex">
-								<a class="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-[#fb8c00] hover:text-white" href="/register">
-									Register
-								</a>
-							</div>
-						</div>
-						{% endif %}
-					</div>
-					<!-- Dropdown menu -->
-					<div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
-						<div class="px-4 py-3">
-							<span class="block text-sm text-gray-900 dark:text-white inline-block">
-								{{ session.username }}
-							</span>
-							<span class="block text-sm text-gray-500 truncate dark:text-gray-400 inline-block">
-								name@flowbite.com
-							</span>
-						</div>
-						<ul class="py-2" aria-labelledby="user-menu-button">
-							{% if session.role is defined %}
-							{% if session.role == 'Admin' %}
-							<li>
-								<a href="/dashboard" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-									Dashboard
-								</a>
-							</li>
-							{% elseif session.role == 'Teacher' %}
-							<li>
-								<a href="/organisateur" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-									Dashboard
-								</a>
-							</li>
-							{% endif %}
-							<li>
-								<a href="#" class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-									Sign out
-								</a>
-							</li>
-							{% endif %}
-						</ul>
-					</div>
-					<button data-collapse-toggle="navbar-user" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-user" aria-expanded="false">
-						<span class="sr-only">
-							Open main menu
-						</span>
-						<svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 17 14">
-							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-						</svg>
-					</button>
-				</div>
-				<!-- Middle Navigation -->
-				<div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+    <div id="headerSection" class="bg-white flex items-center justify-center">
+        <!-- Background effects -->
+        <div class="fixed inset-0 -z-10">
+            <div class="absolute inset-0"></div>
+            <div
+                class="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-violet-500/10 rounded-full filter blur-3xl">
+            </div>
+            <div
+                class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-fuchsia-500/10 rounded-full filter blur-3xl">
+            </div>
+        </div>
+        <div class="w-full max-w-6xl mx-auto">
+            <!-- Carousel container -->
+            <div class="carousel-container relative">
+                <!-- Navigation buttons -->
+                <button
+                    class="nav-button absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation"
+                    onclick="prevSlide()" title="Previous slide">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                </button>
+                <button
+                    class="nav-button absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation"
+                    onclick="nextSlide()" title="Next slide">
+                    <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+                <!-- Carousel track -->
+                <div class="carousel-track relative h-[400px] sm:h-[500px] md:h-[448px] overflow-hidden">
+                    <!-- Carousel items -->
+                    <div class="carousel-item active absolute top-0 left-0 w-full h-full">
+                        <div class="w-full h-full p-4 sm:p-8">
+                            <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1515462277126-2dd0c162007a?auto=format&fit=crop&q=80"
+                                    alt="Geometric art installation"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-violet-500/40 to-purple-500/40 mix-blend-overlay">
+                                </div>
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                    <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
+                                        Digital Prism
+                                    </h3>
+                                    <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
+                                        Where geometry meets art in a stunning display of light and form.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item next absolute top-0 left-0 w-full h-full">
+                        <div class="w-full h-full p-4 sm:p-8">
+                            <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80"
+                                    alt="Futuristic tech setup"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/40 to-pink-500/40 mix-blend-overlay">
+                                </div>
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                    <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
+                                        Tech Haven
+                                    </h3>
+                                    <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
+                                        Immerse yourself in the cutting edge of technology and innovation.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item hidden absolute top-0 left-0 w-full h-full">
+                        <div class="w-full h-full p-4 sm:p-8">
+                            <div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
+                                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80"
+                                    alt="Abstract digital art"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-pink-500/40 to-rose-500/40 mix-blend-overlay">
+                                </div>
+                                <div
+                                    class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                                    <h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
+                                        Neural Dreams
+                                    </h3>
+                                    <p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
+                                        AI-generated masterpieces that blur the line between human and machine
+                                        creativity.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Indicators -->
+                <div class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-1 sm:gap-2 z-20">
+                    <button
+                        class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/40 hover:bg-white/60 transition-colors"
+                        title="Go to slide 1"></button>
+                    <button
+                        class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors"
+                        title="Go to slide 2"></button>
+                    <button
+                        class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors"
+                        title="Go to slide 3"></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-					<ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-						<li>
-							<a href="/home" class="block py-2 px-3 text-white bg-[#fb8c00] rounded md:bg-transparent md:text-[#fb8c00] md:p-0 md:dark:text-[#fb8c00]" aria-current="page">
-								Home
-							</a>
-						</li>
-						<li>
-							<a href="/login" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Create Events
-							</a>
-						</li>
-						<li>
-							<a href="/FindEvents/search" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Find my tickets
-							</a>
-						</li>
-						<li>
-							<a href="/FindEvents" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Find Events
-							</a>
-						</li>
-						<li>
-							<a href="/help/contact" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-[#fb8c00] md:p-0 dark:text-white md:dark:hover:text-[#fb8c00] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-								Help Center
-							</a>
-						</li>
-					</ul>
+    <main id="main" class="mt-5">
 
-				</div>
-			</div>
-		</nav>
-	</header>
-	<!-- Main Content -->
-	<div
-		id="headerSection" class="bg-white flex items-center justify-center">
-		<!-- Background effects -->
-		<div class="fixed inset-0 -z-10">
-			<div class="absolute inset-0"></div>
-			<div class="absolute top-1/4 left-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-violet-500/10 rounded-full filter blur-3xl"></div>
-			<div class="absolute bottom-1/4 right-1/4 w-48 h-48 sm:w-96 sm:h-96 bg-fuchsia-500/10 rounded-full filter blur-3xl"></div>
-		</div>
-		<div
-			class="w-full max-w-6xl mx-auto">
-			<!-- Carousel container -->
-			<div
-				class="carousel-container relative">
-				<!-- Navigation buttons -->
-				<button class="nav-button absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation" onclick="prevSlide()" title="Previous slide">
-					<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-					</svg>
-				</button>
-				<button class="nav-button absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center z-20 text-white touch-manipulation" onclick="nextSlide()" title="Next slide">
-					<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-					</svg>
-				</button>
-				<!-- Carousel track -->
-				<div
-					class="carousel-track relative h-[400px] sm:h-[500px] md:h-[448px] overflow-hidden">
-					<!-- Carousel items -->
-					<div class="carousel-item active absolute top-0 left-0 w-full h-full">
-						<div class="w-full h-full p-4 sm:p-8">
-							<div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
-								<img src="https://images.unsplash.com/photo-1515462277126-2dd0c162007a?auto=format&fit=crop&q=80" alt="Geometric art installation" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-								<div class="absolute inset-0 bg-gradient-to-br from-violet-500/40 to-purple-500/40 mix-blend-overlay"></div>
-								<div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-									<h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
-										Digital Prism
-									</h3>
-									<p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
-										Where geometry meets art in a stunning display of light and form.
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="carousel-item next absolute top-0 left-0 w-full h-full">
-						<div class="w-full h-full p-4 sm:p-8">
-							<div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
-								<img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80" alt="Futuristic tech setup" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-								<div class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/40 to-pink-500/40 mix-blend-overlay"></div>
-								<div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-									<h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
-										Tech Haven
-									</h3>
-									<p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
-										Immerse yourself in the cutting edge of technology and innovation.
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="carousel-item hidden absolute top-0 left-0 w-full h-full">
-						<div class="w-full h-full p-4 sm:p-8">
-							<div class="w-full h-full rounded-xl sm:rounded-2xl overflow-hidden relative group">
-								<img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Abstract digital art" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-								<div class="absolute inset-0 bg-gradient-to-br from-pink-500/40 to-rose-500/40 mix-blend-overlay"></div>
-								<div class="absolute inset-x-0 bottom-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-									<h3 class="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-3">
-										Neural Dreams
-									</h3>
-									<p class="text-gray-200 text-sm sm:text-base md:text-lg max-w-2xl">
-										AI-generated masterpieces that blur the line between human and machine creativity.
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- Indicators -->
-				<div class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2 flex gap-1 sm:gap-2 z-20">
-					<button class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/40 hover:bg-white/60 transition-colors" title="Go to slide 1"></button>
-					<button class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors" title="Go to slide 2"></button>
-					<button class="w-8 sm:w-12 h-1 sm:h-1.5 rounded-full bg-white/20 hover:bg-white/60 transition-colors" title="Go to slide 3"></button>
-				</div>
-			</div>
-		</div>
-	</div>
+        <section>
+            <div class="bg-white flex mx-auto">
+                <div class="mx-auto max-w-screen-2xl">
+                    <div class="mb-4 flex flex-col items-center md:mb-8 lg:flex-row lg:justify-between">
+                        <h2 class="mb-2 text-center text-2xl font-bold text-gray-800 lg:mb-0 lg:text-3xl">Categories
+                        </h2>
+                    </div>
 
-	<main id="main" class="mt-5">
+                    <div class="grid grid-cols-4 gap-4 rounded-lg md:grid-cols-6 lg:gap-6">
+                        <div
+                            class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50"
+                                fill="orange">
+                                <path
+                                    d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7l0 72 0 264c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L448 147 192 223.8 192 432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L128 200l0-72c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z" />
+                            </svg>
+                            <h3 class="mt-4 text-lg font-semibold">music</h3>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50"
+                                fill="orange">
+                                <path
+                                    d="M184 48l144 0c4.4 0 8 3.6 8 8l0 40L176 96l0-40c0-4.4 3.6-8 8-8zm-56 8l0 40L64 96C28.7 96 0 124.7 0 160l0 96 192 0 160 0 8.2 0c32.3-39.1 81.1-64 135.8-64c5.4 0 10.7 .2 16 .7l0-32.7c0-35.3-28.7-64-64-64l-64 0 0-40c0-30.9-25.1-56-56-56L184 0c-30.9 0-56 25.1-56 56zM320 352l-96 0c-17.7 0-32-14.3-32-32l0-32L0 288 0 416c0 35.3 28.7 64 64 64l296.2 0C335.1 449.6 320 410.5 320 368c0-5.4 .2-10.7 .7-16l-.7 0zm320 16a144 144 0 1 0 -288 0 144 144 0 1 0 288 0zM496 288c8.8 0 16 7.2 16 16l0 48 32 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-48 0c-8.8 0-16-7.2-16-16l0-64c0-8.8 7.2-16 16-16z" />
+                            </svg>
+                            <h3 class="mt-4 text-lg font-semibold">Business</h3>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50"
+                                fill="orange">
+                                <path
+                                    d="M416 0C400 0 288 32 288 176l0 112c0 35.3 28.7 64 64 64l32 0 0 128c0 17.7 14.3 32 32 32s32-14.3 32-32l0-128 0-112 0-208c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 .1S34.2 4.6 32.4 12.5L2.1 148.8C.7 155.1 0 161.5 0 167.9c0 45.9 35.1 83.6 80 87.7L80 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-224.4c44.9-4.1 80-41.8 80-87.7c0-6.4-.7-12.8-2.1-19.1L191.6 12.5c-1.8-8-9.3-13.3-17.4-12.4S160 7.8 160 16l0 134.2c0 5.4-4.4 9.8-9.8 9.8c-5.1 0-9.3-3.9-9.8-9L127.9 14.6C127.2 6.3 120.3 0 112 0s-15.2 6.3-15.9 14.6L83.7 151c-.5 5.1-4.7 9-9.8 9c-5.4 0-9.8-4.4-9.8-9.8L64 16zm48.3 152l-.3 0-.3 0 .3-.7 .3 .7z" />
+                            </svg>
+                            <h3 class="mt-4 text-lg font-semibold">food</h3>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50"
+                                fill="orange">
+                                <path
+                                    d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3L344 320c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
+                            </svg>
+                            <h3 class="mt-4 text-lg font-semibold">Drawing</h3>
+                        </div>
+                        <div
+                            class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50"
+                                fill="orange">
+                                <path
+                                    d="M544 248l0 3.3 69.7-69.7c21.9-21.9 21.9-57.3 0-79.2L535.6 24.4c-21.9-21.9-57.3-21.9-79.2 0L416.3 64.5c-2.7-.3-5.5-.5-8.3-.5L296 64c-37.1 0-67.6 28-71.6 64l-.4 0 0 120c0 22.1 17.9 40 40 40s40-17.9 40-40l0-72c0 0 0-.1 0-.1l0-15.9 16 0 136 0c0 0 0 0 .1 0l7.9 0c44.2 0 80 35.8 80 80l0 8zM336 192l0 56c0 39.8-32.2 72-72 72s-72-32.2-72-72l0-118.6c-35.9 6.2-65.8 32.3-76 68.2L99.5 255.2 26.3 328.4c-21.9 21.9-21.9 57.3 0 79.2l78.1 78.1c21.9 21.9 57.3 21.9 79.2 0l37.7-37.7c.9 0 1.8 .1 2.7 .1l160 0c26.5 0 48-21.5 48-48c0-5.6-1-11-2.7-16l2.7 0c26.5 0 48-21.5 48-48c0-12.8-5-24.4-13.2-33c25.7-5 45.1-27.6 45.2-54.8l0-.4c-.1-30.8-25.1-55.8-56-55.8c0 0 0 0 0 0l-120 0z" />
+                            </svg>
+                            <h3 class="mt-4 text-lg font-semibold">volunteering</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		<section>
-			<div class="bg-white py-6 sm:py-8 lg:py-12">
-				<div class="mx-auto max-w-screen-2xl px-4 md:px-8">
-					<div class="mb-4 flex flex-col items-center md:mb-8 lg:flex-row lg:justify-between">
-						<h2 class="mb-2 text-center text-2xl font-bold text-gray-800 lg:mb-0 lg:text-3xl">Categories</h2>
+        </section>
 
-						{# <p class="max-w-md text-center text-gray-400 lg:text-right">
-						Filler text is dummy text which has no meaning however looks very similar to real text.
-						</p> #}
-						
-					</div>
+        <section class="bg-gray-50 py-16 md:py-16">
+            <!-- Container -->
+            <div class="mx-auto w-full max-w-7xl px-5">
+                <!-- Title Section -->
+                <div class="text-center mb-12">
+                    <h2 class="mb-4 text-3xl font-bold md:text-5xl">
+                        Discover Exciting Events Near You
+                    </h2>
+                    <p class="text-gray-600 mt-2">
+                        Explore a wide range of events, from concerts and workshops to networking meetups.
+                    </p>
+                </div>
 
-					<div
-						class="grid grid-cols-4 gap-4 rounded-lg md:grid-cols-6 lg:gap-6">
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M338.9 446.8c-25.4 11-53.4 17.2-82.9 17.2C141.1 464 48 370.9 48 256S141.1 48 256 48s208 93.1 208 208c0 22.4-3.5 43.9-10.1 64.1c3.1 4.5 5.7 9.4 7.8 14.6c12.7-1.6 25.1 .4 36.2 5c9.1-26.2 14-54.4 14-83.7C512 114.6 397.4 0 256 0S0 114.6 0 256S114.6 512 256 512c35.4 0 69.1-7.2 99.7-20.2c-4.8-5.5-8.5-12.2-10.4-19.7l-6.5-25.3zM296 316c0-6.9-3.1-13.2-7.3-18.3c-4.3-5.2-10.1-9.7-16.7-13.4C258.7 276.9 241.4 272 224 272c-3.6 0-6.8 2.5-7.7 6s.6 7.2 3.8 9c0 0 0 0 0 0s0 0 0 0c0 0 0 0 0 0l.2 .1c.2 .1 .5 .3 .9 .5c.8 .5 2 1.2 3.4 2.1c2.8 1.9 6.5 4.5 10.2 7.6c3.7 3.1 7.2 6.6 9.6 10.1c2.5 3.5 3.5 6.4 3.5 8.6s-1 5-3.5 8.6c-2.5 3.5-5.9 6.9-9.6 10.1c-3.7 3.1-7.4 5.7-10.2 7.6c-1.4 .9-2.6 1.6-3.4 2.1c-.4 .2-.7 .4-.9 .5l-.2 .1c0 0 0 0 0 0c0 0 0 0 0 0s0 0 0 0s0 0 0 0s0 0 0 0c-2.5 1.4-4.1 4.1-4.1 7s1.6 5.6 4.1 7c0 0 0 0 0 0s0 0 0 0c0 0 0 0 0 0l.2 .1c.2 .1 .5 .3 .9 .5c.8 .5 2 1.2 3.4 2.1c2.8 1.9 6.5 4.5 10.2 7.6c3.7 3.1 7.2 6.6 9.6 10.1c2.5 3.5 3.5 6.4 3.5 8.6s-1 5-3.5 8.6c-2.5 3.5-5.9 6.9-9.6 10.1c-3.7 3.1-7.4 5.7-10.2 7.6c-1.4 .9-2.6 1.6-3.4 2.1c-.4 .2-.7 .4-.9 .5l-.2 .1c0 0 0 0 0 0c0 0 0 0 0 0s0 0 0 0s0 0 0 0c-3.2 1.8-4.7 5.5-3.8 9s4.1 6 7.7 6c17.4 0 34.7-4.9 47.9-12.3c6.6-3.7 12.5-8.2 16.7-13.4c4.3-5.1 7.3-11.4 7.3-18.3s-3.1-13.2-7.3-18.3c-4.3-5.2-10.1-9.7-16.7-13.4c-2.7-1.5-5.7-3-8.7-4.3c3.1-1.3 6-2.7 8.7-4.3c6.6-3.7 12.5-8.2 16.7-13.4c4.3-5.1 7.3-11.4 7.3-18.3zM176.4 240a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm159.3-20c10.6 0 19.9 3.8 25.4 9.7c7.6 8.1 20.2 8.5 28.3 .9s8.5-20.2 .9-28.3C375.7 186.8 355 180 335.6 180s-40.1 6.8-54.6 22.3c-7.6 8.1-7.1 20.7 .9 28.3s20.7 7.1 28.3-.9c5.5-5.8 14.8-9.7 25.4-9.7zM434 352.3c-6-23.2-28.8-37-51.1-30.8s-35.4 30.1-29.5 53.4l22.9 89.3c2.2 8.7 11.2 13.9 19.8 11.4l84.9-23.8c22.2-6.2 35.4-30.1 29.5-53.4s-28.8-37-51.1-30.8l-20.2 5.6-5.4-21z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">Dating</h3>
-						</div>
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M499.1 6.3c8.1 6 12.9 15.6 12.9 25.7l0 72 0 264c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L448 147 192 223.8 192 432c0 44.2-43 80-96 80s-96-35.8-96-80s43-80 96-80c11.2 0 22 1.6 32 4.6L128 200l0-72c0-14.1 9.3-26.6 22.8-30.7l320-96c9.7-2.9 20.2-1.1 28.3 5z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">music</h3>
-						</div>
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M184 48l144 0c4.4 0 8 3.6 8 8l0 40L176 96l0-40c0-4.4 3.6-8 8-8zm-56 8l0 40L64 96C28.7 96 0 124.7 0 160l0 96 192 0 160 0 8.2 0c32.3-39.1 81.1-64 135.8-64c5.4 0 10.7 .2 16 .7l0-32.7c0-35.3-28.7-64-64-64l-64 0 0-40c0-30.9-25.1-56-56-56L184 0c-30.9 0-56 25.1-56 56zM320 352l-96 0c-17.7 0-32-14.3-32-32l0-32L0 288 0 416c0 35.3 28.7 64 64 64l296.2 0C335.1 449.6 320 410.5 320 368c0-5.4 .2-10.7 .7-16l-.7 0zm320 16a144 144 0 1 0 -288 0 144 144 0 1 0 288 0zM496 288c8.8 0 16 7.2 16 16l0 48 32 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-48 0c-8.8 0-16-7.2-16-16l0-64c0-8.8 7.2-16 16-16z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">Business</h3>
-						</div>
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M416 0C400 0 288 32 288 176l0 112c0 35.3 28.7 64 64 64l32 0 0 128c0 17.7 14.3 32 32 32s32-14.3 32-32l0-128 0-112 0-208c0-17.7-14.3-32-32-32zM64 16C64 7.8 57.9 1 49.7 .1S34.2 4.6 32.4 12.5L2.1 148.8C.7 155.1 0 161.5 0 167.9c0 45.9 35.1 83.6 80 87.7L80 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-224.4c44.9-4.1 80-41.8 80-87.7c0-6.4-.7-12.8-2.1-19.1L191.6 12.5c-1.8-8-9.3-13.3-17.4-12.4S160 7.8 160 16l0 134.2c0 5.4-4.4 9.8-9.8 9.8c-5.1 0-9.3-3.9-9.8-9L127.9 14.6C127.2 6.3 120.3 0 112 0s-15.2 6.3-15.9 14.6L83.7 151c-.5 5.1-4.7 9-9.8 9c-5.4 0-9.8-4.4-9.8-9.8L64 16zm48.3 152l-.3 0-.3 0 .3-.7 .3 .7z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">food</h3>
-						</div>
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3L344 320c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">Drawing</h3>
-						</div>
-						<div class="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-300 transform hover:scale-105 text-gray-400">
-							<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 512 512" height="50" width="50" fill="orange">
-								<path d="M544 248l0 3.3 69.7-69.7c21.9-21.9 21.9-57.3 0-79.2L535.6 24.4c-21.9-21.9-57.3-21.9-79.2 0L416.3 64.5c-2.7-.3-5.5-.5-8.3-.5L296 64c-37.1 0-67.6 28-71.6 64l-.4 0 0 120c0 22.1 17.9 40 40 40s40-17.9 40-40l0-72c0 0 0-.1 0-.1l0-15.9 16 0 136 0c0 0 0 0 .1 0l7.9 0c44.2 0 80 35.8 80 80l0 8zM336 192l0 56c0 39.8-32.2 72-72 72s-72-32.2-72-72l0-118.6c-35.9 6.2-65.8 32.3-76 68.2L99.5 255.2 26.3 328.4c-21.9 21.9-21.9 57.3 0 79.2l78.1 78.1c21.9 21.9 57.3 21.9 79.2 0l37.7-37.7c.9 0 1.8 .1 2.7 .1l160 0c26.5 0 48-21.5 48-48c0-5.6-1-11-2.7-16l2.7 0c26.5 0 48-21.5 48-48c0-12.8-5-24.4-13.2-33c25.7-5 45.1-27.6 45.2-54.8l0-.4c-.1-30.8-25.1-55.8-56-55.8c0 0 0 0 0 0l-120 0z" />
-							</svg>
-							<h3 class="mt-4 text-lg font-semibold">volunteering</h3>
-						</div>
-					</div>
-				</div>
-			</div>
+                <!-- Event Category Buttons -->
+                <div class="my-10 md:my-16 flex flex-wrap justify-center gap-3">
+                    {% for category in categoryHomePage %}
+                    <button
+                        class="px-6 py-2 bg-[#FF9800] text-black hover:text-white hover:bg-gray-800 font-semibold rounded-full transition-all duration-300">
+                        {{ category.name }}
+                    </button>
+                    {% endfor %}
+                </div>
 
-		</section>
+                <!-- Event Content -->
+                <div class="max-w-6xl mx-auto">
+                    <!-- First Row (2 Columns) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
 
-		<section
-			class="bg-gray-50 py-16 md:py-16">
-			<!-- Container -->
-			<div
-				class="mx-auto w-full max-w-7xl px-5">
-				<!-- Title Section -->
-				<div class="text-center mb-12">
-					<h2 class="mb-4 text-3xl font-bold md:text-5xl">
-						Discover Exciting Events Near You
-					</h2>
-					<p class="text-gray-600 mt-2">
-						Explore a wide range of events, from concerts and workshops to networking meetups.
-					</p>
-				</div>
+                        <!-- Event Item 1 -->
+                        <div
+                            class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative h-80">
+                                <img class="h-80 w-full object-cover"
+                                    src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80"
+                                    alt="Event Image" />
+                                <span
+                                    class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
+                                    Music
+                                </span>
+                            </div>
+                            <div class="p-6 flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-xl font-bold mb-2">
+                                        Summer Music Festival 2023
+                                    </h2>
+                                    <p class="text-gray-600">
+                                        Join us for an unforgettable night of live music and performances.
+                                    </p>
+                                    <p class="text-gray-500 text-sm mt-2">
+                                        📅 October 15, 2023 | 🕒 6:00 PM
+                                    </p>
+                                    <p class="text-gray-500 text-sm">
+                                        📍 Central Park, New York
+                                    </p>
+                                </div>
+                                <button class="cursor-pointer hover:scale-110 transition-transform duration-300">
+                                    <svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z"
+                                            fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
+                                        <path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M20.625 30H39.3751" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Event Item 2 -->
+                        <div
+                            class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative h-80">
+                                <img class="h-80 w-full object-cover"
+                                    src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80"
+                                    alt="Event Image" />
+                                <span
+                                    class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
+                                    Workshop
+                                </span>
+                            </div>
+                            <div class="p-6 flex justify-between items-center">
+                                <div>
+                                    <h2 class="text-xl font-bold mb-2">
+                                        Creative Writing Workshop
+                                    </h2>
+                                    <p class="text-gray-600">
+                                        Learn the art of storytelling from award-winning authors.
+                                    </p>
+                                    <p class="text-gray-500 text-sm mt-2">
+                                        📅 November 5, 2023 | 🕒 10:00 AM
+                                    </p>
+                                    <p class="text-gray-500 text-sm">
+                                        📍 Downtown Library, San Francisco
+                                    </p>
+                                </div>
+                                <button class="cursor-pointer hover:scale-110 transition-transform duration-300">
+                                    <svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z"
+                                            fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
+                                        <path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M20.625 30H39.3751" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
-				<!-- Event Category Buttons -->
-				<div class="my-10 md:my-16 flex flex-wrap justify-center gap-3">
-					{% for category in categoryHomePage %}
-					<button class="px-6 py-2 bg-[#FF9800] text-black hover:text-white hover:bg-gray-800 font-semibold rounded-full transition-all duration-300">
-						{{ category.name }}
-					</button>
-					{% endfor %}
-				</div>
-
-				<!-- Event Content -->
-				<div
-					class="max-w-6xl mx-auto">
-					<!-- First Row (2 Columns) -->
-					<div
-						class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-
-						<!-- Event Item 1 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-80">
-								<img class="h-80 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Music
-								</span>
-							</div>
-							<div class="p-6 flex justify-between items-center">
-								<div>
-									<h2 class="text-xl font-bold mb-2">
-										Summer Music Festival 2023
-									</h2>
-									<p class="text-gray-600">
-										Join us for an unforgettable night of live music and performances.
-									</p>
-									<p class="text-gray-500 text-sm mt-2">
-										📅 October 15, 2023 | 🕒 6:00 PM
-									</p>
-									<p class="text-gray-500 text-sm">
-										📍 Central Park, New York
-									</p>
-								</div>
-								<button class="cursor-pointer hover:scale-110 transition-transform duration-300">
-									<svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z" fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
-										<path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M20.625 30H39.3751" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</button>
-							</div>
-						</div>
-						<!-- Event Item 2 -->
-						<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-							<div class="relative h-80">
-								<img class="h-80 w-full object-cover" src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?auto=format&fit=crop&q=80" alt="Event Image" />
-								<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-									Workshop
-								</span>
-							</div>
-							<div class="p-6 flex justify-between items-center">
-								<div>
-									<h2 class="text-xl font-bold mb-2">
-										Creative Writing Workshop
-									</h2>
-									<p class="text-gray-600">
-										Learn the art of storytelling from award-winning authors.
-									</p>
-									<p class="text-gray-500 text-sm mt-2">
-										📅 November 5, 2023 | 🕒 10:00 AM
-									</p>
-									<p class="text-gray-500 text-sm">
-										📍 Downtown Library, San Francisco
-									</p>
-								</div>
-								<button class="cursor-pointer hover:scale-110 transition-transform duration-300">
-									<svg class="h-12 w-12" width="60" height="60" viewbox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-										<path d="M30.0001 52.5001C42.4265 52.5001 52.5001 42.4265 52.5001 30.0001C52.5001 17.5736 42.4265 7.5 30.0001 7.5C17.5736 7.5 7.5 17.5736 7.5 30.0001C7.5 42.4265 17.5736 52.5001 30.0001 52.5001Z" fill="black" stroke="black" stroke-width="2" stroke-miterlimit="10" />
-										<path d="M31.4297 37.9454L39.375 30L31.4297 22.0547" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M20.625 30H39.3751" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-									</svg>
-								</button>
-							</div>
-						</div>
-
-					</div>
+                    </div>
 
 
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-						{% for event in eventsAccepted %}
-							<!-- Event Item -->
-							<div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-								<div class="relative h-72">
-									<img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}" alt="Event Image" />
-									<span class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
-										{{ event.category_name }}
-									</span>
-								</div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {% for event in eventsAccepted %}
+                        <!-- Event Item -->
+                        <div
+                            class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative h-72">
+                                <img class="h-72 w-full object-cover" src="{{ '/assets/images/' ~ event.event_image }}"
+                                    alt="Event Image" />
+                                <span
+                                    class="absolute bottom-5 right-5 bg-[#FF9800] text-gray-800 hover:text-white text-sm font-semibold px-3 py-2 rounded-full hover:bg-gray-800">
+                                    {{ event.category_name }}
+                                </span>
+                            </div>
 
-								<div class="p-6">
-									<h2 class="text-xl font-bold mb-2">
-										{{ event.title }}
-									</h2>
+                            <div class="p-6">
+                                <h2 class="text-xl font-bold mb-2">
+                                    {{ event.title }}
+                                </h2>
 
-									<p class="text-gray-600">
-										{{ event.description | slice(0, 200) ~ '...' }}
-									</p>
+                                <p class="text-gray-600">
+                                    {{ event.description | slice(0, 200) ~ '...' }}
+                                </p>
 
-									<div class="mt-2">
-										<span class="text-sm text-gray-500">Prix :</span>
-										<span class="text-sm {{ event.price > 0 ? 'text-green-600' : 'text-gray-600' }}">
-											{{ event.price > 0 ? event.price ~ ' €' : 'Gratuit' }}
-										</span>
-									</div>
+                                <div class="mt-2">
+                                    <span class="text-sm text-gray-500">Prix :</span>
+                                    <span class="text-sm {{ event.price > 0 ? 'text-green-600' : 'text-gray-600' }}">
+                                        {{ event.price > 0 ? event.price ~ ' €' : 'Gratuit' }}
+                                    </span>
+                                </div>
 
-									<p class="text-gray-500 text-sm mt-2">
-										📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
-									</p>
-									<p class="text-gray-500 text-sm mt-2">
-										📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
-									</p>
+                                <p class="text-gray-500 text-sm mt-2">
+                                    📅 {{ event.startEventAt | date('Y-m-d 🕒 H:i') }}
+                                </p>
+                                <p class="text-gray-500 text-sm mt-2">
+                                    📅 {{ event.endEventAt | date('Y-m-d 🕒 H:i') }}
+                                </p>
 
-									<p class="text-gray-500 text-sm mt-2">
-										📍 {{ event.adresse ?? 'En ligne' }}
-									</p>
+                                <p class="text-gray-500 text-sm mt-2">
+                                    📍 {{ event.adresse ?? 'En ligne' }}
+                                </p>
 
-									<div class="flex items-center mt-4 justify-between">
-										<div>
-											{% for i in 1..5 %}
-												{% if i <= event.rating %}
-													<span class="text-yellow-400">★</span>
-												{% else %}
-													<span class="text-gray-300">★</span>
-												{% endif %}
-											{% endfor %}
-											<span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
-										</div>
-										<!-- Bouton de réservation -->
-										<div>
-											<a href="/reservation/{{ event.event_id }}" class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
-												Réserver
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						{% else %}
-							<p class="text-gray-600">Aucun événement disponible.</p>
-						{% endfor %}
-					</div>
+                                <div class="flex items-center mt-4 justify-between">
+                                    <div>
+                                        {% for i in 1..5 %}
+                                        {% if i <= event.rating %}
+                                        <span class="text-yellow-400">★</span>
+                                        {% else %}
+                                        <span class="text-gray-300">★</span>
+                                        {% endif %}
+                                        {% endfor %}
+                                        <span class="ml-2 text-gray-500 text-sm">({{ event.rating ?? '0'}}/5)</span>
+                                    </div>
+                                    <!-- Bouton de réservation -->
+                                    <div>
+                                        <a href="/EventDataille/{{ event.event_id }}"
+                                            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors duration-300">
+                                            Réserver
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-600">Aucun événement disponible.</p>
+                        {% endfor %}
+                    </div>
 
-					<!-- Load More Button -->
-					<div class="mt-12 text-center">
-						<button class="px-8 py-3 bg-[#FF9800] text-gray-800 hover:text-white  rounded-lg hover:bg-gray-800 transition-all duration-300">
-							Load More Events
-						</button>
-					</div>
-				</div>
-			</div>
-		</section>
+                    <!-- Load More Button -->
+                    <div class="mt-12 text-center">
+                        <button
+                            class="px-8 py-3 bg-[#FF9800] text-gray-800 hover:text-white  rounded-lg hover:bg-gray-800 transition-all duration-300">
+                            Load More Events
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-			{# scroll sponsor  #}
+        {# scroll sponsor  #}
 
 
-		<section id="auto-scroll-section" class="bg-white dark:bg-white">
-			<div class="py-8 lg:py-16 mx-auto max-w-screen-xl px-4">
-				<h2 class="mb-8 lg:mb-16 text-3xl font-extrabold tracking-tight leading-tight text-center text-gray-600 dark:text-gray md:text-4xl">
-					You’ll be in good company
-				</h2>
-				<div
-					class="relative overflow-x-hidden">
-					<!-- Duplicate content for seamless scroll -->
-					<div
-						class="flex animate-scroll hover:animation-paused text-gray-500 dark:text-gray-400">
-						<!-- Original sponsors -->
-						<div class="flex shrink-0 items-center justify-around min-w-full">
+        <section id="auto-scroll-section" class="bg-white dark:bg-white">
+            <div class="py-8 lg:py-16 mx-auto max-w-screen-xl px-4">
+                <h2
+                    class="mb-8 lg:mb-16 text-3xl font-extrabold tracking-tight leading-tight text-center text-gray-600 dark:text-gray md:text-4xl">
+                    You’ll be in good company
+                </h2>
+                <div class="relative overflow-x-hidden">
+                    <!-- Duplicate content for seamless scroll -->
+                    <div class="flex animate-scroll hover:animation-paused text-gray-500 dark:text-gray-400">
+                        <!-- Original sponsors -->
+                        <div class="flex shrink-0 items-center justify-around min-w-full">
 
-							<!-- All your sponsor SVG elements here (6 items) -->
-							{% for sponsor in SponsorsHomePage %}
-							<a href="#" class="flex justify-center items-center px-8">
-								<img src="{{'/assets/images/' ~ sponsor.sponsor_image}}" class="h-12 hover:text-gray-900 dark:hover:text-white">
-								{# <p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p> #}
-							</a>
-							{% endfor %}
-						</div>
-						<!-- Duplicated sponsors -->
-						 <div class="flex shrink-0 items-center justify-around min-w-full">
-							<!-- All your sponsor SVG elements here (6 items) -->
+                            <!-- All your sponsor SVG elements here (6 items) -->
+                            {% for sponsor in SponsorsHomePage %}
+                            <a href="#" class="flex justify-center items-center px-8">
+                                <img src="{{'/assets/images/' ~ sponsor.sponsor_image}}"
+                                    class="h-12 hover:text-gray-900 dark:hover:text-white">
+                                {# <p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p> #}
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <!-- Duplicated sponsors -->
+                        <div class="flex shrink-0 items-center justify-around min-w-full">
+                            <!-- All your sponsor SVG elements here (6 items) -->
 
-							{% for sponsor in SponsorsHomePage %}
-							<a href="#" class="flex justify-center items-center px-8">
-								<img src="{{'/assets/images/' ~ sponsor.sponsor_image}}" class="h-9 hover:text-gray-900 dark:hover:text-white bg-red-400">
-								{# <p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p> #}
-							</a>
-							{% endfor %}
+                            {% for sponsor in SponsorsHomePage %}
+                            <a href="#" class="flex justify-center items-center px-8">
+                                <img src="{{'/assets/images/' ~ sponsor.sponsor_image}}"
+                                    class="h-9 hover:text-gray-900 dark:hover:text-white bg-red-400">
+                                {# <p class="text-xl font-semibold">{{ sponsor.name_sponsor}}</p> #}
+                            </a>
+                            {% endfor %}
 
-							</div> 
-					</div>
-				</div>
-			</div>
-		</section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-	</main>
+    </main>
 
-	<footer class="mt-8 dark:bg-gray-900 pt-9">
-		<div class="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
-			<div class="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
-				<div class="md:w-[316px]">
-					<p class="text-[18px] font-medium text-white">
-					<h1 class="text-white font-extrabold">
-						<span class="text-orange-500">EVENTBRO
-					</h1>
-					</p>
-					</p>
-					<p class="mt-[18px] text-[15px] font-normal text-white/[80%]">Lorem ipsum dolor sit amet consectetur adipisicing
-						elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis enim animi
-						placeat eaque nesciunt alias beatae id, at dicta.</p>
-					<div class="mt-[18px] flex gap-4">
-						<a class="hover:scale-110" target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/facebook.svg" /></a>
-						<a class="hover:scale-110" target="_blank" href="/"><img alt="linkdin icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/linkdin.svg" /></a>
-						<a class="hover:scale-110" target="_blank" href="/"><img alt="instagram icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/instagram1.svg" /></a>
-						<a class="hover:scale-110" target="_blank" href=""><img alt="twitter icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/twitter.svg" /></a>
-						<a class="hover:scale-110" target="_blank" href="https://www.youtube.com/"><img alt="youtube icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/youtube.svg" /></a>
-					</div>
-				</div>
-				<div class="md:w-[316px]">
-					<div class="mt-[23px] flex">
-						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
-							<svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M20.8472 14.8554L16.4306 12.8764L16.4184 12.8707C16.1892 12.7727 15.939 12.7333 15.6907 12.7562C15.4424 12.7792 15.2037 12.8636 14.9963 13.002C14.9718 13.0181 14.9484 13.0357 14.9259 13.0545L12.6441 14.9998C11.1984 14.2976 9.70595 12.8164 9.00376 11.3895L10.9519 9.07294C10.9706 9.0495 10.9884 9.02606 11.0053 9.00075C11.1407 8.79384 11.2229 8.55667 11.2445 8.31035C11.2661 8.06402 11.2264 7.81618 11.1291 7.58887V7.57762L9.14438 3.15356C9.0157 2.85662 8.79444 2.60926 8.51362 2.44841C8.2328 2.28756 7.9075 2.22184 7.58626 2.26106C6.31592 2.42822 5.14986 3.05209 4.30588 4.01615C3.4619 4.98021 2.99771 6.21852 3.00001 7.49981C3.00001 14.9436 9.05626 20.9998 16.5 20.9998C17.7813 21.0021 19.0196 20.5379 19.9837 19.6939C20.9477 18.85 21.5716 17.6839 21.7388 16.4136C21.7781 16.0924 21.7125 15.7672 21.5518 15.4864C21.3911 15.2056 21.144 14.9843 20.8472 14.8554ZM16.5 19.4998C13.3185 19.4963 10.2682 18.2309 8.01856 15.9813C5.76888 13.7316 4.50348 10.6813 4.50001 7.49981C4.49648 6.58433 4.82631 5.69887 5.42789 5.00879C6.02947 4.3187 6.86167 3.87118 7.76907 3.74981C7.7687 3.75355 7.7687 3.75732 7.76907 3.76106L9.73782 8.16731L7.80001 10.4867C7.78034 10.5093 7.76247 10.5335 7.74657 10.5589C7.60549 10.7754 7.52273 11.0246 7.5063 11.2825C7.48988 11.5404 7.54035 11.7981 7.65282 12.0307C8.5022 13.7679 10.2525 15.5051 12.0084 16.3536C12.2428 16.465 12.502 16.5137 12.7608 16.495C13.0196 16.4762 13.2692 16.3907 13.485 16.2467C13.5091 16.2305 13.5322 16.2129 13.5544 16.1942L15.8334 14.2498L20.2397 16.2232C20.2397 16.2232 20.2472 16.2232 20.25 16.2232C20.1301 17.1319 19.6833 17.9658 18.9931 18.5689C18.3028 19.172 17.4166 19.5029 16.5 19.4998Z" fill="white"></path>
-							</svg>
-						</div>
-						<div class="ml-[18px]">
-							<a href="tel:+911800123444" class="font-Inter text-[14px] font-medium text-white">+91 1800123444</a>
-							<p class="font-Inter text-[12px] font-medium text-white">Support Number</p>
-						</div>
-					</div>
-					<div class="mt-[23px] flex">
-						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
-							<svg width="20" height="15" viewbox="0 0 20 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M19 0H1C0.801088 0 0.610322 0.0790178 0.46967 0.21967C0.329018 0.360322 0.25 0.551088 0.25 0.75V13.5C0.25 13.8978 0.408035 14.2794 0.68934 14.5607C0.970644 14.842 1.35218 15 1.75 15H18.25C18.6478 15 19.0294 14.842 19.3107 14.5607C19.592 14.2794 19.75 13.8978 19.75 13.5V0.75C19.75 0.551088 19.671 0.360322 19.5303 0.21967C19.3897 0.0790178 19.1989 0 19 0ZM10 7.98281L2.92844 1.5H17.0716L10 7.98281ZM7.25406 7.5L1.75 12.5447V2.45531L7.25406 7.5ZM8.36406 8.51719L9.48906 9.55312C9.62743 9.68014 9.80842 9.75062 9.99625 9.75062C10.1841 9.75062 10.3651 9.68014 10.5034 9.55312L11.6284 8.51719L17.0659 13.5H2.92844L8.36406 8.51719ZM12.7459 7.5L18.25 2.45438V12.5456L12.7459 7.5Z" fill="white"></path>
-							</svg>
-						</div>
-						<div class="ml-[18px]">
-							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">help@lorem.com</a>
-							<p class="font-Inter text-[12px] font-medium text-[#fff]">Support Email</p>
-						</div>
-					</div>
-					<div class="mt-[23px] flex">
-						<div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
-							<svg width="18" height="21" viewbox="0 0 18 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M9 4.5C8.25832 4.5 7.5333 4.71993 6.91661 5.13199C6.29993 5.54404 5.81928 6.12971 5.53545 6.81494C5.25162 7.50016 5.17736 8.25416 5.32205 8.98159C5.46675 9.70902 5.8239 10.3772 6.34835 10.9017C6.8728 11.4261 7.54098 11.7833 8.26841 11.9279C8.99584 12.0726 9.74984 11.9984 10.4351 11.7145C11.1203 11.4307 11.706 10.9501 12.118 10.3334C12.5301 9.7167 12.75 8.99168 12.75 8.25C12.75 7.25544 12.3549 6.30161 11.6517 5.59835C10.9484 4.89509 9.99456 4.5 9 4.5ZM9 10.5C8.55499 10.5 8.11998 10.368 7.74997 10.1208C7.37996 9.87357 7.09157 9.52217 6.92127 9.11104C6.75097 8.6999 6.70642 8.2475 6.79323 7.81105C6.88005 7.37459 7.09434 6.97368 7.40901 6.65901C7.72368 6.34434 8.12459 6.13005 8.56105 6.04323C8.9975 5.95642 9.4499 6.00097 9.86104 6.17127C10.2722 6.34157 10.6236 6.62996 10.8708 6.99997C11.118 7.36998 11.25 7.80499 11.25 8.25C11.25 8.84674 11.0129 9.41903 10.591 9.84099C10.169 10.2629 9.59674 10.5 9 10.5ZM9 0C6.81273 0.00248131 4.71575 0.872472 3.16911 2.41911C1.62247 3.96575 0.752481 6.06273 0.75 8.25C0.75 11.1938 2.11031 14.3138 4.6875 17.2734C5.84552 18.6108 7.14886 19.8151 8.57344 20.8641C8.69954 20.9524 8.84978 20.9998 9.00375 20.9998C9.15772 20.9998 9.30796 20.9524 9.43406 20.8641C10.856 19.8147 12.1568 18.6104 13.3125 17.2734C15.8859 14.3138 17.25 11.1938 17.25 8.25C17.2475 6.06273 16.3775 3.96575 14.8309 2.41911C13.2843 0.872472 11.1873 0.00248131 9 0ZM9 19.3125C7.45031 18.0938 2.25 13.6172 2.25 8.25C2.25 6.45979 2.96116 4.7429 4.22703 3.47703C5.4929 2.21116 7.20979 1.5 9 1.5C10.7902 1.5 12.5071 2.21116 13.773 3.47703C15.0388 4.7429 15.75 6.45979 15.75 8.25C15.75 13.6153 10.5497 18.0938 9 19.3125Z" fill="white"></path>
-							</svg>
-						</div>
-						<div class="ml-[18px]">
-							<a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">Sub Nerul, Mumbia,
-								India, 123456</a>
-							<p class="font-Inter text-[12px] font-medium text-white">Address</p>
-						</div>
-					</div>
-				</div>
-				<div class="mt-6 flex w-full flex-col justify-between text-white sm:flex-row md:mt-0 md:max-w-[341px]">
-					<div class="">
-						<p class="text-deutziawhite font-inter text-[18px] font-medium leading-normal">Pages</p>
-						<ul>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/">Home</a>
-							</li>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/our-tutors">News</a>
-							</li>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/become-a-tutor">Contact</a>
-							</li>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/plans-and-pricing">Plans and pricing</a>
-							</li>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/terms-and-conditions">Terms and conditions</a>
-							</li>
-							<li class="mt-[15px]">
-								<a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold" href="/privacy-policy">Privcay policy</a>
-							</li>
-						</ul>
-					</div>
-					<div class="mt-6 flex flex-col gap-4 sm:mt-0">
-						<p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
-						<div class="flex gap-4 sm:flex-col">
-							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/google-store.svg" /></a>
-							<a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/apple-store.svg" /></a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<hr class="mt-[30px] text-white" />
-			<div class="flex items-center justify-center pb-8 pt-[9px] md:py-8">
-				<p class="text-[10px] font-normal text-white md:text-[12px]">
-					© Copyright
-					<!-- -->
-					2024
-					<!-- -->
-					, All Rights Reserved by YOUR WEBSITES. PVT. LTD
-				</p>
-			</div>
-		</div>
-	</footer>
+    <footer class="mt-8 dark:bg-gray-900 pt-9">
+        <div class="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
+            <div class="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
+                <div class="md:w-[316px]">
+                    <p class="text-[18px] font-medium text-white">
+                    <h1 class="text-white font-extrabold">
+                        <span class="text-orange-500">EVENTBRO
+                    </h1>
+                    </p>
+                    </p>
+                    <p class="mt-[18px] text-[15px] font-normal text-white/[80%]">Lorem ipsum dolor sit amet consectetur
+                        adipisicing
+                        elit. Eos, fugit non. Incidunt dolorum adipisci, tempore asperiores nemo odio facere officiis
+                        enim animi
+                        placeat eaque nesciunt alias beatae id, at dicta.</p>
+                    <div class="mt-[18px] flex gap-4">
+                        <a class="hover:scale-110" target="_blank" href="#"><img alt="facebook icon" loading="lazy"
+                                width="36" height="36" decoding="async" data-nimg="1" style="color:transparent"
+                                src="https://www.englishyaari.com/img/facebook.svg" /></a>
+                        <a class="hover:scale-110" target="_blank" href="/"><img alt="linkdin icon" loading="lazy"
+                                width="36" height="36" decoding="async" data-nimg="1" style="color:transparent"
+                                src="https://www.englishyaari.com/img/linkdin.svg" /></a>
+                        <a class="hover:scale-110" target="_blank" href="/"><img alt="instagram icon" loading="lazy"
+                                width="36" height="36" decoding="async" data-nimg="1" style="color:transparent"
+                                src="https://www.englishyaari.com/img/instagram1.svg" /></a>
+                        <a class="hover:scale-110" target="_blank" href=""><img alt="twitter icon" loading="lazy"
+                                width="36" height="36" decoding="async" data-nimg="1" style="color:transparent"
+                                src="https://www.englishyaari.com/img/twitter.svg" /></a>
+                        <a class="hover:scale-110" target="_blank" href="https://www.youtube.com/"><img
+                                alt="youtube icon" loading="lazy" width="36" height="36" decoding="async" data-nimg="1"
+                                style="color:transparent" src="https://www.englishyaari.com/img/youtube.svg" /></a>
+                    </div>
+                </div>
+                <div class="md:w-[316px]">
+                    <div class="mt-[23px] flex">
+                        <div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+                            <svg width="24" height="24" viewbox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M20.8472 14.8554L16.4306 12.8764L16.4184 12.8707C16.1892 12.7727 15.939 12.7333 15.6907 12.7562C15.4424 12.7792 15.2037 12.8636 14.9963 13.002C14.9718 13.0181 14.9484 13.0357 14.9259 13.0545L12.6441 14.9998C11.1984 14.2976 9.70595 12.8164 9.00376 11.3895L10.9519 9.07294C10.9706 9.0495 10.9884 9.02606 11.0053 9.00075C11.1407 8.79384 11.2229 8.55667 11.2445 8.31035C11.2661 8.06402 11.2264 7.81618 11.1291 7.58887V7.57762L9.14438 3.15356C9.0157 2.85662 8.79444 2.60926 8.51362 2.44841C8.2328 2.28756 7.9075 2.22184 7.58626 2.26106C6.31592 2.42822 5.14986 3.05209 4.30588 4.01615C3.4619 4.98021 2.99771 6.21852 3.00001 7.49981C3.00001 14.9436 9.05626 20.9998 16.5 20.9998C17.7813 21.0021 19.0196 20.5379 19.9837 19.6939C20.9477 18.85 21.5716 17.6839 21.7388 16.4136C21.7781 16.0924 21.7125 15.7672 21.5518 15.4864C21.3911 15.2056 21.144 14.9843 20.8472 14.8554ZM16.5 19.4998C13.3185 19.4963 10.2682 18.2309 8.01856 15.9813C5.76888 13.7316 4.50348 10.6813 4.50001 7.49981C4.49648 6.58433 4.82631 5.69887 5.42789 5.00879C6.02947 4.3187 6.86167 3.87118 7.76907 3.74981C7.7687 3.75355 7.7687 3.75732 7.76907 3.76106L9.73782 8.16731L7.80001 10.4867C7.78034 10.5093 7.76247 10.5335 7.74657 10.5589C7.60549 10.7754 7.52273 11.0246 7.5063 11.2825C7.48988 11.5404 7.54035 11.7981 7.65282 12.0307C8.5022 13.7679 10.2525 15.5051 12.0084 16.3536C12.2428 16.465 12.502 16.5137 12.7608 16.495C13.0196 16.4762 13.2692 16.3907 13.485 16.2467C13.5091 16.2305 13.5322 16.2129 13.5544 16.1942L15.8334 14.2498L20.2397 16.2232C20.2397 16.2232 20.2472 16.2232 20.25 16.2232C20.1301 17.1319 19.6833 17.9658 18.9931 18.5689C18.3028 19.172 17.4166 19.5029 16.5 19.4998Z"
+                                    fill="white"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-[18px]">
+                            <a href="tel:+911800123444" class="font-Inter text-[14px] font-medium text-white">+91
+                                1800123444</a>
+                            <p class="font-Inter text-[12px] font-medium text-white">Support Number</p>
+                        </div>
+                    </div>
+                    <div class="mt-[23px] flex">
+                        <div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+                            <svg width="20" height="15" viewbox="0 0 20 15" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M19 0H1C0.801088 0 0.610322 0.0790178 0.46967 0.21967C0.329018 0.360322 0.25 0.551088 0.25 0.75V13.5C0.25 13.8978 0.408035 14.2794 0.68934 14.5607C0.970644 14.842 1.35218 15 1.75 15H18.25C18.6478 15 19.0294 14.842 19.3107 14.5607C19.592 14.2794 19.75 13.8978 19.75 13.5V0.75C19.75 0.551088 19.671 0.360322 19.5303 0.21967C19.3897 0.0790178 19.1989 0 19 0ZM10 7.98281L2.92844 1.5H17.0716L10 7.98281ZM7.25406 7.5L1.75 12.5447V2.45531L7.25406 7.5ZM8.36406 8.51719L9.48906 9.55312C9.62743 9.68014 9.80842 9.75062 9.99625 9.75062C10.1841 9.75062 10.3651 9.68014 10.5034 9.55312L11.6284 8.51719L17.0659 13.5H2.92844L8.36406 8.51719ZM12.7459 7.5L18.25 2.45438V12.5456L12.7459 7.5Z"
+                                    fill="white"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-[18px]">
+                            <a href="mailto:help@lorem.com"
+                                class="font-Inter text-[14px] font-medium text-[#fff]">help@lorem.com</a>
+                            <p class="font-Inter text-[12px] font-medium text-[#fff]">Support Email</p>
+                        </div>
+                    </div>
+                    <div class="mt-[23px] flex">
+                        <div class="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
+                            <svg width="18" height="21" viewbox="0 0 18 21" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M9 4.5C8.25832 4.5 7.5333 4.71993 6.91661 5.13199C6.29993 5.54404 5.81928 6.12971 5.53545 6.81494C5.25162 7.50016 5.17736 8.25416 5.32205 8.98159C5.46675 9.70902 5.8239 10.3772 6.34835 10.9017C6.8728 11.4261 7.54098 11.7833 8.26841 11.9279C8.99584 12.0726 9.74984 11.9984 10.4351 11.7145C11.1203 11.4307 11.706 10.9501 12.118 10.3334C12.5301 9.7167 12.75 8.99168 12.75 8.25C12.75 7.25544 12.3549 6.30161 11.6517 5.59835C10.9484 4.89509 9.99456 4.5 9 4.5ZM9 10.5C8.55499 10.5 8.11998 10.368 7.74997 10.1208C7.37996 9.87357 7.09157 9.52217 6.92127 9.11104C6.75097 8.6999 6.70642 8.2475 6.79323 7.81105C6.88005 7.37459 7.09434 6.97368 7.40901 6.65901C7.72368 6.34434 8.12459 6.13005 8.56105 6.04323C8.9975 5.95642 9.4499 6.00097 9.86104 6.17127C10.2722 6.34157 10.6236 6.62996 10.8708 6.99997C11.118 7.36998 11.25 7.80499 11.25 8.25C11.25 8.84674 11.0129 9.41903 10.591 9.84099C10.169 10.2629 9.59674 10.5 9 10.5ZM9 0C6.81273 0.00248131 4.71575 0.872472 3.16911 2.41911C1.62247 3.96575 0.752481 6.06273 0.75 8.25C0.75 11.1938 2.11031 14.3138 4.6875 17.2734C5.84552 18.6108 7.14886 19.8151 8.57344 20.8641C8.69954 20.9524 8.84978 20.9998 9.00375 20.9998C9.15772 20.9998 9.30796 20.9524 9.43406 20.8641C10.856 19.8147 12.1568 18.6104 13.3125 17.2734C15.8859 14.3138 17.25 11.1938 17.25 8.25C17.2475 6.06273 16.3775 3.96575 14.8309 2.41911C13.2843 0.872472 11.1873 0.00248131 9 0ZM9 19.3125C7.45031 18.0938 2.25 13.6172 2.25 8.25C2.25 6.45979 2.96116 4.7429 4.22703 3.47703C5.4929 2.21116 7.20979 1.5 9 1.5C10.7902 1.5 12.5071 2.21116 13.773 3.47703C15.0388 4.7429 15.75 6.45979 15.75 8.25C15.75 13.6153 10.5497 18.0938 9 19.3125Z"
+                                    fill="white"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-[18px]">
+                            <a href="mailto:help@lorem.com" class="font-Inter text-[14px] font-medium text-[#fff]">Sub
+                                Nerul, Mumbia,
+                                India, 123456</a>
+                            <p class="font-Inter text-[12px] font-medium text-white">Address</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 flex w-full flex-col justify-between text-white sm:flex-row md:mt-0 md:max-w-[341px]">
+                    <div class="">
+                        <p class="text-deutziawhite font-inter text-[18px] font-medium leading-normal">Pages</p>
+                        <ul>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/">Home</a>
+                            </li>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/our-tutors">News</a>
+                            </li>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/become-a-tutor">Contact</a>
+                            </li>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/plans-and-pricing">Plans and pricing</a>
+                            </li>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/terms-and-conditions">Terms and conditions</a>
+                            </li>
+                            <li class="mt-[15px]">
+                                <a class="text-deutziawhite hover:text-deutziawhite/80 font-inter text-[15px] font-normal hover:font-semibold"
+                                    href="/privacy-policy">Privcay policy</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="mt-6 flex flex-col gap-4 sm:mt-0">
+                        <p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
+                        <div class="flex gap-4 sm:flex-col">
+                            <a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50"
+                                    decoding="async" data-nimg="1" style="color:transparent"
+                                    src="https://www.englishyaari.com/img/google-store.svg" /></a>
+                            <a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50"
+                                    decoding="async" data-nimg="1" style="color:transparent"
+                                    src="https://www.englishyaari.com/img/apple-store.svg" /></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-[30px] text-white" />
+            <div class="flex items-center justify-center pb-8 pt-[9px] md:py-8">
+                <p class="text-[10px] font-normal text-white md:text-[12px]">
+                    © Copyright
+                    <!-- -->
+                    2024
+                    <!-- -->
+                    , All Rights Reserved by YOUR WEBSITES. PVT. LTD
+                </p>
+            </div>
+        </div>
+    </footer>
 
-	<script>
-		let currentSlide = 0;
-		const slides = document.querySelectorAll('.carousel-item');
-		const indicators = document.querySelectorAll('.bottom-2 button, .bottom-4 button');
-		// const progressBar = document.querySelector('.progress-bar');
-		let autoAdvanceTimer;
-		let touchStartX = 0;
-		let touchEndX = 0;
-		const carousel = document.querySelector('.carousel-track');
+    <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-item');
+    const indicators = document.querySelectorAll('.bottom-2 button, .bottom-4 button');
+    // const progressBar = document.querySelector('.progress-bar');
+    let autoAdvanceTimer;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const carousel = document.querySelector('.carousel-track');
 
-		// Add touch events for swipe
-		carousel.addEventListener('touchstart', e => {
-			touchStartX = e.changedTouches[0].screenX;
-		}, {
-			passive: true
-		});
+    // Add touch events for swipe
+    carousel.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {
+        passive: true
+    });
 
-		carousel.addEventListener('touchend', e => {
-			touchEndX = e.changedTouches[0].screenX;
-			handleSwipe();
-		}, {
-			passive: true
-		});
+    carousel.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, {
+        passive: true
+    });
 
-		function handleSwipe() {
-			const swipeThreshold = 50;
-			const diff = touchStartX - touchEndX;
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
 
-			if (Math.abs(diff) > swipeThreshold) {
-				if (diff > 0) {
-					nextSlide();
-				} else {
-					prevSlide();
-				}
-			}
-		}
+        if (Math.abs(diff) > swipeThreshold) {
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+    }
 
-		function updateSlides() {
-			slides.forEach((slide, index) => {
-				slide.className = 'carousel-item absolute top-0 left-0 w-full h-[30rem]';
-				if (index === currentSlide) {
-					slide.classList.add('active');
-				} else if (index === (currentSlide + 1) % slides.length) {
-					slide.classList.add('next');
-				} else if (index === (currentSlide - 1 + slides.length) % slides.length) {
-					slide.classList.add('prev');
-				} else {
-					slide.classList.add('hidden');
-				}
-			});
+    function updateSlides() {
+        slides.forEach((slide, index) => {
+            slide.className = 'carousel-item absolute top-0 left-0 w-full h-[30rem]';
+            if (index === currentSlide) {
+                slide.classList.add('active');
+            } else if (index === (currentSlide + 1) % slides.length) {
+                slide.classList.add('next');
+            } else if (index === (currentSlide - 1 + slides.length) % slides.length) {
+                slide.classList.add('prev');
+            } else {
+                slide.classList.add('hidden');
+            }
+        });
 
-			// Update indicators
-			indicators.forEach((indicator, index) => {
-				indicator.className = `w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors ${
+        // Update indicators
+        indicators.forEach((indicator, index) => {
+            indicator.className = `w-8 sm:w-12 h-1 sm:h-1.5 rounded-full transition-colors ${
 				index === currentSlide ? 'bg-white/40' : 'bg-white/20'
 				} hover:bg-white/60`;
-			});
+        });
 
-			// Update progress bar
-			// progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
-		}
+        // Update progress bar
+        // progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+    }
 
-		function resetAutoAdvance() {
-			clearInterval(autoAdvanceTimer);
-			autoAdvanceTimer = setInterval(nextSlide, 5000);
-		}
+    function resetAutoAdvance() {
+        clearInterval(autoAdvanceTimer);
+        autoAdvanceTimer = setInterval(nextSlide, 5000);
+    }
 
-		function nextSlide() {
-			currentSlide = (currentSlide + 1) % slides.length;
-			updateSlides();
-			resetAutoAdvance();
-		}
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        updateSlides();
+        resetAutoAdvance();
+    }
 
-		function prevSlide() {
-			currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-			updateSlides();
-			resetAutoAdvance();
-		}
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        updateSlides();
+        resetAutoAdvance();
+    }
 
-		// Add click handlers to indicators
-		indicators.forEach((indicator, index) => {
-			indicator.addEventListener('click', () => {
-				currentSlide = index;
-				updateSlides();
-				resetAutoAdvance();
-			});
-		});
+    // Add click handlers to indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            currentSlide = index;
+            updateSlides();
+            resetAutoAdvance();
+        });
+    });
 
-		// Initialize auto advance
-		resetAutoAdvance();
+    // Initialize auto advance
+    resetAutoAdvance();
 
-		// Initialize slides
-		updateSlides();
+    // Initialize slides
+    updateSlides();
 
-		//  scroll
-	</script>
+    //  scroll
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+
 </body>
 
 </html>
