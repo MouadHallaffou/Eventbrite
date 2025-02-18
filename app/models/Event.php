@@ -560,8 +560,7 @@ class Event
 
         $query = " SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
             e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
-            c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
-            u.user_id, u.username, e.adresse FROM events e LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
+            c.img AS image_category, u.user_id, u.username, e.adresse FROM events e
         LEFT JOIN events_tag et ON et.event_id = e.event_id LEFT JOIN tags t ON t.tag_id = et.tag_id
         LEFT JOIN users u ON u.user_id = e.user_id LEFT JOIN categories c ON c.category_id = e.category_id
         WHERE e.status = 'accepted' AND e.title LIKE :q GROUP BY e.event_id ORDER BY e.event_id;";
