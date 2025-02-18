@@ -3,6 +3,8 @@ namespace App\controllers\backsOffice;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use App\core\view;
+use App\core\Session;
+
 use App\models\User;
 use App\models\Event;
 use App\config\Database;
@@ -20,21 +22,29 @@ class AdminController extends User{
 
 
     public function index(){
-        $eventModel = new Event($this->pdo);
-        $events = $eventModel->fetchAllEvents();
-        $categories = $eventModel->fetchCategories();
-        $users = $this->getUsersData();
-        
-        View::render('back/Admin/dashboard.twig', [
+
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+           $eventModel = new Event($this->pdo);
+           $events = $eventModel->fetchAllEvents();
+           $categories = $eventModel->fetchCategories();
+           $users = $this->getAllUsers();
+           View::render('back/Admin/dashboard.twig', [
             'events' => $events,
             'categories' => $categories,
             'users' => $users,
-        ]);
+           ]);
+        }else{
+            header("Location: /404");
+        }
     }
 
-
     public function updateEventsStatus() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        Session::checkSession();
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Decode JSON input
             $input = json_decode(file_get_contents('php://input'), true);
     
@@ -65,12 +75,20 @@ class AdminController extends User{
                 ]);
             }
             exit;
+         }
+
+        }else{
+            header("Location: /404");
         }
     }
 
     public function showStatusEvents(){
-     
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
         $eventModel = new Event($this->pdo);
+        $events = $eventModel->fetchAllEvents();
         $events = $eventModel->fetchAllEvents();
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
@@ -80,7 +98,35 @@ class AdminController extends User{
             'categories' => $categories,
             'tags' => $tags,
         ]);
+        }else{
+            header("Location: /404");
+        }
     }
 
+    public function statistics(){
+
+        Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && $_SESSION["UserRole"] == 'Admin') {
+
+            $eventModel = new Event($this->pdo);
+            $events = $eventModel->fetchAllEvents();
+            $categories = $eventModel->fetchCategories();
+            $users = $this->getAllUsers();         
+            $TotalUsers = $this->countUsers();
+            $TotalEvents = $eventModel->EventsTotal();
+
+         View::render('back/Admin/dashboard.twig', [
+            'TotalUsers' => $TotalUsers,
+            'TotalEvents' => $TotalEvents,
+            'events' => $events,
+            'categories' => $categories,
+            'users' => $users,
+         ]);
+        }else{
+            header("Location: /404");
+        }
+
+    }
 
 }

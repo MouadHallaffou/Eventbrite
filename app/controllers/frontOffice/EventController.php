@@ -310,16 +310,44 @@ class EventController
     // Affiche les événements acceptés
     public function displayEventsAcceptedHome()
     {
-        $eventsHomePage = new Event($this->pdo);
-        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
-        $categoryHomePage = $eventsHomePage->fetchCategories();
-        $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+        
+        Session::checkSession();
+        if (isset($_SESSION["UserRole"]) && isset($_SESSION['username'])) {
+            $role = $_SESSION["UserRole"];
+            $username = $_SESSION['username'];        
+            
+            $eventsHomePage = new Event($this->pdo);
 
-        View::render('front/home.twig', [
+          $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+          $categoryHomePage = $eventsHomePage->fetchCategories();
+          $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+
+          View::render('front/home.twig', [
+            'user' => [
+            'username' => $username,
+            'role' => $role,
+
+            ],
             'eventsAccepted' => $eventsAccepted,
             'categoryHomePage' => $categoryHomePage,
             'SponsorsHomePage' => $SponsorsHomePage,
-        ]);
+          ]);
+          }else{
+            $eventsHomePage = new Event($this->pdo);
+          $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+          $categoryHomePage = $eventsHomePage->fetchCategories();
+          $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+
+          View::render('front/home.twig', [
+            
+            'eventsAccepted' => $eventsAccepted,
+            'categoryHomePage' => $categoryHomePage,
+            'SponsorsHomePage' => $SponsorsHomePage,
+          ]);
+        }
+        
+
+        
     }
 
 
@@ -342,15 +370,38 @@ class EventController
     public function displayEvents()
     {
         $eventsHomePage = new Event($this->pdo);
-        $eventsAccepted = $eventsHomePage->displayEventsAccepted();
-        $categoryHomePage = $eventsHomePage->fetchCategories();
-        $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
-        // var_dump($eventsAccepted);
-        View::render('front/FindEvents.twig', [
+            $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+            $categoryHomePage = $eventsHomePage->fetchCategories();
+            $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+            Session::checkSession();
+
+        if (isset($_SESSION["UserRole"]) && isset($_SESSION['username'])) {
+            $role = $_SESSION["UserRole"];
+            $username = $_SESSION['username'];
+            View::render('front/FindEvents.twig', 
+            [
+                'user' => [
+                'username' => $username,
+                'role' => $role,
+    
+                ],
             'eventsAccepted' => $eventsAccepted,
             'categoryHomePage' => $categoryHomePage,
             'SponsorsHomePage' => $SponsorsHomePage,
-        ]);
+           ]);
+        }else{
+            // $eventsHomePage = new Event($this->pdo);
+            // $eventsAccepted = $eventsHomePage->displayEventsAccepted();
+            // $categoryHomePage = $eventsHomePage->fetchCategories();
+            // $SponsorsHomePage = $eventsHomePage->fetchAllSponsors();
+            View::render('front/FindEvents.twig', [
+            'eventsAccepted' => $eventsAccepted,
+            'categoryHomePage' => $categoryHomePage,
+            'SponsorsHomePage' => $SponsorsHomePage,
+           ]);
+
+         }  
+
     }
 
 
@@ -390,10 +441,29 @@ class EventController
        
         $eventsHomePage = new Event($this->pdo);
         $eventsAccepted = $eventsHomePage->eventDetaill($id);
-        View::render('front/pages/EventDataille.twig', [
-            'eventsAccepted' => $eventsAccepted,
-        ]);
+
+        Session::checkSession();
+        if (isset($_SESSION["UserRole"]) && isset($_SESSION['username'])) {
+            $role = $_SESSION["UserRole"];
+            $username = $_SESSION['username'];
+    
+            View::render('front/pages/EventDataille.twig', [
+              'user' => [
+              'username' => $username,
+              'role' => $role],
+              'eventsAccepted' => $eventsAccepted,
+            ]);
+        }else{
+            View::render('front/pages/EventDataille.twig', [
+                'eventsAccepted' => $eventsAccepted,
+              ]);
+
+        }
         
+    }
+
+    public function countEvents(){
+
     }
 
 }
