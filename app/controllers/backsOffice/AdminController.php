@@ -89,6 +89,7 @@ class AdminController extends User{
 
         $eventModel = new Event($this->pdo);
         $events = $eventModel->fetchAllEvents();
+        $events = $eventModel->fetchAllEvents();
         $categories = $eventModel->fetchCategories();
         $tags = $eventModel->fetchTags();
 

@@ -63,7 +63,7 @@
                     </div>
 
                     <div id="dropdownMenu" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
-                        <a href="/edit-profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
+                        <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
                             <i class="fas fa-edit mr-2"></i> Modifier
                         </a>
                         <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 flex items-center">
@@ -433,6 +433,7 @@
                         <label class="block font-semibold mb-2">Date de début</label>
                         <input
                             type="datetime-local"
+                            min="2025-02-22T00:00"
                             name="startEventAt"
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ post.startEventAt }}"
@@ -446,6 +447,7 @@
                         <input
                             type="datetime-local"
                             name="endEventAt"
+                            min="2025-02-22T00:00"
                             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:outline-none"
                             value="{{ post.endEventAt }}"
                             required>
@@ -546,12 +548,18 @@
                         </ul>
                     </div>
                     <div class="mt-6 flex flex-col gap-4 sm:mt-0">
-                        <p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
-                        <div class="flex gap-4 sm:flex-col">
-                            <a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/google-store.svg" /></a>
-                            <a target="_blank" href="#"><img alt="facebook icon" loading="lazy" width="168" height="50" decoding="async" data-nimg="1" style="color:transparent" src="https://www.englishyaari.com/img/apple-store.svg" /></a>
-                        </div>
-                    </div>
+						<p class="text-deutziawhite font-inter text-[18px] font-medium">Download the app</p>
+                            <div class="flex items-center gap-1 px-2">
+                                <a href="#" class="w-full min-w-xl">
+                                    <img src="https://mcqmate.com/public/images/icons/playstore.svg" alt="Playstore Button"
+                                        class="h-10">
+                                </a>
+                                <a class="w-full min-w-xl" href="https://www.youtube.com/channel/UCo8tEi6SrGFP8XG9O0ljFgA">
+                                    <img src="https://mcqmate.com/public/images/icons/youtube.svg" alt="Youtube Button"
+                                        class="h-28">
+                                </a>
+                            </div>
+					</div>
                 </div>
             </div>
             <hr class="mt-[30px] text-white" />

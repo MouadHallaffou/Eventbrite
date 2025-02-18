@@ -13,7 +13,7 @@ use App\controllers\backsOffice\UserController;
 use App\controllers\frontOffice\ContactController;
 use App\Controllers\PaymentController;
 use App\core\Validator;
-
+use App\controllers\frontOffice\ProfileController;
 
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -24,6 +24,7 @@ Session::checkSession();
 
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
+$router->get('/profile', ProfileController::class, 'index');
 
 
 $router->get('/home', EventController::class, 'displayEventsAcceptedHome');
@@ -83,7 +84,7 @@ $router->get('/edit-event/{event_id}', EventController::class, 'editEvent');
 $router->post('/update-event/{event_id}', EventController::class, 'updateEvent');
 
 
-$router->post('/dashboard/user/delete', UserController::class, 'deleteUser'); // Add this route
+$router->post('/dashboard/user/delete', UserController::class, 'deleteUser'); 
 $router->post('/dashboard/user/userStatus', UserController::class, 'updateStatus');
 $router->get('/dashboard/users', UserController::class, 'index');
 

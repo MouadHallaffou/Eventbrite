@@ -197,19 +197,19 @@ class Event
     }
 
 
-    public function fetchAllEvents()
-    {
-        $sql = "SELECT *,u.username,v.ville, c.name as category_name, c.img AS image_category 
-                FROM events e
-                LEFT JOIN events_tag et ON et.event_id = e.event_id
-                LEFT JOIN categories c ON c.category_id = e.category_id
-                LEFT JOIN users u ON u.user_id = e.user_id
-                LEFT JOIN ville v on v.id = e.ville_id ";
+    // public function fetchAllEvents()
+    // {
+    //     $sql = "SELECT *,u.username,v.ville, c.name as category_name, c.img AS image_category 
+    //             FROM events e
+    //             LEFT JOIN events_tag et ON et.event_id = e.event_id
+    //             LEFT JOIN categories c ON c.category_id = e.category_id
+    //             LEFT JOIN users u ON u.user_id = e.user_id
+    //             LEFT JOIN ville v on v.id = e.ville_id ";
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    //     $stmt = $this->pdo->prepare($sql);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
 
     // Insert an event
     public function insert(array $tags, array $sponsors): int
@@ -407,7 +407,8 @@ class Event
     public function displayEventsAccepted()
     {
         $sql = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
-                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
+                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status, t.tag_id,
+                GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,c.category_id, c.name as category_name, v.ville,
                 c.img AS image_category, 
                 u.user_id, u.username, e.adresse
             FROM events e 
@@ -415,6 +416,7 @@ class Event
             LEFT JOIN tags t ON t.tag_id = et.tag_id
             LEFT JOIN users u ON u.user_id = e.user_id
             LEFT JOIN categories c ON c.category_id = e.category_id
+            LEFT JOIN ville v on v.id = e.ville_id
             WHERE e.status = 'accepted'
             GROUP BY e.event_id;";
 
@@ -574,12 +576,16 @@ class Event
     public function eventDetaill($id) {
 
         $query = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
-            e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
-            c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
-            u.user_id,u.email, u.is_verified,u.avatar, u.username, e.adresse FROM events e LEFT JOIN sponsors s ON s.sponsor_id = e.sponsor_id
-        LEFT JOIN events_tag et ON et.event_id = e.event_id LEFT JOIN tags t ON t.tag_id = et.tag_id
-        LEFT JOIN users u ON u.user_id = e.user_id LEFT JOIN categories c ON c.category_id = e.category_id
-        WHERE e.status = 'accepted' AND e.event_id = :id";
+                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,c.category_id, c.name as category_name, 
+                c.img AS image_category, s.sponsor_id, s.name AS sponsor_name,s.img AS sponsor_image, 
+                u.user_id,u.email, u.is_verified,u.avatar, u.username, e.adresse FROM events e 
+            LEFT join event_sponsor es on es.event_id = e.event_id
+            LEFT JOIN sponsors s ON s.sponsor_id  = es.sponsor_id
+            LEFT JOIN events_tag et ON et.event_id = e.event_id LEFT JOIN tags t ON t.tag_id = et.tag_id
+            LEFT JOIN users u ON u.user_id = e.user_id LEFT JOIN categories c ON c.category_id = e.category_id
+            WHERE e.status = 'accepted' AND e.event_id = :id
+            group by e.event_id";
+
         $stmt = $this->pdo->prepare($query);
         $stmt->bindParam(':id', $id,); 
         $stmt->execute();
@@ -587,10 +593,19 @@ class Event
 
     }
 
+    public function fetchAllEvents()
+    {
+        $sql = "SELECT e.*,u.username,v.ville, c.name as category_name, c.img AS image_category 
+                FROM events e
+                LEFT JOIN events_tag et ON et.event_id = e.event_id
+                LEFT JOIN categories c ON c.category_id = e.category_id
+                LEFT JOIN users u ON u.user_id = e.user_id
+                LEFT JOIN ville v on v.id = e.ville_id 
+                GROUP BY e.event_id";
 
-    public function EventsTotal(){
-
-        $result = OrmMethodes::countItems('events');
-        return $result;
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 }

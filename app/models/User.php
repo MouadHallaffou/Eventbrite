@@ -64,66 +64,67 @@ public function getStatus(){
     return $this->status;
 }
 
-// |---------------------- AddUser -----------------|
+    // |---------------------- AddUser -----------------|
 
-public static function AddUser($columns, $values ,$roleId)
-{
-  $conn = Database::getInstanse()->getConnection();
+    public static function AddUser($columns, $values, $roleId)
+    {
+        $conn = Database::getInstanse()->getConnection();
 
-  $table = 'users';
+        $table = 'users';
 
-  $columnsArray = explode(',', $columns);
-  $placeholders = implode(', ', array_fill(0, count($columnsArray), '?'));
+        $columnsArray = explode(',', $columns);
+        $placeholders = implode(', ', array_fill(0, count($columnsArray), '?'));
 
-  $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
-  $stmt = $conn->prepare($query);
+        $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+        $stmt = $conn->prepare($query);
 
-  $result =  $stmt->execute($values);
+        $result =  $stmt->execute($values);
 
-  if($result){
-    $lastid = $conn->lastInsertId();
+        if ($result) {
+            $lastid = $conn->lastInsertId();
 
-    $role = self::AddRoleUser($lastid,$roleId);
+            $role = self::AddRoleUser($lastid, $roleId);
 
-    return true;
+            return true;
+        }
+    }
+    public static function AddRoleUser($lastid, $roleId)
+    {
 
-  }
-
-}
-public static function AddRoleUser($lastid, $roleId){
-
-    $conn = Database::getInstanse()->getConnection();
-    try {
+        $conn = Database::getInstanse()->getConnection();
+        try {
             if (!empty($roleId)) {
                 $sql = "INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)";
                 $stmt = $conn->prepare($sql);
-                $stmt->execute([$lastid , $roleId]);
+                $stmt->execute([$lastid, $roleId]);
             } else {
                 echo "Error: Tag not found - $roleId";
             }
-    } catch (\PDOException $e) {
-        echo $e->getMessage();
+        } catch (\PDOException $e) {
+            echo $e->getMessage();
+        }
     }
-}
-// |---------------------- findByEmail -----------------|
+    // |---------------------- findByEmail -----------------|
 
-public static function findByEmail($email){
+    public static function findByEmail($email)
+    {
 
-  $conn = Database::getInstanse()->getConnection();
+        $conn = Database::getInstanse()->getConnection();
 
   $query ="SELECT u.user_id AS userId, u.username AS userName, u.avatar AS avatar, u.email AS userEmail , u.password ,u.status, r.role_id AS roleId ,r.name_role AS UserRole
       FROM users u INNER JOIN user_roles ur ON ur.user_id = u.user_id INNER JOIN roles r on r.role_id = ur.role_id  WHERE email = :email";
-  $stmt=$conn->prepare($query);
-  $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-  $stmt->execute();
-  return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-public function getUsersData(){
+    public function getUsersData()
+    {
 
-    $conn = Database::getInstanse()->getConnection();
+        $conn = Database::getInstanse()->getConnection();
 
-    $query = "SELECT u.*,r.role_id,r.name_role as role FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
+        $query = "SELECT u.*,r.role_id,r.name_role as role FROM users u JOIN user_roles ur ON u.user_id = ur.user_id JOIN
      roles r ON  r.role_id = ur.role_id WHERE r.name_role = 'Organizer' ";
     $stmt = $conn->prepare($query);
     $stmt->execute();
@@ -190,5 +191,30 @@ public function countUsers(){
    return $result;
 
 }
+
+public function findById($id)
+    {
+        $conn = Database::getInstanse()->getConnection();
+        $query = "SELECT u.*, r.name_role AS role FROM users u
+          JOIN user_roles ur ON u.user_id = ur.user_id
+          JOIN roles r ON r.role_id = ur.role_id
+          WHERE u.user_id = :id";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function updateUser($userId, $username, $email, $gender, $avatar)
+    {
+        $conn = Database::getInstanse()->getConnection();
+
+        $query = "UPDATE users SET username = ?, email = ?, gender = ?, avatar = ? WHERE user_id = ?";
+        $stmt = $conn->prepare($query);
+
+        return $stmt->execute([$username, $email, $gender, $avatar, $userId]);
+    }
 
 }
