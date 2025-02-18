@@ -1,119 +1,63 @@
 <?php
-require __DIR__ . "/../vendor/autoload.php";
+// app/controllers/PaymentController.php
 
-use PaypalServerSdkLib\Authentication\ClientCredentialsAuthCredentialsBuilder;
-use PaypalServerSdkLib\Environment;
-use PaypalServerSdkLib\PaypalServerSDKClientBuilder;
-use PaypalServerSdkLib\Models\Builders\MoneyBuilder;
-use PaypalServerSdkLib\Models\Builders\OrderRequestBuilder;
-use PaypalServerSdkLib\Models\Builders\PurchaseUnitRequestBuilder;
-use PaypalServerSdkLib\Models\Builders\AmountWithBreakdownBuilder;
-use PaypalServerSdkLib\Models\Builders\ShippingDetailsBuilder;
-use PaypalServerSdkLib\Models\Builders\ShippingOptionBuilder;
-use PaypalServerSdkLib\Models\ShippingType;
+namespace App\controllers;
 
-$PAYPAL_CLIENT_ID = getenv("PAYPAL_CLIENT_ID");
-$PAYPAL_CLIENT_SECRET = getenv("PAYPAL_CLIENT_SECRET");
+use App\core\Controller;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
+use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
+use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 
+class PaymentController extends Controller {
+    private $client;
 
-$client = PaypalServerSdkClientBuilder::init()
-    ->clientCredentialsAuthCredentials(
-        ClientCredentialsAuthCredentialsBuilder::init(
-            $PAYPAL_CLIENT_ID,
-            $PAYPAL_CLIENT_SECRET
-        )
-    )
-    ->environment(Environment::SANDBOX)
-    ->build();
+    public function __construct() {
+        $config = require __DIR__ . "/../../config/PayPalConfig.php";
+        $environment = new SandboxEnvironment($config['client_id'], $config['client_secret']);
+        $this->client = new PayPalHttpClient($environment);
+    }
 
+    public function showPaymentPage() {
+        // Afficher la page de paiement
+        $this->render('Payment.twig');
+    }
 
-function handleResponse($response)
-{
-    $jsonResponse = json_decode($response->getBody(), true);
-    return [
-        "jsonResponse" => $jsonResponse,
-        "httpStatusCode" => $response->getStatusCode(),
-    ];
-}
+    public function createOrder() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $cart = $data['cart'];
 
-$endpoint = $_SERVER["REQUEST_URI"];
-if ($endpoint === "/") {
-    try {
-        $response = [
-            "message" => "Server is running",
+        $request = new OrdersCreateRequest();
+        $request->prefer('return=representation');
+        $request->body = [
+            "intent" => "CAPTURE",
+            "purchase_units" => [[
+                "amount" => [
+                    "currency_code" => "USD",
+                    "value" => "100.00"
+                ]
+            ]]
         ];
-        header("Content-Type: application/json");
-        echo json_encode($response);
-    } catch (Exception $e) {
-        echo json_encode(["error" => $e->getMessage()]);
-        http_response_code(500);
+
+        try {
+            $response = $this->client->execute($request);
+            echo json_encode($response);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
-} 
 
-/**
- * Create an order to start the transaction.
- * @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
- */
-function createOrder($cart)
-{
-    global $client;
+    public function captureOrder($orderID) {
+        $request = new OrdersCaptureRequest($orderID);
+        $request->prefer('return=representation');
 
-    $orderBody = [
-        "body" => OrderRequestBuilder::init("CAPTURE", [
-            PurchaseUnitRequestBuilder::init(
-                AmountWithBreakdownBuilder::init("USD", "100")->build()
-            )->build(),
-        ])->build(),
-    ];
-
-    
-    $apiResponse = $client->getOrdersController()->ordersCreate($orderBody);
-
-    return handleResponse($apiResponse);
-}
-
-if ($endpoint === "/api/orders") {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $cart = $data["cart"];
-    header("Content-Type: application/json");
-    try {
-        $orderResponse = createOrder($cart);
-        echo json_encode($orderResponse["jsonResponse"]);
-    } catch (Exception $e) {
-        echo json_encode(["error" => $e->getMessage()]);
-        http_response_code(500);
+        try {
+            $response = $this->client->execute($request);
+            echo json_encode($response);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
 }
-
-
-/**
- * Capture payment for the created order to complete the transaction.
- * @see https://developer.paypal.com/docs/api/orders/v2/#orders_capture
- */
-function captureOrder($orderID)
-{
-    global $client;
-
-    $captureBody = [
-        "id" => $orderID,
-    ];
-
-    $apiResponse = $client->getOrdersController()->ordersCapture($captureBody);
-
-    return handleResponse($apiResponse);
-}
-
-if (str_ends_with($endpoint, "/capture")) {
-    $urlSegments = explode("/", $endpoint);
-    end($urlSegments); // Will set the pointer to the end of array
-    $orderID = prev($urlSegments);
-    header("Content-Type: application/json");
-    try {
-        $captureResponse = captureOrder($orderID);
-        echo json_encode($captureResponse["jsonResponse"]);
-    } catch (Exception $e) {
-        echo json_encode(["error" => $e->getMessage()]);
-        http_response_code(500);
-    }
-}
-

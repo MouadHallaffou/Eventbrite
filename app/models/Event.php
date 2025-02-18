@@ -391,7 +391,7 @@ class Event
     public function displayEventsAccepted()
     {
         $sql = "SELECT e.event_id, e.title, e.description, e.image As event_image, e.price, e.startEventAt, 
-                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status, t.tag_id,
+                e.endEventAt,e.lienEvent, e.capacite,e.situation, e.eventMode, e.status,
                 GROUP_CONCAT(t.name SEPARATOR ', ') AS tags,c.category_id, c.name as category_name, v.ville,
                 c.img AS image_category, 
                 u.user_id, u.username, e.adresse
@@ -593,3 +593,10 @@ class Event
     }
 
 }
+
+
+// validation 
+// payment 
+// edit profile 
+// session 
+
