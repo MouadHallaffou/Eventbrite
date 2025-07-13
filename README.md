@@ -1,6 +1,6 @@
 # Eventbrite
 
-## Structure
+## Structure de projet
 
 ```
 app/
